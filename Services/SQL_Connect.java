@@ -23,11 +23,11 @@ public class SQL_Connect {
         }
     }
 
-    public void removeFromStock(int quantityToSubtract, int article_id) {
+    public void removeFromStock(Double quantityToSubtract, int article_id) {
         String sql = "UPDATE Articles SET stock = stock - ? WHERE article_id = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, quantityToSubtract);
+            pstmt.setInt(1, quantityToSubtract.intValue());
             pstmt.setInt(2, article_id);
             pstmt.executeUpdate();
 

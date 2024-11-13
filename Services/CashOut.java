@@ -1,27 +1,25 @@
 package Services;
-import java.awt.*;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
 import org.json.JSONObject;
-
 
 public class CashOut {
     SQL_Connect conn = new SQL_Connect();
-
-
     public CashOut(){
     }
 
-    public String makeJSON(List listOfIDs){
+    public String makeJSON(List<Item> listOfItems){
+
         JSONObject items = new JSONObject();
-        for (int positionInArrayList=0; positionInArrayList<listOfIDs.toArray().length;positionInArrayList++){
+        for (int positionInArrayList=0; positionInArrayList<listOfItems.toArray().length;positionInArrayList++){
             JSONObject item = new JSONObject();
-            item.put("name", conn.getString((int) listOfIDs.toArray()[positionInArrayList]));
-            item.put("price", conn.getPrice((int) listOfIDs.toArray()[positionInArrayList]));
+            item.put("name", listOfItems.get(positionInArrayList).getName());
+            item.put("price", listOfItems.get(positionInArrayList).getPrice());
+            item.put("amount", listOfItems.get(positionInArrayList).getAmount());
             items.put("item"+(positionInArrayList+1),item);
         }
         return items.toString();
@@ -42,18 +40,22 @@ public class CashOut {
         Path path = Paths.get("Receipts",filePath);
 
 //        double[] price = new double[readJSON(jsonString).length];
-        List<String> name = new ArrayList<>();
-        List<Double> price = new ArrayList<>();
-        List<Integer> count = new ArrayList<>();
-        String[] nameArray = name.toArray(String[]::new);
-        Double[] priceArray = price.toArray(Double[]::new);
+        ArrayList<Item> itemList = new ArrayList<>();
+        ItemCountable[] items = new ItemCountable[itemList.toArray().length];
+        ItemCountable ip = new ItemCountable("a",2.,2.);
+
 
         //make name and price array
         for (int i = 0; i<readJSON(jsonString).length;i++){
-            name.add(readJSON(jsonString)[i].getString("name"));
-            price.add(readJSON(jsonString)[i].getDouble("price"));
+
+            itemList.add(new ItemCountable(
+                readJSON(jsonString)[i].getString("name"),
+                readJSON(jsonString)[i].getDouble("price"),
+                readJSON(jsonString)[i].getDouble("amount")));
         }
 
+        System.out.println(ip.getInfo());
+        System.out.println(Arrays.toString(ip.refactor((itemList))));
         try{
             File receipt = new File(path.toString());
             if (receipt.createNewFile()){
@@ -63,14 +65,10 @@ public class CashOut {
                 System.out.println("File already exists.");
             }
             FileWriter fileWriter = new FileWriter(receipt);
-            fileWriter.write(new Receipt().makeReceipt( nameArray,1,priceArray).toString());
+            fileWriter.write(new Receipt().makeReceipt(itemList).toString());
             fileWriter.close();
         } catch (IOException e) {
             System.out.println("An error occurred: " + e);
         }
-        price.clear();
-        name.clear();
-        count.clear();
-
     }
 }
