@@ -20,7 +20,7 @@
       <console name="Shop" type="STANDARD" schema="" session="Main"><![CDATA[select * from Articles
 SELECT * FROM Transactions
 update Articles set stock = stock - 1 where article_id = 1
-insert into Articles (name,price,stock) values ("Orange", 1.99, 500)
+insert into Articles (name,price,stock) values ('Rozok', 0.14, 500)
 CREATE TABLE Transactions (
     transaction_id INTEGER PRIMARY KEY,
     transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

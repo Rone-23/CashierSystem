@@ -30,15 +30,15 @@ public class Receipt {
         receiptBuilder.append(String.format("%s         č.bloku: %s\n",date,numOfReceipt));
         receiptBuilder.append("----------------------------------------\n");
         //items
-        for(int itemIndex = 0; itemIndex<arrayList.length;itemIndex++){
-            while (arrayList[itemIndex].getName().length()!= 18){
-                arrayList[itemIndex].setName(arrayList[itemIndex].getName()+" ");
+        for (Item item : arrayList) {
+            while (item.getName().length() != 18) {
+                item.setName(item.getName() + " ");
             }
 
-            receiptBuilder.append(String.format("%s   %.1fks   %9.2f B\n",arrayList[itemIndex].getName(),
-                    arrayList[itemIndex].getAmount(),
-                    (arrayList[itemIndex].getPrice())*arrayList[itemIndex].getAmount()));
-            totalAmount +=arrayList[itemIndex].getPrice();
+            receiptBuilder.append(String.format("%s   %.1fks   %9.2f B\n", item.getName(),
+                    item.getAmount(),
+                    (item.getPrice()) * item.getAmount()));
+            totalAmount += item.getPrice();
         }
         receiptBuilder.append("----------------------------------------\n");
         receiptBuilder.append(String.format("NA ÚHRADU EUR %26.2f\n",totalAmount));

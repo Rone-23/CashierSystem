@@ -52,10 +52,13 @@ public class CashOut {
                 readJSON(jsonString)[i].getString("name"),
                 readJSON(jsonString)[i].getDouble("price"),
                 readJSON(jsonString)[i].getDouble("amount")));
+            System.out.println(new ItemCountable(
+                    readJSON(jsonString)[i].getString("name"),
+                    readJSON(jsonString)[i].getDouble("price"),
+                    readJSON(jsonString)[i].getDouble("amount")).getInfo());
         }
 
-        System.out.println(ip.getInfo());
-        System.out.println(Arrays.toString(ip.refactor((itemList))));
+
         try{
             File receipt = new File(path.toString());
             if (receipt.createNewFile()){

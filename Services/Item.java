@@ -25,7 +25,7 @@ public abstract class Item {
     Double getAmount(){
         return this.amount;
     }
-    String getInfo(){return this.name + this.price.toString() + this.amount.toString();}
+    String getInfo(){return String.format("Name: %s Price: %s Amount: %s",this.name, this.price, this.amount);}
     public Item[] refactor(ArrayList<Item> incomingListOfItems){
         ArrayList<Item> finalArray = new ArrayList<>();
         for (int i = 0;i<incomingListOfItems.size();i++){

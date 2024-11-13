@@ -4,6 +4,7 @@ import Services.ItemCountable;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Choice_Panel {
     private JPanel mainPanel;
@@ -13,7 +14,7 @@ public class Choice_Panel {
     private JPanel navPanel;
     private JPanel articleButtonsPanel;
     private JButton backButton;
-    private Main_Window mainWindow;
+    private final Main_Window mainWindow;
     private final ArrayList<Item> listOfItems = new ArrayList<>();
     private Double amountToRemove= 1.0;
 
@@ -66,7 +67,7 @@ public class Choice_Panel {
                 amountToRemove));
         amountToRemove=1.0;
 
-        System.out.println();
+//        System.out.println(Arrays.toString(listOfItems.toArray()));
     }
     private void addToStock(int article_id){
         Main_Window mainWindow = new Main_Window();

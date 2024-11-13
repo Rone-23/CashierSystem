@@ -11,7 +11,7 @@ public class SQL_Connect {
             Class.forName("org.sqlite.JDBC");
 
             //url where db is located
-            String url = "jdbc:sqlite:shop.db";
+            String url = "jdbc:sqlite:shop_rework.db";
 
             conn = DriverManager.getConnection(url);
             try (Statement stmt = conn.createStatement()) {
