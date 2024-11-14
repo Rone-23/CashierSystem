@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import org.json.JSONObject;
 
@@ -39,26 +40,30 @@ public class CashOut {
         String filePath = String.format("%s_%s-%s-%s.txt",date.split(":")[0],time.split(":")[0],time.split(":")[1],time.split(":")[2]);
         Path path = Paths.get("Receipts",filePath);
 
-//        double[] price = new double[readJSON(jsonString).length];
+
+        //make array  ready to print
         ArrayList<Item> itemList = new ArrayList<>();
-        ItemCountable[] items = new ItemCountable[itemList.toArray().length];
-        ItemCountable ip = new ItemCountable("a",2.,2.);
-
-
-        //make name and price array
+        HashMap<String, Item> sortedListoToPrint = new HashMap<>();
         for (int i = 0; i<readJSON(jsonString).length;i++){
 
             itemList.add(new ItemCountable(
                 readJSON(jsonString)[i].getString("name"),
                 readJSON(jsonString)[i].getDouble("price"),
                 readJSON(jsonString)[i].getDouble("amount")));
-            System.out.println(new ItemCountable(
-                    readJSON(jsonString)[i].getString("name"),
-                    readJSON(jsonString)[i].getDouble("price"),
-                    readJSON(jsonString)[i].getDouble("amount")).getInfo());
         }
 
-
+        for (Item item:itemList){
+            String name = item.getName() ;
+            if (sortedListoToPrint.containsKey(name)){
+                sortedListoToPrint.get(name).setAmount(sortedListoToPrint.get(name).getAmount()+item.getAmount());
+            }
+            else{
+                sortedListoToPrint.put(name,item);
+            }
+        }
+        System.out.println(sortedListoToPrint.values());
+        Item[] finalArray = sortedListoToPrint.values().toArray(new Item[0]);
+        System.out.println(finalArray[0].getInfo());
         try{
             File receipt = new File(path.toString());
             if (receipt.createNewFile()){
@@ -68,7 +73,7 @@ public class CashOut {
                 System.out.println("File already exists.");
             }
             FileWriter fileWriter = new FileWriter(receipt);
-            fileWriter.write(new Receipt().makeReceipt(itemList).toString());
+            fileWriter.write(new Receipt().makeReceipt(finalArray).toString());
             fileWriter.close();
         } catch (IOException e) {
             System.out.println("An error occurred: " + e);

@@ -20,7 +20,7 @@
       <console name="Shop" type="STANDARD" schema="" session="Main"><![CDATA[select * from Articles
 SELECT * FROM Transactions
 update Articles set stock = stock - 1 where article_id = 1
-insert into Articles (name,price,stock) values ('Rozok', 0.14, 500)
+insert into Articles (name,price,stock) values ('Kvaskovy chlieb', 1.15, 500)
 CREATE TABLE Transactions (
     transaction_id INTEGER PRIMARY KEY,
     transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -44,7 +44,9 @@ commit]]></console>
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files />
+    <open-files>
+      <object connection-id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5" object-ref="consoles/Shop" />
+    </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5" />
@@ -108,7 +110,7 @@ commit]]></console>
           <driver-library value="" />
           <driver value="" />
           <url-type value="CUSTOM" />
-          <url value="jdbc:sqlite:C:\Users\tomas\Documents\Billa_system\shop.db" />
+          <url value="jdbc:sqlite:C:\Users\tomas\Documents\Billa_system\shop_rework.db" />
           <type value="NONE" />
           <user value="" />
           <deprecated-pwd value="" />

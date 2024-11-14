@@ -26,7 +26,8 @@ public abstract class Item {
         return this.amount;
     }
     String getInfo(){return String.format("Name: %s Price: %s Amount: %s",this.name, this.price, this.amount);}
-    public Item[] refactor(ArrayList<Item> incomingListOfItems){
+
+    protected Item[] refactor(ArrayList<Item> incomingListOfItems){
         ArrayList<Item> finalArray = new ArrayList<>();
         for (int i = 0;i<incomingListOfItems.size();i++){
             for (int j = 1; j<incomingListOfItems.size();j++){

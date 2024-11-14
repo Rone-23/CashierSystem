@@ -10,14 +10,11 @@ public class Receipt {
     String KP = "88820203125030905";
     String date = "03-11-2024 20:00:12";
     int numOfReceipt = 666;
-    Item[] arrayList = new Item[0];
     double totalAmount;
     ArrayList <Item>itemArrayList = new ArrayList<>();
     public Receipt(){
     }
-    public StringBuilder makeReceipt(ArrayList<Item> itemArrayList){
-        this.arrayList = itemArrayList.toArray(new Item[0]);
-
+    public StringBuilder makeReceipt(Item[] itemArrayList){
 
         //header
         receiptBuilder.append(String.format(" %25s\n","BILLA s.r.o."));
@@ -30,7 +27,7 @@ public class Receipt {
         receiptBuilder.append(String.format("%s         č.bloku: %s\n",date,numOfReceipt));
         receiptBuilder.append("----------------------------------------\n");
         //items
-        for (Item item : arrayList) {
+        for (Item item : itemArrayList) {
             while (item.getName().length() != 18) {
                 item.setName(item.getName() + " ");
             }
