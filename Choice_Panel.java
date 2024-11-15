@@ -1,6 +1,10 @@
+import Services.Item;
+import Services.ItemCountable;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Choice_Panel {
     private JPanel mainPanel;
@@ -10,9 +14,9 @@ public class Choice_Panel {
     private JPanel navPanel;
     private JPanel articleButtonsPanel;
     private JButton backButton;
-    private Main_Window mainWindow;
-    private ArrayList<Integer[]> listOfItems = new ArrayList<>();
-    private int amountToRemove=1;
+    private final Main_Window mainWindow;
+    private final ArrayList<Item> listOfItems = new ArrayList<>();
+    private Double amountToRemove= 1.0;
 
 
     public Choice_Panel(Main_Window mainWindow){
@@ -58,17 +62,16 @@ public class Choice_Panel {
         double stock = Main_Window.getConn().getStock(article_id);
         String toDisplay = String.format("%s x -%s ( %s )\n",name, amountToRemove, stock);
         mainWindow.getDisplayMain().append(toDisplay);
-        Integer[] itemPair = new Integer[2];
-        itemPair[0]=article_id;
-        itemPair[1]=amountToRemove;
-        listOfItems.add(itemPair);
-        amountToRemove=1;
+        listOfItems.add(new ItemCountable(Main_Window.getConn().getString(article_id),
+                Main_Window.getConn().getPrice(article_id),
+                amountToRemove));
+        amountToRemove=1.0;
 
-        System.out.println();
+//        System.out.println(Arrays.toString(listOfItems.toArray()));
     }
     private void addToStock(int article_id){
         Main_Window mainWindow = new Main_Window();
-        Main_Window.getConn().removeFromStock(1,article_id);
+        Main_Window.getConn().removeFromStock(1.,article_id);
         String name = Main_Window.getConn().getString(article_id);
         double stock = Main_Window.getConn().getStock(article_id);
         String toDisplay = name + " x 1 ( " + stock + ")\n";
@@ -82,7 +85,7 @@ public class Choice_Panel {
         return mainPanel;
     }
 
-    public void setAmountToRemove(int amountToRemove) {
+    public void setAmountToRemove(Double amountToRemove) {
         this.amountToRemove = amountToRemove;
     }
 }

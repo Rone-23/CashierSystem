@@ -1,6 +1,8 @@
+package Services;
+
 import java.util.ArrayList;
 
-abstract class Item {
+public abstract class Item {
     String name;
     Double price,amount;
     static double totalAmount;
@@ -23,7 +25,11 @@ abstract class Item {
     Double getAmount(){
         return this.amount;
     }
-    Item[] refactor(ArrayList<Item> incomingListOfItems){
+    public void setTotalAmount(double totalAmountToSet){totalAmount = totalAmountToSet;}
+    public double getTotalAmount(){return totalAmount;}
+    String getInfo(){return String.format("Name: %s Price: %s Amount: %s",this.name, this.price, this.amount);}
+
+    protected Item[] refactor(ArrayList<Item> incomingListOfItems){
         ArrayList<Item> finalArray = new ArrayList<>();
         for (int i = 0;i<incomingListOfItems.size();i++){
             for (int j = 1; j<incomingListOfItems.size();j++){
@@ -37,6 +43,6 @@ abstract class Item {
             }
 
         }
-        return finalArray.toArray(new Item[0]);
+        return finalArray.toArray(new Item[finalArray.size()]);
     }
 }

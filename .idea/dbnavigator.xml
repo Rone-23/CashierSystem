@@ -20,7 +20,7 @@
       <console name="Shop" type="STANDARD" schema="" session="Main"><![CDATA[select * from Articles
 SELECT * FROM Transactions
 update Articles set stock = stock - 1 where article_id = 1
-insert into Articles (name,price,stock) values ("Orange", 1.99, 500)
+insert into Articles (name,price,stock) values ('Kvaskovy chlieb', 1.15, 500)
 CREATE TABLE Transactions (
     transaction_id INTEGER PRIMARY KEY,
     transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -82,9 +82,6 @@ commit]]></console>
   <component name="DBNavigator.Project.ExecutionManager">
     <retain-sticky-names value="false" />
   </component>
-  <component name="DBNavigator.Project.FileConnectionMappingManager">
-    <mapping file-url="file://$PROJECT_DIR$/shop.db" connection-id="virtual-sqlite-connection" session-id="MAIN" current-schema="" />
-  </component>
   <component name="DBNavigator.Project.MethodExecutionManager">
     <method-browser />
     <execution-history>
@@ -113,7 +110,7 @@ commit]]></console>
           <driver-library value="" />
           <driver value="" />
           <url-type value="CUSTOM" />
-          <url value="jdbc:sqlite:C:\Users\tomas\Documents\Billa_system\shop.db" />
+          <url value="jdbc:sqlite:C:\Users\tomas\Documents\Billa_system\shop_rework.db" />
           <type value="NONE" />
           <user value="" />
           <deprecated-pwd value="" />

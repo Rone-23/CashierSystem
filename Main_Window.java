@@ -1,5 +1,6 @@
 import Assets.Assets;
 import Services.CashOut;
+import Services.ItemCountable;
 import Services.SQL_Connect;
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +28,7 @@ public class Main_Window {
 
     final String[] keypadNames = {"7", "8", "9", "4", "5", "6", "1", "2", "3", "0", "00", ","};
     private static StringBuilder amountBuilder= new StringBuilder();
-    private static int amount;
+    private static Double amount=0.0;
 
     private static final Assets as = new Assets();
     private static final SQL_Connect conn = new SQL_Connect();
@@ -103,7 +104,7 @@ public class Main_Window {
     private void vklad(){
         if (!choicePanel.getListOfItems().isEmpty()){
             displayMain.setText("");
-            conn.logToDB(cashOut.makeJSON(choicePanel.getListOfItems()),choicePanel.getListOfItems().toArray().length);
+            conn.logToDB(cashOut.makeJSON(choicePanel.getListOfItems()), 0);
 
             System.out.println(cashOut.makeJSON(choicePanel.getListOfItems()));
 
@@ -112,19 +113,23 @@ public class Main_Window {
         }
     }
     private void keypadButtonsFunction(int finalNumberIndex){
-        amount = Integer.parseInt(Integer.toString(amount) +keypadNames[finalNumberIndex]);
+        amount = (Double.parseDouble((Double.toString(amount).replaceFirst(".0","")
+                + keypadNames[finalNumberIndex])));
+
+
         displayCount.append(keypadNames[finalNumberIndex]);
+        System.out.println(amount);
     }
     private void setMnozstvo(){
-        if(amount!=0) {
+        if(amount!=0.0) {
             choicePanel.setAmountToRemove(amount);
-            amount=0;
+            amount=0.0;
             displayCount.setText("");
         }
     }
     private void openArticles(){
         displayCount.setText("");
-        amount=0;
+        amount=0.0;
         choicePanel.getMainPanel().setVisible(true);
     }
     public JTextArea getDisplayMain(){
