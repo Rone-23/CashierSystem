@@ -1,5 +1,6 @@
 import Assets.Assets;
 import Services.CashOut;
+import Services.ItemCountable;
 import Services.SQL_Connect;
 import javax.swing.*;
 import java.awt.*;
@@ -103,7 +104,7 @@ public class Main_Window {
     private void vklad(){
         if (!choicePanel.getListOfItems().isEmpty()){
             displayMain.setText("");
-            conn.logToDB(cashOut.makeJSON(choicePanel.getListOfItems()),choicePanel.getListOfItems().toArray().length);
+            conn.logToDB(cashOut.makeJSON(choicePanel.getListOfItems()), 0);
 
             System.out.println(cashOut.makeJSON(choicePanel.getListOfItems()));
 

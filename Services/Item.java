@@ -25,6 +25,8 @@ public abstract class Item {
     Double getAmount(){
         return this.amount;
     }
+    public void setTotalAmount(double totalAmountToSet){totalAmount = totalAmountToSet;}
+    public double getTotalAmount(){return totalAmount;}
     String getInfo(){return String.format("Name: %s Price: %s Amount: %s",this.name, this.price, this.amount);}
 
     protected Item[] refactor(ArrayList<Item> incomingListOfItems){

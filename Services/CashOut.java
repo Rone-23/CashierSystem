@@ -40,7 +40,6 @@ public class CashOut {
         String filePath = String.format("%s_%s-%s-%s.txt",date.split(":")[0],time.split(":")[0],time.split(":")[1],time.split(":")[2]);
         Path path = Paths.get("Receipts",filePath);
 
-
         //make array  ready to print
         ArrayList<Item> itemList = new ArrayList<>();
         HashMap<String, Item> sortedListoToPrint = new HashMap<>();
@@ -61,9 +60,13 @@ public class CashOut {
                 sortedListoToPrint.put(name,item);
             }
         }
-        System.out.println(sortedListoToPrint.values());
         Item[] finalArray = sortedListoToPrint.values().toArray(new Item[0]);
-        System.out.println(finalArray[0].getInfo());
+        double totalAmount =0;
+        for(Item item:finalArray){
+            double amount=item.getAmount();
+            totalAmount += amount;
+        }
+        finalArray[0].setTotalAmount(totalAmount);
         try{
             File receipt = new File(path.toString());
             if (receipt.createNewFile()){
