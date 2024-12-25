@@ -1,4 +1,4 @@
-package Services;
+package services;
 
 import java.util.ArrayList;
 
@@ -29,6 +29,8 @@ public abstract class Item {
     public double getTotalAmount(){return totalAmount;}
     String getInfo(){return String.format("Name: %s Price: %s Amount: %s",this.name, this.price, this.amount);}
 
+
+    //maybe delete?
     protected Item[] refactor(ArrayList<Item> incomingListOfItems){
         ArrayList<Item> finalArray = new ArrayList<>();
         for (int i = 0;i<incomingListOfItems.size();i++){

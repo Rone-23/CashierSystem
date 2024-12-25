@@ -1,4 +1,4 @@
-package Services;
+package services;
 
 import java.sql.*;
 
@@ -36,11 +36,11 @@ public class SQL_Connect {
         }
     }
 
-    public void addToStock(int quantityToSubstract, int article_id) {
+    public void addToStock(int quantityToAdd, int article_id) {
         String sql = "UPDATE Articles SET stock = stock + ? WHERE article_id = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, quantityToSubstract);
+            pstmt.setInt(1, quantityToAdd);
             pstmt.setInt(2, article_id);
                 pstmt.executeUpdate();
 
