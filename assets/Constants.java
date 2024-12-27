@@ -1,6 +1,8 @@
 package assets;
 
 public enum Constants {
+    //MAIN
+    //
     MAIN_BORDER(0.014),
     LEFT_PANEL_WIDTH(0.41),
     RIGHT_PANEL_WIDTH(0.576),
@@ -10,7 +12,7 @@ public enum Constants {
     //TOP LEFT CONST
     TOP_DISPLAY_HEIGHT(0.072),
     TOP_DISPLAY_WIDTH(1.0),
-    ARTICLE_DISPLAY_HEIGHT(0.776),
+    ARTICLE_DISPLAY_HEIGHT(0.776+0.1),
     ARTICLE_DISPLAY_WIDTH(1.0),
     TO_PAY_DISPLAY_HEIGHT(0.152),
     TO_PAY_DISPLAY_WIDTH(0.643),
@@ -37,7 +39,17 @@ public enum Constants {
     BUTTONS_FOR_USE_HEIGHT(0.2),
     BUTTONS_FOR_USE_WIDTH(0.2),
 
+    //ARTICLES
+    //
+    ARTICLE_SECTION_BUTTONS_HEIGHT(0.15),
+    ARTICLE_BUTTONS_HEIGHT(0.75),
+    ARTICLE_UTILITY_BUTTONS_HEIGHT(0.1),
 
+    //TOP PANEL
+    ARROW_WIDTH(0.6),
+
+    //BOTTOM PANEL
+    MATH_OPERATION_BUTTON_HEIGHT(0.4),
 
     ;
     private final double value;

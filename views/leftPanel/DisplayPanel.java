@@ -12,7 +12,7 @@ import java.awt.*;
 
 public class DisplayPanel {
     private final JPanel mainPanel = PanelBuilder.createPanel(new GridBagLayout());
-    private final JScrollPane topDisplay = DisplayBuilder.buildDisplay(Colors.YELLOW_DISPLAY.getColor());
+    private final JScrollPane topDisplay = DisplayBuilder.buildDisplay(Colors.GRAY.getColor());
     private final JScrollPane articleDisplay = DisplayBuilder.buildDisplay(Colors.YELLOW_DISPLAY.getColor());
 //    private final JScrollPane scrollArticleDisplay = new JScrollPane(articleDisplay);
     private final JButton buttonUp = ButtonBuilder.buildButton(Colors.DEFAULT_BUTTON.getColor(),"UP");
@@ -21,7 +21,6 @@ public class DisplayPanel {
     private final JScrollPane toPayDisplay = DisplayBuilder.buildDisplay(Colors.YELLOW_DISPLAY.getColor());
 
     public DisplayPanel(){
-//        System.out.println();
         GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
 
         //adding top display
@@ -30,7 +29,6 @@ public class DisplayPanel {
         gbc.weightx = Constants.TOP_DISPLAY_WIDTH.getValue();
         mainPanel.add(topDisplay,gbc);
 
-//        scrollArticleDisplay.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         articleDisplay.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
 

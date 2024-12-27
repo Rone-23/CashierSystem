@@ -16,11 +16,8 @@ public class KeyboardController  {
             keyboard.getButton(String.valueOf(keyName)).addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-//                topCountDisplay.append(String.valueOf(finalKeyName));
                 amountToUse.appendContent(String.valueOf(finalKeyName));
                 keyboard.updateTopCountDisplay(amountToUse.getContent());
-                displayPanel.updateToPay(amountToUse.getContent());
-                displayPanel.updateArticleDisplay(amountToUse.getContent());
 
             }
         });}

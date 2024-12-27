@@ -1,6 +1,9 @@
 import assets.Assets;
+import assets.Colors;
 import controllers.MainController;
 import utility.GridBagConstraintsBuilder;
+import utility.PanelBuilder;
+import views.ArticlesPanel;
 import views.MainPanel;
 
 import javax.swing.*;
@@ -15,30 +18,27 @@ public class Main {
 
         SwingUtilities.invokeLater(()-> {
 
+
             JFrame main_frame = new JFrame("Billa_system");
             main_frame.setSize((int)as.width,(int)as.height);
-
-            JPanel parentPanel = new JPanel(new GridBagLayout());
-            parentPanel.setBorder(null);
-            MainPanel mainPanel = new MainPanel();
-            JPanel childPanel = mainPanel.getMainPanel();
-            childPanel.setBorder(null);
-
-            GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
-            gbc.weighty=1;
-            gbc.weightx=1;
-
-            parentPanel.add(childPanel,gbc);
-            main_frame.setContentPane(parentPanel);
-            main_frame.setVisible(true);
-
+            main_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             //Logo
             Path billaLogoPath = Paths.get("Images","Billa_logo.png");
             ImageIcon billaLogo = new ImageIcon(String.valueOf(billaLogoPath));
             main_frame.setIconImage(billaLogo.getImage());
-            main_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//            main_frame.setContentPane(new Main_Window().getLayeredPane());
-            new MainController(mainPanel.getLeftPanel());
+
+            MainPanel mainPanel = new MainPanel();
+            ArticlesPanel secondPanel = new ArticlesPanel();
+
+            JLayeredPane childPanel = mainPanel.getMainPanel();
+            main_frame.add(childPanel);
+
+            GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
+            childPanel.add(secondPanel.getMainPanel(), gbc, JLayeredPane.MODAL_LAYER);
+            childPanel.setBorder(null);
+            main_frame.setVisible(true);
+
+            new MainController(mainPanel, secondPanel);
         });
 
     }

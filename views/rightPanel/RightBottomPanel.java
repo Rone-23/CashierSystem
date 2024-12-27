@@ -11,7 +11,7 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Buttons {
+public class RightBottomPanel {
     final String[] keypadNames = {};
     private final JPanel mainPanel = PanelBuilder.createPanel(new GridBagLayout());
     private final JButton[] actionButtons = new JButton[25];
@@ -44,13 +44,11 @@ public class Buttons {
             "",
     };
 
-    protected Buttons(){
+    protected RightBottomPanel(){
         GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
 
         //Making and Adding buttons
         gbc.gridwidth = 1;
-        gbc.gridy = 0;
-        gbc.gridx = 0;
         gbc.weighty = Constants.BUTTONS_FOR_USE_HEIGHT.getValue();
         gbc.weightx = Constants.BUTTONS_FOR_USE_WIDTH.getValue();
         for (int numberIndex = 0; numberIndex < 25; numberIndex++) {

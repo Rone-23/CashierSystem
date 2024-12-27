@@ -31,7 +31,7 @@ public class DisplayBuilder {
         display.setBackground(color);
         display.setEditable(false);
         display.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        display.setFont(new Font("Roboto", Font.PLAIN, 50));
+//        display.setFont(new Font("Roboto", Font.PLAIN, 50));
         display.setMargin(new Insets(0, 0, 0, 0));
         JScrollPane jScrollPane = new JScrollPane(display);
         jScrollPane.setBorder(null);

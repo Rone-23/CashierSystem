@@ -1,5 +1,7 @@
 package utility;
 
+import assets.Colors;
+
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
@@ -7,6 +9,13 @@ import java.awt.*;
 
 public class ButtonBuilder {
 
+    public static JButton buildButton(){
+        JButton jButton = new JButton();
+        jButton.setBorder(new BevelBorder(0));
+        jButton.setBackground(Colors.DEFAULT_BUTTON.getColor());
+        jButton.setForeground(Color.white);
+        return jButton;
+    }
     public static JButton buildButton(Color color){
         JButton jButton = new JButton()
 //        {
