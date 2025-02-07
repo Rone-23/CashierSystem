@@ -6,12 +6,11 @@ import views.MainPanel;
 import views.leftPanel.LeftPanel;
 import views.rightPanel.RightPanel;
 
-import javax.swing.*;
-
 public class MainController {
         LeftPanel leftPanel;
         RightPanel rightPanel;
     public MainController(MainPanel mainPanel, ArticlesPanel articlesPanel){
+
         AmountToUse amountToUse = new AmountToUse();
         this.leftPanel = mainPanel.getLeftPanel();
         this.rightPanel = mainPanel.getRightPanel();

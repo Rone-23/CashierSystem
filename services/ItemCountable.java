@@ -7,4 +7,8 @@ public class ItemCountable extends Item{
         this.price = price;
         this.amount = amount;
     }
+    public void addAmount(double amountToAdd){
+        this.amount+=amountToAdd;
+    }
+
 }

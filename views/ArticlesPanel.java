@@ -23,26 +23,29 @@ public class ArticlesPanel {
     JButton[] sectionButtons = new JButton[5];
     JButton plusButton;
     JButton minusButton;
-    JButton saerchButton;
+    JButton searchButton;
     JButton cancelButton;
     JLabel amountLabel;
+    String[] articleButtonNames;
+    String[] sectionButtonNames;
     Map<String, JButton> buttons = new HashMap<>();
-    public ArticlesPanel(){
-        this.mainPanel = PanelBuilder.createPanel(new GridBagLayout());
+    public ArticlesPanel(String[] articleButtonNames, String[] sectionButtonNames){
+        this.articleButtonNames = articleButtonNames;
+        this.sectionButtonNames = sectionButtonNames;
+        this.mainPanel = PanelBuilder.createPanel(new GridBagLayout(),Color.white,null);
         this.topPanel = PanelBuilder.createPanel(new GridBagLayout(),  new EmptyBorder(10,30,0,30));
-        this.articlePanel = PanelBuilder.createPanel(new GridBagLayout(), new EmptyBorder(10,30,0,30));
+        this.articlePanel = PanelBuilder.createPanel(new GridLayout(0,5,5,5), new EmptyBorder(10,30,0,30));
         this.bottomPanel = PanelBuilder.createPanel(new GridBagLayout(), new EmptyBorder(10,30,0,30));
 
 
         GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
-
         gbc.weighty = Constants.ARTICLE_SECTION_BUTTONS_HEIGHT.getValue();
-        makeSectionButtons();
+        makeSectionButtons(this.sectionButtonNames);
         this.mainPanel.add(this.topPanel, gbc);
 
         gbc.gridy=1;
         gbc.weighty = Constants.ARTICLE_BUTTONS_HEIGHT.getValue();
-        makeArticleButtons();
+        makeArticleButtons(this.articleButtonNames);
         this.mainPanel.add(this.articlePanel, gbc);
 
         gbc.gridy=2;
@@ -52,27 +55,7 @@ public class ArticlesPanel {
         this.mainPanel.setVisible(false);
     }
 
-    private void makeArticleButtons(){
-        GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
-
-        //Making and Adding buttons
-        gbc.gridwidth = 1;
-
-        gbc.weighty = Constants.BUTTONS_FOR_USE_HEIGHT.getValue();
-        gbc.weightx = Constants.BUTTONS_FOR_USE_WIDTH.getValue();
-        for (int numberIndex = 0; numberIndex < 25; numberIndex++) {
-            this.articleButtons[numberIndex] = ButtonBuilder.buildButton();
-            this.buttons.put("articleButton_"+numberIndex, this.articleButtons[numberIndex]);
-            this.articlePanel.add(this.articleButtons[numberIndex],gbc);
-            gbc.gridx++;
-            if ((numberIndex + 1) % 5 == 0) {
-                gbc.gridx=0;
-                gbc.gridy++;
-            }
-        }
-    }
-
-    private void makeSectionButtons(){
+    private void makeSectionButtons(String[] sectionButtonNames){
         GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
 
         gbc.weightx = Constants.ARROW_WIDTH.getValue();
@@ -83,7 +66,12 @@ public class ArticlesPanel {
         gbc.weightx = 1;
         gbc.gridx = 1;
         for(int numberIndex = 0; numberIndex<5; numberIndex++){
-            this.sectionButtons[numberIndex] = ButtonBuilder.buildButton();
+            if(numberIndex<sectionButtonNames.length){
+                this.sectionButtons[numberIndex] = ButtonBuilder.buildButton(Colors.DEFAULT_BUTTON.getColor(),sectionButtonNames[numberIndex]);
+            }
+            else {
+                this.sectionButtons[numberIndex] = ButtonBuilder.buildButton();
+            }
             this.buttons.put("sectionButton_"+numberIndex,this.sectionButtons[numberIndex]);
             this.topPanel.add(this.sectionButtons[numberIndex], gbc);
             gbc.gridx++;
@@ -94,6 +82,19 @@ public class ArticlesPanel {
         this.arrowRight = ButtonBuilder.buildButton();
         this.buttons.put("arrowRight",this.arrowRight);
         this.topPanel.add(this.arrowRight, gbc);
+    }
+
+    private void makeArticleButtons(String[] articleButtonNames){
+        GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
+
+        //Making and Adding buttons
+        for (int numberIndex = 0; numberIndex < 25; numberIndex++) {
+            if(numberIndex<articleButtonNames.length){
+                this.articleButtons[numberIndex] = ButtonBuilder.buildButton(Colors.DEFAULT_BUTTON.getColor(),articleButtonNames[numberIndex]);
+                this.buttons.put("articleButton_"+numberIndex, this.articleButtons[numberIndex]);
+                this.articlePanel.add(this.articleButtons[numberIndex]);
+            }
+        }
     }
 
     private void makeUtilityButtons(){
@@ -117,12 +118,12 @@ public class ArticlesPanel {
 
         gbc.weightx = 1;
         gbc.gridx = 3;
-        this.saerchButton = ButtonBuilder.buildButton();
-        this.buttons.put("saerchButton", this.saerchButton);
-        this.bottomPanel.add(this.saerchButton,gbc);
+        this.searchButton = ButtonBuilder.buildButton();
+        this.buttons.put("saerchButton", this.searchButton);
+        this.bottomPanel.add(this.searchButton,gbc);
 
         gbc.gridx = 4;
-        this.cancelButton = ButtonBuilder.buildButton();
+        this.cancelButton = ButtonBuilder.buildButton(Colors.RED_BUTTON.getColor());
         this.buttons.put("cancelButton", this.cancelButton);
         this.bottomPanel.add(this.cancelButton,gbc);
     }

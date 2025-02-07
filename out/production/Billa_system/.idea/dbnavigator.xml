@@ -9,6 +9,24 @@
     <value-preview-text-wrapping value="false" />
     <value-preview-pinned value="false" />
   </component>
+  <component name="DBNavigator.Project.DataExportManager">
+    <export-instructions>
+      <create-header value="true" />
+      <friendly-headers value="false" />
+      <quote-values-containing-separator value="true" />
+      <quote-all-values value="false" />
+      <value-separator value="" />
+      <begin-quote value="&quot;" />
+      <end-quote value="&quot;" />
+      <file-name value="" />
+      <file-location value="" />
+      <scope value="GLOBAL" />
+      <destination value="FILE" />
+      <format value="EXCEL" />
+      <charset value="UTF-8" />
+      <charset value="UTF-8" />
+    </export-instructions>
+  </component>
   <component name="DBNavigator.Project.DatabaseBrowserManager">
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
@@ -27,13 +45,15 @@ CREATE TABLE Transactions (
     items TEXT, -- JSON representation of items
     total_amount DECIMAL(10, 2)
 );
-
+alter table Articles add column subtype;
 commit 
 SELECT name FROM Articles WHERE article_id = 1
 SELECT stock FROM Articles where article_id = 1
 update Articles set stock = 89 where article_id = 1;
- 
-SELECT COUNT(*) FROM Articles;]]></console>
+select name from Articles ;
+SELECT COUNT(*) FROM Articles;
+
+SELECT subtype FROM Articles WHERE type = PECIVO;]]></console>
     </connection>
     <connection id="a702d7de-5ccf-4b8c-81a8-9f4c79a1aaad">
       <console name="Connection" type="STANDARD" schema="" session="Main"><![CDATA[select * from transactions
@@ -56,7 +76,7 @@ commit]]></console>
         <condition column="transactions_id" operator="=" value="" active="true" />
       </filter>
     </filter-actions>
-    <filter-actions connection-id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5" dataset="main.sqlite_sequence" active-filter-id="78728dea-3405-48c7-81ad-0fe1d9e2715e">
+    <filter-actions connection-id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5" dataset="main.sqlite_sequence" active-filter-id="EMPTY_FILTER">
       <filter id="78728dea-3405-48c7-81ad-0fe1d9e2715e" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
         <condition column="name" operator="=" value="" active="true" />
       </filter>
@@ -66,12 +86,8 @@ commit]]></console>
         <condition column="article_id" operator="=" value="" active="true" />
       </filter>
     </filter-actions>
-    <filter-actions connection-id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5" dataset="main.Transactions" active-filter-id="d55b2006-ddd6-4d2b-a4e6-51f3c124bfa3">
-      <filter id="d55b2006-ddd6-4d2b-a4e6-51f3c124bfa3" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
-        <condition column="transaction_id" operator="=" value="" active="true" />
-      </filter>
-    </filter-actions>
-    <filter-actions connection-id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5" dataset="main.Articles" active-filter-id="ca1cd842-f94a-49ba-871d-44ecb48391b9">
+    <filter-actions connection-id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5" dataset="main.Transactions" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5" dataset="main.Articles" active-filter-id="EMPTY_FILTER">
       <filter id="ca1cd842-f94a-49ba-871d-44ecb48391b9" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
         <condition column="article_id" operator="=" value="" active="true" />
       </filter>

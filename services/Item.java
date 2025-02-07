@@ -1,50 +1,49 @@
 package services;
 
-import java.util.ArrayList;
+import java.util.Objects;
 
 public abstract class Item {
-    String name;
-    Double price,amount;
-    static double totalAmount;
+    protected String name;
+    protected Double price,amount;
+    private static double totalAmount;
+    public Item(){
+        //TODO: Remake so it shows how many items went through not how many types went through
+        totalAmount++;
+    }
 
-    void setName(String name){
+    protected void setName(String name){
         this.name=name;
     }
-    void setPrice(double price){
+    protected void setPrice(double price){
         this.price=price;
     }
-    void setAmount(double amount){
+    protected void setAmount(double amount){
         this.amount=amount;
     }
-    String getName(){
+    public String getName(){
         return this.name;
     }
-    Double getPrice(){
+    public Double getPrice(){
         return this.price;
     }
-    Double getAmount(){
+    public Double getAmount(){
         return this.amount;
     }
-    public void setTotalAmount(double totalAmountToSet){totalAmount = totalAmountToSet;}
-    public double getTotalAmount(){return totalAmount;}
+    public double getTotalAmount(){return totalAmount; }
+    public void setTotalAmountZero(){totalAmount = 0;}
     String getInfo(){return String.format("Name: %s Price: %s Amount: %s",this.name, this.price, this.amount);}
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Item item = (Item) obj;
+        return Objects.equals(this.name, item.name);
+    }
 
-    //maybe delete?
-    protected Item[] refactor(ArrayList<Item> incomingListOfItems){
-        ArrayList<Item> finalArray = new ArrayList<>();
-        for (int i = 0;i<incomingListOfItems.size();i++){
-            for (int j = 1; j<incomingListOfItems.size();j++){
-                if (incomingListOfItems.get(i).getName().equals(incomingListOfItems.get(j).getName())){
-                    this.setName(incomingListOfItems.get(i).getName());
-                    this.setPrice(incomingListOfItems.get(i).getPrice());
-                    this.setAmount(incomingListOfItems.get(i).getAmount()+incomingListOfItems.get(j).getAmount());
-                    incomingListOfItems.remove(j);
-                    finalArray.add(this);
-                }
-            }
-
-        }
-        return finalArray.toArray(new Item[finalArray.size()]);
+    // Override hashCode() to ensure consistency with equals()
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.name);
     }
 }
