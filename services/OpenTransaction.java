@@ -9,17 +9,18 @@ public class OpenTransaction {
     private static int transactionID;
     private final LocalDateTime  transactionDateTime;
     private final Map<String,Item> itemsInTransaction= new HashMap<>();
-    private final SQL_Connect sql;
     private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-    public OpenTransaction( SQL_Connect sql){
+    //day is stored using sql.getLastTimeStamp() and split it into day ("dd-MM-yyyy HH:mm:ss")
+    public OpenTransaction(int day ){
 
-        this.sql = sql;
         this.transactionDateTime = LocalDateTime.now();
         this.transactionDateTime.format(dtf);
 
-        if(Integer.parseInt(this.sql.getLastTimeStamp().split(" ")[0].split("-")[2])==this.transactionDateTime.getDayOfMonth()){
+        try{if(day==this.transactionDateTime.getDayOfMonth()){
             transactionID++;
         }else{
+            transactionID = 0;
+        }}catch (NullPointerException e){
             transactionID = 0;
         }
     }
@@ -31,9 +32,10 @@ public class OpenTransaction {
             ItemCountable itemCountable = (ItemCountable) this.itemsInTransaction.get(item.getName());
             itemCountable.addAmount(item.getAmount());
         }else {
-            ItemUncountable itemUncountable = (ItemUncountable) item;
+            ItemUncountable itemUncountable = (ItemUncountable) this.itemsInTransaction.get(item.getName());
+            ItemUncountable itemUncountableToAdd = (ItemUncountable) item;
+            itemUncountable.addWeight(itemUncountableToAdd.getWeight());
 
-            //TODO: item. add vaha to list
         }
     }
 
@@ -42,9 +44,4 @@ public class OpenTransaction {
     public String getTransactionDateTime(){return this.transactionDateTime.format(this.dtf); }
 
     public int getTransactionID(){return transactionID;}
-
-
-
-    //TODO: Make transaction
-    //TODO: Create receipt
 }

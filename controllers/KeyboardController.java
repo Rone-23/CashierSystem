@@ -1,9 +1,8 @@
 package controllers;
-import services.display.AmountToUse;
+import controllers.display.AmountToUse;
 import views.leftPanel.DisplayPanel;
 import views.leftPanel.Keyboard;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

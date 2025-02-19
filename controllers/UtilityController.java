@@ -1,15 +1,17 @@
 package controllers;
 
-import services.display.AmountToUse;
+import controllers.display.AmountToUse;
+import services.OpenTransaction;
+import services.SQL_Connect;
 import views.leftPanel.Keyboard;
 import views.leftPanel.Utility;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class UtilityController {
-    public UtilityController(Keyboard keyboard, Utility utility, AmountToUse amountToUse){
+    public UtilityController(Keyboard keyboard, Utility utility, AmountToUse amountToUse,  OpenTransaction openTransaction){
+        MakeTransaction makeTransaction = new MakeTransaction();
 
         utility.getButton("<-BKSP").addActionListener(new ActionListener() {
             @Override
@@ -24,6 +26,14 @@ public class UtilityController {
             public void actionPerformed(ActionEvent e) {
                  amountToUse.clearContent();
                 keyboard.updateTopCountDisplay(amountToUse.getContent());
+            }
+        });
+        //TODO:temporary
+        utility.getButton("Tlač Dane").addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                makeTransaction.makeTransaction(openTransaction);
+
             }
         });
     }

@@ -14,7 +14,6 @@ public class TopRightController {
         mainPanel.getRightPanel().getRightTopPanel().getArticleButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                System.out.println("ad");
                 articlesPanel.setVisible(true);
                 mainPanel.setVisible(false);
             }
