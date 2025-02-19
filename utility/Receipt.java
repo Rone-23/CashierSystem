@@ -1,6 +1,7 @@
 package utility;
 
 import services.Item;
+import services.ItemUncountable;
 
 import java.util.ArrayList;
 
@@ -17,6 +18,7 @@ public class Receipt {
     }
 
     public static StringBuilder makeReceipt(Item[] itemArrayList, String dateTime, int transactionID){
+        receiptBuilder.setLength(0);
         double totalAmount = 0;
         //TODO: Make c bloku counting work now it shows only 1
         //header
@@ -36,8 +38,11 @@ public class Receipt {
 //
 //                item.setName(item.getName() + " ");
 //            }
-
-            receiptBuilder.append(String.format("%s   %.1fks   %9.2f B\n", item.getName(), item.getAmount(), item.getPrice() * item.getAmount()));
+            if (item.getClass() == ItemUncountable.class){
+                receiptBuilder.append(String.format("%s   %.3fkg   %9.2f B\n", item.getName(), item.getAmount(), item.getPrice() * item.getAmount()));
+            }else{
+                receiptBuilder.append(String.format("%s   %sks   %9.2f B\n", item.getName(), item.getAmount(), item.getPrice() * item.getAmount()));
+            }
             totalAmount += item.getPrice() * item.getAmount();
         }
         receiptBuilder.append("----------------------------------------\n");

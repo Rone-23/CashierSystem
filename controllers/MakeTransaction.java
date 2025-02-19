@@ -1,23 +1,28 @@
 package controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import services.Item;
 import services.OpenTransaction;
 import services.SQL_Connect;
-import utility.JSON;
 import utility.Receipt;
 
 public class MakeTransaction {
-    SQL_Connect sql;
-    public MakeTransaction(SQL_Connect sql, OpenTransaction openTransaction ){
-        this.sql = sql;
+    public MakeTransaction(){
+    }
+    public void makeTransaction( OpenTransaction openTransaction ){
+        ObjectMapper objectMapper = new ObjectMapper();
         Item[] itemArray=openTransaction.getItemsInTransaction().values().toArray(new Item[0]);
-        String itemsJSON =JSON.makeJSON(openTransaction.getItemsInTransaction());
-        sql.logToDB(itemsJSON, itemArray.length);
-        itemArray[0].setTotalAmountZero();
+        for (Item item : itemArray){
+            SQL_Connect.getInstance().removeFromStock(item.getAmount(),item.getName());
+        }
+        try {
+            SQL_Connect.getInstance().logToDB(objectMapper.writeValueAsString(openTransaction.getItemsInTransaction()), itemArray.length, openTransaction.getTransactionID());
+        }catch (JsonProcessingException e){
+            System.out.println(e);
+        }
+        Item.setTotalAmountZero();
         Receipt.makeReceipt(itemArray, openTransaction.getTransactionDateTime(),openTransaction.getTransactionID());
     }
 
-
-
-    //TODO: Remove from article stock
 }

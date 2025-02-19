@@ -1,7 +1,12 @@
 package services;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import utility.ItemDeserializer;
+
 import java.util.Objects;
 
+@JsonDeserialize(using = ItemDeserializer.class)
 public abstract class Item {
     protected String name;
     protected Double price,amount;
@@ -30,7 +35,7 @@ public abstract class Item {
         return this.amount;
     }
     public double getTotalAmount(){return totalAmount; }
-    public void setTotalAmountZero(){totalAmount = 0;}
+    public static void setTotalAmountZero(){totalAmount = 0;}
     String getInfo(){return String.format("Name: %s Price: %s Amount: %s",this.name, this.price, this.amount);}
 
     @Override

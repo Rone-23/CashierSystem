@@ -1,4 +1,4 @@
-package services.display;
+package controllers.display;
 
 public class AmountToUse {
     private final StringBuilder content = new StringBuilder();

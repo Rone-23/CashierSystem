@@ -91,6 +91,7 @@ public class ArticlesPanel {
         for (int numberIndex = 0; numberIndex < 25; numberIndex++) {
             if(numberIndex<articleButtonNames.length){
                 this.articleButtons[numberIndex] = ButtonBuilder.buildButton(Colors.DEFAULT_BUTTON.getColor(),articleButtonNames[numberIndex]);
+                this.articleButtons[numberIndex].setName("articleButton_"+numberIndex);
                 this.buttons.put("articleButton_"+numberIndex, this.articleButtons[numberIndex]);
                 this.articlePanel.add(this.articleButtons[numberIndex]);
             }

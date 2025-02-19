@@ -8,31 +8,38 @@ import java.util.Set;
 
 public class SQL_Connect {
     private Connection conn;
+    static SQL_Connect instance;
 
-    public SQL_Connect() {
+    private SQL_Connect() {
+        connect();
+    }
+
+    public static SQL_Connect getInstance(){
+        if(instance == null){
+            instance = new SQL_Connect();
+        }
+        return instance;
+    }
+
+    public void connect(){
         try {
-            //make connection to shop.db
             Class.forName("org.sqlite.JDBC");
-
-            //url where db is located
             String url = "jdbc:sqlite:shop_rework.db";
-
             conn = DriverManager.getConnection(url);
             try (Statement stmt = conn.createStatement()) {
                 stmt.execute("PRAGMA busy_timeout = 5000;"); //wait time 5s
             }
-
         } catch (Exception e) {
             System.out.println("Error unable to establish connection: " + e.getMessage());
         }
     }
 
-    public void removeFromStock(Double quantityToSubtract, int article_id) {
-        String sql = "UPDATE Articles SET stock = stock - ? WHERE article_id = ?";
+    public void removeFromStock(double quantityToSubtract, String name) {
+        String sql = "UPDATE Articles SET stock = stock - ? WHERE name = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, quantityToSubtract.intValue());
-            pstmt.setInt(2, article_id);
+            pstmt.setDouble(1, quantityToSubtract);
+            pstmt.setString(2, name);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -40,12 +47,12 @@ public class SQL_Connect {
         }
     }
 
-    public void addToStock(int quantityToAdd, int article_id) {
-        String sql = "UPDATE Articles SET stock = stock + ? WHERE article_id = ?";
+    public void addToStock(double quantityToAdd, String name) {
+        String sql = "UPDATE Articles SET stock = stock + ? WHERE name = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, quantityToAdd);
-            pstmt.setInt(2, article_id);
+            pstmt.setDouble(1, quantityToAdd);
+            pstmt.setString(2, name);
                 pstmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -53,13 +60,13 @@ public class SQL_Connect {
         }
     }
 
-    public void addArticle(String nameOfArticle, double price, int initialStock, String type, String subtype){
+    public void addArticle(String nameOfArticle, double price, double initialStock, String type, String subtype){
         String sql = "INSERT INTO Articles (name,price,stock,type,subtype) VALUES (?,?,?,?,?)";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)){
             pstmt.setString(1,nameOfArticle);
             pstmt.setDouble(2, price);
-            pstmt.setInt(3, initialStock);
+            pstmt.setDouble(3, initialStock);
             pstmt.setString(4, type);
             pstmt.setString(5, subtype);
             pstmt.executeUpdate();
@@ -154,21 +161,17 @@ public class SQL_Connect {
         return 0;
     }
 
-    public String getString(int article_id){
+    public String getString(int article_id) throws SQLException{
         String sql = "SELECT name FROM Articles WHERE article_id = ?";
 
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, article_id);
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()){
                 return rs.getString("name");
             }
-
-        } catch (SQLException e) {
-            System.out.println("Error getting name : " + e.getMessage());
-        }
-        return null;
+            throw new RuntimeException("Cant find such id");
     }
 
     public int getRows(String tableName){
@@ -187,16 +190,33 @@ public class SQL_Connect {
         return 0;
     }
 
-    public void logToDB(String itemList, double totalAmount){
-        String sql =  "INSERT INTO Transactions (items, total_amount) VALUES (?, ?)";
+    public void logToDB(String itemList, double totalAmount,int transactionId){
+        String sql =  "INSERT INTO Transactions (items, total_amount, transaction_dayid) VALUES (?, ?, ?)";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, itemList);
             pstmt.setDouble(2, totalAmount);
+            pstmt.setInt(3, transactionId);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public String getLogFromDB(String date, int numberOfReceipt){
+        String sql =  "SELECT items FROM Transactions WHERE transaction_dayid = ? and  datetime(?)";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setDouble(1, numberOfReceipt);
+            pstmt.setString(2, date);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()){
+                return rs.getString("items");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
     }
 
     public String getLastTimeStamp(){

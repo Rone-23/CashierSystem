@@ -19,7 +19,7 @@ public class Main {
         SwingUtilities.invokeLater(()-> {
 
 
-            JFrame main_frame = new JFrame("Billa_system");
+            JFrame main_frame = new JFrame("Cashier system");
             main_frame.setSize((int)width,(int)height);
             main_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             //Logo
@@ -27,12 +27,8 @@ public class Main {
             ImageIcon billaLogo = new ImageIcon(String.valueOf(billaLogoPath));
             main_frame.setIconImage(billaLogo.getImage());
 
-            //initialize database\
-            //TODO: Make intializer class containing window creation sql etc..
-            SQL_Connect sql = new SQL_Connect();
             try {
-                System.out.println(sql.getPrice(1));
-                for(String s : sql.getTypes())
+                for(String s : SQL_Connect.getInstance().getTypes())
                     System.out.println(s);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -40,9 +36,8 @@ public class Main {
             MainPanel mainPanel = new MainPanel();
             ArticlesPanel secondPanel = null;
             try {
-                secondPanel = new ArticlesPanel(sql.getNames("BEZNE-PECIVO"), sql.getTypes());
-//                secondPanel = new ArticlesPanel(sql.getSubTypes("PECIVO"), sql.getTypes());
-
+                secondPanel = new ArticlesPanel(SQL_Connect.getInstance().getNames("BEZNE-PECIVO"),
+                        SQL_Connect.getInstance().getTypes());
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -57,6 +52,5 @@ public class Main {
 
             new MainController(mainPanel, secondPanel);
         });
-
     }
 }
