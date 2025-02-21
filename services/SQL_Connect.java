@@ -24,7 +24,7 @@ public class SQL_Connect {
     public void connect(){
         try {
             Class.forName("org.sqlite.JDBC");
-            String url = "jdbc:sqlite:shop_rework.db";
+            String url = "jdbc:sqlite:shop.db";
             conn = DriverManager.getConnection(url);
             try (Statement stmt = conn.createStatement()) {
                 stmt.execute("PRAGMA busy_timeout = 5000;"); //wait time 5s
@@ -145,11 +145,27 @@ public class SQL_Connect {
         }
     }
 
-    public double getPrice(int article_id){
+    public double getPriceById(int articleId){
         String sql = "SELECT price FROM Articles WHERE article_id = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)){
-            pstmt.setInt(1,article_id);
+            pstmt.setInt(1,articleId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()){
+                return rs.getDouble("price");
+            }
+        }
+        catch (SQLException e){
+            System.out.println("Error getting price: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    public double getPriceByName(String articleName){
+        String sql = "SELECT price FROM Articles WHERE name = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)){
+            pstmt.setString(1,articleName);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()){
                 return rs.getDouble("price");

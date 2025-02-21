@@ -38,7 +38,7 @@
       <console name="Shop" type="STANDARD" schema="" session="Main"><![CDATA[select * from Articles
 SELECT * FROM Transactions
 update Articles set stock = stock - 1 where article_id = 1
-insert into Articles (name,price,stock,type,subtype) values ('VRKOC-SOL', 0.68, 500.00,'PECIVO','BEZNE-PECIVO')
+insert into Articles (name,price,stock,type,subtype) values ('SVETLA-BULKA', 0.48, 500.00,'PECIVO','BEZNE-PECIVO')
 insert into Articles (name,price,stock,type,subtype) values ('POMARANC', 0.72, 500.001,'OVOCIE','CITRUSY')
 insert into Transactions (transaction_date,items, total_amount) values ("2024-11-15_11-21-40", 'asd,asd', 2)
 CREATE TABLE Transactions (
@@ -85,7 +85,7 @@ commit]]></console>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files>
-      <object connection-id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5" object-ref="schemas/main/tables/Transactions" />
+      <object connection-id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5" object-ref="consoles/Shop" />
       <object connection-id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5" object-ref="schemas/main/tables/Articles" />
     </open-files>
   </component>
@@ -147,7 +147,7 @@ commit]]></console>
           <driver-library value="" />
           <driver value="" />
           <url-type value="CUSTOM" />
-          <url value="jdbc:sqlite:C:\Users\tomas\Documents\Billa_system\shop_rework.db" />
+          <url value="jdbc:sqlite:C:\Users\tomas\Documents\Billa_system\shop.db" />
           <type value="NONE" />
           <user value="" />
           <deprecated-pwd value="" />

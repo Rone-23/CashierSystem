@@ -26,13 +26,6 @@ public class Main {
             Path billaLogoPath = Paths.get("Images","Billa_logo.png");
             ImageIcon billaLogo = new ImageIcon(String.valueOf(billaLogoPath));
             main_frame.setIconImage(billaLogo.getImage());
-
-            try {
-                for(String s : SQL_Connect.getInstance().getTypes())
-                    System.out.println(s);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
             MainPanel mainPanel = new MainPanel();
             ArticlesPanel secondPanel = null;
             try {
