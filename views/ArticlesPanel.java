@@ -12,6 +12,8 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.Assert.assertTrue;
+
 public class ArticlesPanel {
     JPanel mainPanel;
     JPanel topPanel;
@@ -68,6 +70,7 @@ public class ArticlesPanel {
         for(int numberIndex = 0; numberIndex<5; numberIndex++){
             if(numberIndex<sectionButtonNames.length){
                 this.sectionButtons[numberIndex] = ButtonBuilder.buildButton(Colors.DEFAULT_BUTTON.getColor(),sectionButtonNames[numberIndex]);
+                this.sectionButtons[numberIndex].setName("sectionButton_"+numberIndex);
             }
             else {
                 this.sectionButtons[numberIndex] = ButtonBuilder.buildButton();
@@ -84,17 +87,26 @@ public class ArticlesPanel {
         this.topPanel.add(this.arrowRight, gbc);
     }
 
-    private void makeArticleButtons(String[] articleButtonNames){
+    public void makeArticleButtons(String[] articleButtonNames){
         GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
 
         //Making and Adding buttons
         for (int numberIndex = 0; numberIndex < 25; numberIndex++) {
-            if(numberIndex<articleButtonNames.length){
+//            if(numberIndex<articleButtonNames.length){
+//                this.articleButtons[numberIndex] = ButtonBuilder.buildButton(Colors.DEFAULT_BUTTON.getColor(),articleButtonNames[numberIndex]);
+//                this.articleButtons[numberIndex].setName("articleButton_"+numberIndex);
+//                this.buttons.put("articleButton_"+numberIndex, this.articleButtons[numberIndex]);
+//                this.articlePanel.add(this.articleButtons[numberIndex]);
+//            }
+            if (articleButtonNames.length>numberIndex) {
                 this.articleButtons[numberIndex] = ButtonBuilder.buildButton(Colors.DEFAULT_BUTTON.getColor(),articleButtonNames[numberIndex]);
-                this.articleButtons[numberIndex].setName("articleButton_"+numberIndex);
-                this.buttons.put("articleButton_"+numberIndex, this.articleButtons[numberIndex]);
-                this.articlePanel.add(this.articleButtons[numberIndex]);
+            }else {
+                this.articleButtons[numberIndex] = ButtonBuilder.buildButtonBlank();
             }
+            this.articleButtons[numberIndex].setName("articleButton_"+numberIndex);
+            this.buttons.put("articleButton_"+numberIndex, this.articleButtons[numberIndex]);
+            this.articlePanel.add(this.articleButtons[numberIndex]);
+
         }
     }
 
@@ -133,5 +145,59 @@ public class ArticlesPanel {
 
     public void setVisible(Boolean condition){this.mainPanel.setVisible(condition);}
 
+    public void updateArticleButtons(String[] buttonNames){
+        //TODO: update the Map buttons acroding to button names
+        int index = 0;
+        for(JButton button : this.articleButtons) {
+            if (button.getName() != null && buttonNames.length > index)
+            {
+                button.setText(buttonNames[index]);
+                button.setEnabled(true);
+                button.setBackground(Colors.DEFAULT_BUTTON.getColor());
+                index++;
+            }else{
+                button.setText("");
+                button.setEnabled(false);
+                button.setBackground(Colors.GRAY.getColor());
+                button.setName("articleButton" + index);
+            }
+            //            if (button.getName() != null && button.getName().contains("articleButton") && buttonNames.length > index) {
+//                button.setText(buttonNames[index]);
+//                button.setEnabled(true);
+//                button.setBackground(Colors.DEFAULT_BUTTON.getColor());
+//                index++;
+//            } else if(button.getName() != null && button.getName().contains("articleButton")) {
+//                button.setText("");
+//                button.setEnabled(false);
+//                button.setBackground(Colors.GRAY.getColor());
+////                button.setName("articleButton" + index);
+//            }
+        }
+//            try{
+//                if (button.getName() != null && button.getName().contains("articleButton")) {
+//                    button.setText(buttonNames[index]);
+//                    button.setName("articleButton" + index);
+//                    index++;
+//                }else{
+//
+//                }
+//
+////                else if (){
+////                    button = ButtonBuilder.buildButton(Colors.DEFAULT_BUTTON.getColor(),buttonNames[index]);
+////                    button.setName("articleButton" + index);
+////                    this.buttons.put(buttonNames[index],button);
+////                    this.articlePanel.add(button);
+////                    this.articlePanel.revalidate();
+////                    index++;
+////                }
+//            }catch (ArrayIndexOutOfBoundsException e){
+//                this.articlePanel.remove(button);
+//                this.buttons.remove(button.getName());
+//                this.articlePanel.revalidate();
+//            }
+//        }
+    }
+
     public Map<String, JButton> getButtons(){ return this.buttons;}
+
 }

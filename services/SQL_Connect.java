@@ -93,7 +93,7 @@ public class SQL_Connect {
     }
 
     public String[] getNames(String subtype) throws SQLException {
-        String sql = "SELECT name FROM Articles WHERE subtype = ?";
+        String sql = "SELECT name FROM Articles WHERE type = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1,subtype);

@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class UtilityController {
-    public UtilityController(Keyboard keyboard, Utility utility, AmountToUse amountToUse,  OpenTransaction openTransaction){
+    public UtilityController(Keyboard keyboard, Utility utility, AmountToUse amountToUse){
         MakeTransaction makeTransaction = new MakeTransaction();
 
         utility.getButton("<-BKSP").addActionListener(new ActionListener() {
@@ -32,8 +32,7 @@ public class UtilityController {
         utility.getButton("Tlač Dane").addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                makeTransaction.makeTransaction(openTransaction);
-
+                MainController.makeTransaction();
             }
         });
     }

@@ -1,6 +1,7 @@
 package utility;
 
 import assets.Colors;
+import com.fasterxml.jackson.databind.ser.impl.FailingSerializer;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -9,6 +10,7 @@ import java.awt.*;
 
 public class ButtonBuilder {
 
+    //TODO: maybe make it to .setText to the same value as .setText
     public static JButton buildButton(){
         JButton jButton = new JButton();
         jButton.setBorder(new BevelBorder(0));
@@ -51,6 +53,15 @@ public class ButtonBuilder {
         jButton.setBackground(color);
         jButton.setForeground(Color.white);
         jButton.setBorder(border);
+        return jButton;
+    }
+
+    public static JButton buildButtonBlank(){
+        JButton jButton = new JButton();
+        jButton.setBorder(new BevelBorder(0));
+        jButton.setBackground(Colors.GRAY.getColor());
+        jButton.setForeground(Color.white);
+        jButton.setEnabled(false);
         return jButton;
     }
 }

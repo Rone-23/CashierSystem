@@ -9,14 +9,15 @@ public class OpenTransaction {
     private static int transactionID;
     private final LocalDateTime  transactionDateTime;
     private final Map<String,Item> itemsInTransaction= new HashMap<>();
-    private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+    private static Item latestItem;
     //day is stored using sql.getLastTimeStamp() and split it into day ("dd-MM-yyyy HH:mm:ss")
-    public OpenTransaction(int day ){
+    public OpenTransaction(int lastTransactionDay ){
 
         this.transactionDateTime = LocalDateTime.now();
-        this.transactionDateTime.format(dtf);
+        this.transactionDateTime.format(dateTimeFormatter);
 
-        try{if(day==this.transactionDateTime.getDayOfMonth()){
+        try{if(lastTransactionDay==this.transactionDateTime.getDayOfMonth()){
             transactionID++;
         }else{
             transactionID = 0;
@@ -26,6 +27,7 @@ public class OpenTransaction {
     }
 
     public void addItem(Item item){
+        latestItem = item;
         if (!this.itemsInTransaction.containsValue(item)){
             this.itemsInTransaction.put(item.getName(),item);
         }else if(this.itemsInTransaction.containsValue(item) && item.getClass()==ItemCountable.class){
@@ -35,13 +37,14 @@ public class OpenTransaction {
             ItemUncountable itemUncountable = (ItemUncountable) this.itemsInTransaction.get(item.getName());
             ItemUncountable itemUncountableToAdd = (ItemUncountable) item;
             itemUncountable.addWeight(itemUncountableToAdd.getWeight());
-
         }
     }
 
     public Map<String,Item> getItemsInTransaction(){return this.itemsInTransaction; }
 
-    public String getTransactionDateTime(){return this.transactionDateTime.format(this.dtf); }
+    public static Item getLatestItem(){return latestItem;}
+
+    public String getTransactionDateTime(){return this.transactionDateTime.format(this.dateTimeFormatter); }
 
     public int getTransactionID(){return transactionID;}
 }

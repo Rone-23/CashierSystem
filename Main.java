@@ -29,7 +29,7 @@ public class Main {
             MainPanel mainPanel = new MainPanel();
             ArticlesPanel secondPanel = null;
             try {
-                secondPanel = new ArticlesPanel(SQL_Connect.getInstance().getNames("BEZNE-PECIVO"),
+                secondPanel = new ArticlesPanel(SQL_Connect.getInstance().getNames("PECIVO"),
                         SQL_Connect.getInstance().getTypes());
             } catch (SQLException e) {
                 throw new RuntimeException(e);
