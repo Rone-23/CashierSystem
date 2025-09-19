@@ -1,8 +1,6 @@
 package controllers;
 
-import controllers.display.AmountToUse;
-import services.OpenTransaction;
-import services.SQL_Connect;
+import controllers.display.DisplayAmountController;
 import views.leftPanel.Keyboard;
 import views.leftPanel.Utility;
 
@@ -10,22 +8,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class UtilityController {
-    public UtilityController(Keyboard keyboard, Utility utility, AmountToUse amountToUse){
+    public UtilityController(Keyboard keyboard, Utility utility, DisplayAmountController displayAmountController){
         MakeTransaction makeTransaction = new MakeTransaction();
 
         utility.getButton("<-BKSP").addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                amountToUse.removeLast();
-                keyboard.updateTopCountDisplay(amountToUse.getContent());
+                displayAmountController.removeLast();
+                keyboard.updateTopCountDisplay(displayAmountController.getContent());
             }
         });
 
         utility.getButton("C/ Zmaza").addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                 amountToUse.clearContent();
-                keyboard.updateTopCountDisplay(amountToUse.getContent());
+                 displayAmountController.clearContent();
+                keyboard.updateTopCountDisplay(displayAmountController.getContent());
             }
         });
         //TODO:temporary

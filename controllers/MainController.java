@@ -1,7 +1,7 @@
 package controllers;
 
-import controllers.display.AmountToUse;
-import controllers.display.ItemsToSee;
+import controllers.display.DisplayAmountController;
+import controllers.display.DisplayItemsController;
 import services.Item;
 import services.OpenTransaction;
 import services.SQL_Connect;
@@ -15,14 +15,15 @@ public class MainController {
     private static final MakeTransaction makeTransaction = new MakeTransaction();
     public MainController(MainPanel mainPanel, ArticlesPanel articlesPanel){
         //TODO: This OpenTransaction.class need to be created every time that you start transaction not to make it here in main controller
-       createOpenTransaction();
-        AmountToUse amountToUse = new AmountToUse();
-        ItemsToSee itemsToSee = new ItemsToSee();
         LeftPanel leftPanel = mainPanel.getLeftPanel();
+        DisplayAmountController displayAmountController = new DisplayAmountController();
+        DisplayItemsController displayItemsController = new DisplayItemsController(leftPanel.getDisplayPanel());
+        OpenTransaction.addObserver(displayItemsController);
+        createOpenTransaction();
         //TODO: Right panel should implement all the buttons like vklad vratka etc
         RightPanel rightPanel = mainPanel.getRightPanel();
-        new KeyboardController(leftPanel.getKeyboardPanel().getKeyboard(), leftPanel.getDisplayPanel(), amountToUse);
-        new UtilityController(leftPanel.getKeyboardPanel().getKeyboard(), leftPanel.getKeyboardPanel().getUtility(), amountToUse);
+        new KeyboardController(leftPanel.getKeyboardPanel().getKeyboard(), leftPanel.getDisplayPanel(), displayAmountController);
+        new UtilityController(leftPanel.getKeyboardPanel().getKeyboard(), leftPanel.getKeyboardPanel().getUtility(), displayAmountController);
         new TopRightController(mainPanel,articlesPanel);
         new ArticlePanelController(mainPanel,articlesPanel);
     }

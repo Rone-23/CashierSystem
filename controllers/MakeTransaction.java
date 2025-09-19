@@ -23,6 +23,7 @@ public class MakeTransaction {
         }
         Item.setTotalAmountZero();
         Receipt.makeReceipt(itemArray, openTransaction.getTransactionDateTime(),openTransaction.getTransactionID());
+        openTransaction.openTransactionDestroy();
     }
 
 }

@@ -1,6 +1,6 @@
 package controllers.display;
 
-public class AmountToUse {
+public class DisplayAmountController {
     private final StringBuilder content = new StringBuilder();
 
     public String getContent() {

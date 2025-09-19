@@ -1,8 +1,7 @@
 package controllers;
 
-import controllers.display.ItemsToSee;
+import controllers.display.DisplayItemsController;
 import services.ItemCountable;
-import services.OpenTransaction;
 import services.SQL_Connect;
 import views.ArticlesPanel;
 import views.MainPanel;
@@ -47,7 +46,6 @@ public class ArticlePanelController {
                                 SQL_Connect.getInstance().getPriceByName(e.getActionCommand()),
                                 1.0);
                         MainController.addItem(item);
-                        ItemsToSee.updateDisplay(item);
                     }
                 });
             }

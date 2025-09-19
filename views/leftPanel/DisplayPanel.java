@@ -71,7 +71,13 @@ public class DisplayPanel {
 
     public void updateArticleDisplay(String textToUpdate){
         JTextArea display = (JTextArea) this.articleDisplay.getViewport().getView();
-        display.setText(textToUpdate);
+        String text = display.getText();
+        display.setText(String.join("\n",text,textToUpdate));
+    }
+
+    public void clearArticleDisplay(){
+        JTextArea display = (JTextArea) this.articleDisplay.getViewport().getView();
+        display.setText("");
     }
 
     public void updateToPay(String textToUpdate){
