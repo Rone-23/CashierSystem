@@ -1,5 +1,7 @@
 package utility;
 
+import viewsRework.GP.Display;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.MutableAttributeSet;
@@ -8,9 +10,6 @@ import javax.swing.text.StyleConstants;
 import java.awt.*;
 
 public class DisplayBuilder {
-    JTextArea display;
-    JScrollPane jScrollPane;
-    //add custom graphics
 
 //    public static JTextArea buildDisplay(Color color){
 //        JTextArea display = new JTextArea();
@@ -27,7 +26,7 @@ public class DisplayBuilder {
 //    }
 
     public static JScrollPane buildDisplay (Color color){
-        JTextArea display = new JTextArea();
+        Display display = new Display();
         display.setBackground(color);
         display.setEditable(false);
         display.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);

@@ -9,7 +9,11 @@ public enum Colors {
     YELLOW_DISPLAY("#ECD996"),
     YELLOW_BUTTON("#E7C328"),
     RED_BUTTON("#F03320"),
-    GREEN_STATUS("#398C5C");
+    GREEN_STATUS("#398C5C"),
+    BLACK_TEXT("#43484E"),
+    BACKGROUND_WHITE("#FAFCFE"),
+    LIGHT_BLUE("#DFE8F4"),
+    DEFAULT_BLUE("#87B5F5");
 
     //darkmode
 //    DEFAULT_BUTTON("#3B4A54"),

@@ -1,0 +1,22 @@
+<component name="libraryTable">
+  <library name="ch.ledcom.assertj.extensions" type="repository">
+    <properties maven-id="ch.ledcom.assertj-extensions:assertj-extensions:1.1" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/assertj-extensions-1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/assertj-core-1.6.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jsr305-3.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/logback-classic-1.1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/logback-core-1.1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.7.6.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/lib/assertj-extensions-1.1-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/assertj-core-1.6.1-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jsr305-3.0.0-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/logback-classic-1.1.2-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/logback-core-1.1.2-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.7.6-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>
