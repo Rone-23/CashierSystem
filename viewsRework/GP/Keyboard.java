@@ -1,9 +1,7 @@
 package viewsRework.GP;
 
 import assets.Colors;
-import assets.Constants;
 import utility.ButtonBuilder;
-import utility.DisplayBuilder;
 import utility.GridBagConstraintsBuilder;
 import utility.PanelBuilder;
 
@@ -12,27 +10,34 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Keyboard extends JComponent{
+public class Keyboard extends JPanel{
     final String[] buttonNames = {"7", "8", "9", "4", "5", "6", "1", "2", "3", "0", "00", ","};
-    private final JPanel mainPanel = PanelBuilder.createPanel(new GridBagLayout());
+//    private final JPanel mainPanel = PanelBuilder.createPanel(new GridBagLayout());
     private final JPanel topPanel = PanelBuilder.createPanel(new GridBagLayout());
     private final JPanel bottomPanel = PanelBuilder.createPanel(new GridBagLayout());
     private final Map<String, JButton> buttons = new HashMap<>();
+    private final Dimension numberButtonDimensions = new Dimension(183,136);
+    private final Dimension utilityButtonDimensions = new Dimension(280,136);
 
     public Keyboard(){
+        topPanel.setOpaque(false);
+        bottomPanel.setOpaque(false);
 
-
+        setOpaque(false);
+        Color color = Colors.BUTTON_LIGHT_BLUE.getColor();
         GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
 
         //Adding delete button
         gbc.gridwidth = 1;
-        JButton delete = ButtonBuilder.buildChonkyButton("Delete");
+        JButton delete = ButtonBuilder.buildChonkyButton("Delete", color);
+        delete.setPreferredSize(utilityButtonDimensions);
         topPanel.add(delete,gbc);
 
         //Adding delete button
         gbc.gridwidth = 1;
         gbc.gridx = 1;
-        JButton backspace = ButtonBuilder.buildChonkyButton("Backspace");
+        JButton backspace = ButtonBuilder.buildChonkyButton("Backspace", color);
+        backspace.setPreferredSize(utilityButtonDimensions);
         topPanel.add(backspace,gbc);
 
         //Making and Adding buttons
@@ -41,7 +46,8 @@ public class Keyboard extends JComponent{
         gbc.gridx = 0;
         for (int numberIndex = 0; numberIndex < 12; numberIndex++) {
             JButton[] keypadButtons = new JButton[12];
-            keypadButtons[numberIndex] = ButtonBuilder.buildChonkyButton(buttonNames[numberIndex]);
+            keypadButtons[numberIndex] = ButtonBuilder.buildChonkyButton(buttonNames[numberIndex], color);
+            keypadButtons[numberIndex].setPreferredSize(numberButtonDimensions);
             this.buttons.put(buttonNames[numberIndex], keypadButtons[numberIndex]);
             bottomPanel.add(keypadButtons[numberIndex],gbc);
 
@@ -52,20 +58,18 @@ public class Keyboard extends JComponent{
             }
         }
 
+        this.setLayout(new GridBagLayout());
         gbc.gridwidth = 1;
         gbc.gridy = 1;
         gbc.gridx = 0;
-        mainPanel.add(topPanel,gbc);
+        this.add(topPanel,gbc);
         gbc.gridy = 2;
         gbc.gridx = 0;
-        mainPanel.add(bottomPanel,gbc);
+        this.add(bottomPanel,gbc);
 
     }
-    public JPanel getMainPanel(){
-        return mainPanel;
-    }
 
-    public  JButton getButton(String key){
+    public JButton getButton(String key){
         return this.buttons.get(key);
     }
 }

@@ -67,8 +67,8 @@ public class ButtonBuilder {
         jButton.setEnabled(false);
         return jButton;
     }
-    public static JButton buildChonkyButton(String text){
-        JButton jButton = new ChonkyButton(text);
+    public static JButton buildChonkyButton(String text, Color color){
+        JButton jButton = new ChonkyButton(text, color);
         return jButton;
     }
 }

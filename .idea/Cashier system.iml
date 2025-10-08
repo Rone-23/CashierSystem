@@ -52,5 +52,6 @@
     <orderEntry type="library" name="jackson-databind-2.15.2" level="project" />
     <orderEntry type="library" name="ch.ledcom.assertj.extensions" level="project" />
     <orderEntry type="library" name="assertj.swing" level="project" />
+    <orderEntry type="library" name="hotswapagent.hotswap.agent" level="project" />
   </component>
 </module>
