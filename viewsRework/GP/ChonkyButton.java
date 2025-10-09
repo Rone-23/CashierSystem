@@ -17,11 +17,11 @@ public class ChonkyButton extends JButton {
     public ChonkyButton(String text, Color color) {
         super(text);
         this.color = color;
-        setContentAreaFilled(false); // prevent default fill
+        setContentAreaFilled(false);
         setOpaque(false);
-        setFocusPainted(false);      // remove ugly focus rectangle
-        setBorderPainted(false);     // we will draw our own border
-        setFont(new Font("Roboto", Font.BOLD, 40)); // style text
+        setFocusPainted(false);
+        setBorderPainted(false);
+        setFont(new Font("Roboto", Font.BOLD, 40));
         setForeground(Colors.BLACK_TEXT.getColor());
         setMargin(new Insets(55,55,40,40));
 
@@ -40,7 +40,7 @@ public class ChonkyButton extends JButton {
         int margin = Math.max(5,(int) (Math.min(width,height)*0.1));
         int mainArc = (int) (height * 0.3);
 
-        g2.setPaint(ColorManipulation.darken(color,0.91f));
+        g2.setPaint(ColorManipulation.darken(color,0.93f));
         g2.fillRoundRect(margin,margin,width-margin,height-margin,mainArc,mainArc);
 
         //setting shadow rectangle
@@ -79,7 +79,7 @@ public class ChonkyButton extends JButton {
         //Overlap with mainRect
         areaShadow.intersect(new Area(new RoundRectangle2D.Double(margin,margin,width-margin,height-margin,mainArc,mainArc)));
 
-        Color shadowColor = ColorManipulation.darken(color,0.73f);
+        Color shadowColor = ColorManipulation.darken(color,0.79f);
         Color shadowColorAlpha = new Color(shadowColor.getRed(),
                 shadowColor.getGreen(),
                 shadowColor.getBlue(),
@@ -94,6 +94,8 @@ public class ChonkyButton extends JButton {
         int innerArc = (int) (height * 0.25);
         int innerWidth = width-heightZ;
         int innerHeight = height-heightZ;
+
+        //TODO: Make inner shadow/glow (Check figma)
 
         g2.setPaint(color);
         g2.fillRoundRect(heightZ - margin, marginInner,innerWidth,innerHeight,innerArc,innerArc);

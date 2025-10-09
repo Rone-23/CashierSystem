@@ -19,12 +19,11 @@ public class Display extends JTextArea {
 
     public void setText(String text) {
         this.text = text;
-        repaint(); // tells Swing to redraw with new text
+        repaint();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g.create();
 
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -39,6 +38,8 @@ public class Display extends JTextArea {
         // Fill
         g2d.setColor(Colors.DEFAULT_BLUE.getColor());
         g2d.fill(pill);
+        super.paintComponent(g);
+
 
         g2d.dispose();
     }

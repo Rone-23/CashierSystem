@@ -14,13 +14,19 @@ import java.awt.event.MouseMotionAdapter;
 
 public class DisplayScrollable extends JScrollPane {
     JPanel mainItemPanel = new JPanel();
+    JPanel spacer = new JPanel();
     int itemContainerCount = 0;
     GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints();
+    GridBagConstraints gbcSpacer = GridBagConstraintsBuilder.buildGridBagConstraints();
 
     public DisplayScrollable(){
+        spacer.setOpaque(false);
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        gbc.anchor=GridBagConstraints.NORTHWEST;
         gbc.gridx=0;
         gbc.gridy=0;
         gbc.weighty=0;
+        gbc.weightx=1;
         mainItemPanel.setLayout(new GridBagLayout());
         mainItemPanel.setOpaque(false);
 
@@ -28,9 +34,12 @@ public class DisplayScrollable extends JScrollPane {
         setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
         setBackground(Colors.BACKGROUND_WHITE.getColor());
         setViewportView(mainItemPanel);
+        getViewport().setOpaque(false);
+        setBorder(null);
         setOpaque(false);
         touchControls();
-
+        setPreferredSize(new Dimension(0,0));
+        setAlignmentY(JScrollPane.TOP_ALIGNMENT);
 
     }
 
@@ -40,7 +49,7 @@ public class DisplayScrollable extends JScrollPane {
         itemContainer.setLayout(new FlowLayout());
         itemContainer.setBackground(Colors.BACKGROUND_WHITE.getColor());
         itemContainer.setBorder(new DottedBorderTopBottom(Colors.GRAY.getColor(), 1));
-        itemContainer.setPreferredSize(new Dimension(0,180));
+        itemContainer.setPreferredSize(new Dimension(0,70));
 
         if(itemContainerCount % 2 == 1){
             itemContainer.setBackground(Colors.BUTTON_BACKGROUND_WHITE_ELEVATED.getColor());
@@ -50,6 +59,7 @@ public class DisplayScrollable extends JScrollPane {
             makeItemContainer(item, itemContainer);
             mainItemPanel.add(itemContainer,gbc);
             gbc.gridy++;
+            moveSpacer(gbc.gridy);
 
             itemContainerCount++;
         }else{
@@ -57,6 +67,7 @@ public class DisplayScrollable extends JScrollPane {
         }
 
     }
+
 
     private void makeItemContainer(Item item, JPanel itemContainer) {
         JPanel itemNameContainer = new JPanel();
@@ -89,31 +100,33 @@ public class DisplayScrollable extends JScrollPane {
     }
 
     private int compoundItems(Item item) {
-
+        //Checking for existing item listings and adding them together
         for(Component itemContainer : mainItemPanel.getComponents()){
             if(itemContainer instanceof JPanel itemContainers){
+                //Selecting out the spacer which contents are 0
+                if (itemContainers.getComponents().length!=0){
 
-                JPanel itemNameContainer = (JPanel) itemContainers.getComponent(0);
-                JPanel itemPriceAmountContainer = (JPanel) itemContainers.getComponent(1);
+                    JPanel itemNameContainer = (JPanel) itemContainers.getComponent(0);
+                    JPanel itemPriceAmountContainer = (JPanel) itemContainers.getComponent(1);
 
-                String itemName = ((JLabel) itemNameContainer.getComponent(0)).getText();
-                double itemPrice = Double.parseDouble(((JLabel) itemPriceAmountContainer.getComponent(0)).getText().split(" ")[0]);
-                double itemAmount = Double.parseDouble(((JLabel) itemPriceAmountContainer.getComponent(1)).getText().split(" ")[0]);
+                    String itemName = ((JLabel) itemNameContainer.getComponent(0)).getText();
+                    double itemPrice = Double.parseDouble(((JLabel) itemPriceAmountContainer.getComponent(0)).getText().split(" ")[0]);
+                    double itemAmount = Double.parseDouble(((JLabel) itemPriceAmountContainer.getComponent(1)).getText().split(" ")[0]);
 
-                if(itemName.equals(item.getName())){
-                    itemPrice = Math.ceil(( itemPrice + item.getPrice() ) * 100) / 100;
-                    itemAmount = Math.ceil(( itemAmount + item.getAmount() ) * 1000) / 1000;
-                    ((JLabel) itemPriceAmountContainer.getComponent(0)).setText(itemPrice +" €");
+                    if(itemName.equals(item.getName())){
+                        itemPrice = Math.ceil(( itemPrice + item.getPrice() ) * 100) / 100;
+                        itemAmount = Math.ceil(( itemAmount + item.getAmount() ) * 1000) / 1000;
+                        ((JLabel) itemPriceAmountContainer.getComponent(0)).setText(itemPrice +" €");
 
-                    if (item instanceof ItemUncountable){
-                        ((JLabel) itemPriceAmountContainer.getComponent(1)).setText(itemAmount + " kg");
-                    }else{
-                        int intItemAmount = (int) Math.round(itemAmount);
-                        ((JLabel) itemPriceAmountContainer.getComponent(1)).setText(intItemAmount + " ks");
+                        if (item instanceof ItemUncountable){
+                            ((JLabel) itemPriceAmountContainer.getComponent(1)).setText(itemAmount + " kg");
+                        }else{
+                            int intItemAmount = (int) Math.round(itemAmount);
+                            ((JLabel) itemPriceAmountContainer.getComponent(1)).setText(intItemAmount + " ks");
+                        }
+                        return 1;
                     }
-                    return 1;
                 }
-
             }
         }
         return 0;
@@ -140,6 +153,16 @@ public class DisplayScrollable extends JScrollPane {
                 lastDrag.setLocation(e.getPoint());
             }
         });
+    }
+
+
+    private void moveSpacer(int currentGridY){
+        gbcSpacer.gridx = 0;
+        gbcSpacer.gridy = currentGridY+1;
+        gbcSpacer.weightx = 0.0;
+        gbcSpacer.weighty = 1.0;
+        gbcSpacer.fill = GridBagConstraints.BOTH;
+        mainItemPanel.add(spacer,gbcSpacer);
     }
 
 }

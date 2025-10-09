@@ -9,6 +9,8 @@ import viewsRework.GP.Keyboard;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 
 public class DuringRegister extends JPanel {
@@ -20,66 +22,113 @@ public class DuringRegister extends JPanel {
     private final DisplayScrollable displayScrollable = new DisplayScrollable();
     private final ButtonCluster buttonCluster = new ButtonCluster();
 
-    private final JPanel leftPanel = new JPanel();
-    private final JPanel middlePanel = new JPanel();
-    private final JPanel rightPanel = new JPanel();
-    private final GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints();
 
 
     public DuringRegister(){
         setLayout(new GridBagLayout());
 
-        leftPanel.setLayout(new GridBagLayout());
-        middlePanel.setLayout(new GridBagLayout());
-        rightPanel.setLayout(new GridBagLayout());
+        JPanel leftPanel = createLeftPanel();
+        JPanel middlePanel = createMiddlePanel();
+        JPanel rightPanel = createRightPanel();
 
-//        leftPanel.setBackground(Colors.BACKGROUND_WHITE.getColor());
-//        middlePanel.setBackground(Colors.BACKGROUND_GRAY.getColor());
-//        rightPanel.setBackground(Colors.BACKGROUND_GRAY.getColor());
-
-        leftPanel.setBackground(Color.yellow);
-        middlePanel.setBackground(Color.blue);
-        rightPanel.setBackground(Color.red);
-
-
-        gbc.weightx = 1;
-
-        //Left panel
-        gbc.weighty = 1;
-        leftPanel.add(displayScrollable, gbc);
-        gbc.weighty = 0;
-        gbc.weightx = 1;
-        gbc.gridy=1;
-        leftPanel.add(display1, gbc);
-
-
-        //Middle panel
-        gbc.weightx = 0;
-        gbc.gridy=0;
-        middlePanel.add(display2,gbc);
-        gbc.gridy=1;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        middlePanel.add(new JPanel());
-        gbc.weightx = 0;
-        gbc.weighty = 0;
-        gbc.gridy=2;
-        gbc.fill = GridBagConstraints.NONE;
-        middlePanel.add(keyboard,gbc);
-
-        //Right panel
-        gbc.gridy=0;
-        rightPanel.add(buttonCluster,gbc);
+        //DEBUG COLORS
+//        leftPanel.setBackground(Color.yellow);
+//        middlePanel.setBackground(Color.blue);
+//        rightPanel.setBackground(Color.red);
 
         //Assign to DuringRegister panels with components
-        GridBagConstraints gbc2 = GridBagConstraintsBuilder.buildGridBagConstraints();
-        add(leftPanel, gbc2);
-        add(middlePanel, gbc2);
-        add(rightPanel, gbc2);
+        GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints();
+        gbc.gridy=0;
+        gbc.gridx=0;
+        add(leftPanel, gbc);
+        gbc.gridx=1;
+        add(middlePanel, gbc);
+        gbc.gridx=2;
+        add(rightPanel, gbc);
 
     }
 
     public JComponent getKeyboard(){return keyboard;};
     public JComponent getDisplayScrollable(){return displayScrollable;};
+
+    private JPanel createLeftPanel(){
+        final GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints();
+        final JPanel leftPanel = new JPanel();
+
+        Border rightBorder = new MatteBorder(
+                0,
+                0,
+                0,
+                3,
+                Colors.BUTTON_LIGHT_BLUE.getColor()
+        );
+        leftPanel.setBorder(rightBorder);
+
+        leftPanel.setLayout(new GridBagLayout());
+        leftPanel.setBackground(Colors.BACKGROUND_WHITE.getColor());
+
+        gbc.gridx=0;
+        gbc.gridy=0;
+        leftPanel.add(displayScrollable, gbc);
+
+        gbc.weighty = 0;
+        gbc.gridy=1;
+        leftPanel.add(display1, gbc);
+
+
+        return leftPanel;
+    }
+
+    private JPanel createMiddlePanel(){
+        final GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints();
+        final JPanel middlePanel = new JPanel();
+
+        middlePanel.setBorder(new EmptyBorder(20,0,20,0));
+        middlePanel.setLayout(new GridBagLayout());
+        middlePanel.setBackground(Colors.BACKGROUND_GRAY.getColor());
+
+        gbc.gridx=0;
+
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 0;
+        gbc.weighty = 0;
+        gbc.gridy=0;
+        middlePanel.add(display2,gbc);
+
+
+        gbc.gridy=1;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        JPanel fillerPanel = new JPanel();
+        fillerPanel.setOpaque(false);
+        middlePanel.add(fillerPanel,gbc);
+
+
+        gbc.weightx = 0;
+        gbc.weighty = 0;
+        gbc.gridy=2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        middlePanel.add(keyboard,gbc);
+
+        return middlePanel;
+    }
+
+    private JPanel createRightPanel(){
+        final GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints();
+        final JPanel rightPanel = new JPanel();
+
+        rightPanel.setLayout(new GridBagLayout());
+        rightPanel.setBackground(Colors.BACKGROUND_GRAY.getColor());
+
+        gbc.weightx=1;
+        gbc.weighty=1;
+
+        gbc.gridy=0;
+        gbc.gridx=0;
+
+        rightPanel.add(buttonCluster,gbc);
+        return rightPanel;
+
+    }
 }
