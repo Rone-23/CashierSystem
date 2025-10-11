@@ -1,13 +1,11 @@
 package viewsRework.GP;
 
 import assets.Colors;
-import com.itextpdf.awt.geom.Rectangle;
 import utility.ColorManipulation;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Area;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
@@ -90,7 +88,7 @@ public class ChonkyButton extends JButton {
         g2.fill(areaShadow);
 
         //setting inner rectangle
-        int marginInner = Math.max(5,(int) ((Math.min(width,height)-margin )*0.22));
+        int marginInner = Math.max(5,(int) ((Math.min(width,height)-margin/2 )*0.22));
         int innerArc = (int) (height * 0.25);
         int innerWidth = width-heightZ;
         int innerHeight = height-heightZ;
@@ -100,7 +98,7 @@ public class ChonkyButton extends JButton {
         g2.setPaint(color);
         g2.fillRoundRect(heightZ - margin, marginInner,innerWidth,innerHeight,innerArc,innerArc);
 
-        final float fontHeightRatio =  0.3f;
+        final float fontHeightRatio =  0.35f;
 
         int newFontSize = (int) (innerHeight * fontHeightRatio);
 

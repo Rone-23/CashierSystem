@@ -51,6 +51,11 @@ public enum Constants {
     //BOTTOM PANEL
     MATH_OPERATION_BUTTON_HEIGHT(0.4),
 
+    //DISPLAY TYPE
+    TOTAL(15),
+    WEIGHT(16),
+    SPLIT(17),
+
     ;
     private final double value;
     Constants(double constant){

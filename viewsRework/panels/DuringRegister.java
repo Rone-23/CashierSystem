@@ -1,6 +1,7 @@
 package viewsRework.panels;
 
 import assets.Colors;
+import assets.Constants;
 import utility.GridBagConstraintsBuilder;
 import viewsRework.GP.ButtonCluster;
 import viewsRework.GP.Display;
@@ -15,9 +16,8 @@ import java.awt.*;
 
 public class DuringRegister extends JPanel {
 
-//    private final JPanel mainPanel = new JPanel();
-    private final Display display1 = new Display();
-    private final Display display2 = new Display();
+    private final Display display1 = new Display(Constants.SPLIT);
+    private final Display display2 = new Display(Constants.WEIGHT);
     private final Keyboard keyboard = new Keyboard();
     private final DisplayScrollable displayScrollable = new DisplayScrollable();
     private final ButtonCluster buttonCluster = new ButtonCluster();
@@ -31,11 +31,6 @@ public class DuringRegister extends JPanel {
         JPanel middlePanel = createMiddlePanel();
         JPanel rightPanel = createRightPanel();
 
-        //DEBUG COLORS
-//        leftPanel.setBackground(Color.yellow);
-//        middlePanel.setBackground(Color.blue);
-//        rightPanel.setBackground(Color.red);
-
         //Assign to DuringRegister panels with components
         GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints();
         gbc.gridy=0;
@@ -47,9 +42,6 @@ public class DuringRegister extends JPanel {
         add(rightPanel, gbc);
 
     }
-
-    public JComponent getKeyboard(){return keyboard;};
-    public JComponent getDisplayScrollable(){return displayScrollable;};
 
     private JPanel createLeftPanel(){
         final GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints();
@@ -129,6 +121,11 @@ public class DuringRegister extends JPanel {
 
         rightPanel.add(buttonCluster,gbc);
         return rightPanel;
-
     }
+
+
+    public JComponent getKeyboard(){return keyboard;};
+    public JComponent getDisplayScrollable(){return displayScrollable;};
+    public JComponent getDisplay(){return display1;};
+
 }
