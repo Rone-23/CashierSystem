@@ -1,4 +1,4 @@
-package viewsRework.GP;
+package viewsRework.Components;
 
 import assets.Colors;
 import assets.Constants;
@@ -7,7 +7,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
-import java.util.Arrays;
 
 public class Display extends JTextArea {
     private final String[] text = new String[2];
@@ -188,7 +187,7 @@ public class Display extends JTextArea {
 
     private Font paintVariantSplit(Graphics2D g2){
         int insets = 20;
-        float thickness = 3.0f;
+        float thickness = 2.0f;
         g2.setPaint(Colors.BLACK_TEXT.getColor());
 
         float[] dottedPattern = {15.0f, 15.0f};

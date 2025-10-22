@@ -1,12 +1,8 @@
 package utility;
 
-import viewsRework.GP.Display;
+import viewsRework.Components.Display;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.text.MutableAttributeSet;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
 import java.awt.*;
 
 public class DisplayBuilder {

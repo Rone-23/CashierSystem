@@ -1,4 +1,4 @@
-package viewsRework.GP;
+package viewsRework.Components;
 
 import assets.Colors;
 import services.Item;
@@ -12,14 +12,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
-public class DisplayScrollable extends JScrollPane {
+public class DisplayScrollableItems extends JScrollPane {
     JPanel mainItemPanel = new JPanel();
     JPanel spacer = new JPanel();
     int itemContainerCount = 0;
     GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints();
     GridBagConstraints gbcSpacer = GridBagConstraintsBuilder.buildGridBagConstraints();
 
-    public DisplayScrollable(){
+    public DisplayScrollableItems(){
         spacer.setOpaque(false);
         gbc.fill=GridBagConstraints.HORIZONTAL;
         gbc.anchor=GridBagConstraints.NORTHWEST;

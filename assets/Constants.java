@@ -56,6 +56,12 @@ public enum Constants {
     WEIGHT(16),
     SPLIT(17),
 
+    //ARROW TYPE
+    LEFT(20),
+    RIGHT(21),
+    UP(22),
+    DOWN(23),
+
     ;
     private final double value;
     Constants(double constant){

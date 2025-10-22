@@ -1,4 +1,4 @@
-package viewsRework.GP;
+package viewsRework.Components;
 
 import assets.Colors;
 import utility.ButtonBuilder;

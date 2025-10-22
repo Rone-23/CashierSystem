@@ -1,4 +1,4 @@
-package viewsRework.GP;
+package viewsRework.Components;
 
 import assets.Colors;
 import utility.ColorManipulation;
@@ -10,8 +10,19 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
 public class ChonkyButton extends JButton {
+    protected Shape innerRectangle;
+    private final Insets insets = new Insets(60,25,60,25);
 
     Color color;
+    public ChonkyButton(Color color){
+        this.color = color;
+        setContentAreaFilled(false);
+        setOpaque(false);
+        setFocusPainted(false);
+        setBorderPainted(false);
+        setMargin(insets);
+    }
+
     public ChonkyButton(String text, Color color) {
         super(text);
         this.color = color;
@@ -21,7 +32,7 @@ public class ChonkyButton extends JButton {
         setBorderPainted(false);
         setFont(new Font("Roboto", Font.BOLD, 40));
         setForeground(Colors.BLACK_TEXT.getColor());
-        setMargin(new Insets(55,55,40,40));
+        setMargin(insets);
 
     }
 
@@ -39,15 +50,15 @@ public class ChonkyButton extends JButton {
         int mainArc = (int) (height * 0.3);
 
         g2.setPaint(ColorManipulation.darken(color,0.93f));
-        g2.fillRoundRect(margin,margin,width-margin,height-margin,mainArc,mainArc);
+        g2.fillRoundRect(margin/2,margin/2,width-margin,height-margin,mainArc,mainArc);
 
         //setting shadow rectangle
-        int heightZ = Math.max(5,(int) (Math.min(width,height)*0.25)) + margin;
+        int heightZ = Math.max(5,(int) (Math.min(width,height)*0.25)) + margin/2;
         double marginShadow = Math.max(5,(int) (Math.min(width,height)*0.1));
         int mainArcShadow = (int) (height * 0.3);
 
-        Rectangle2D topRect = new Rectangle2D.Double(marginShadow, marginShadow,width,marginShadow*1.5);
-        Rectangle2D rightRect = new Rectangle2D.Double(width-margin,0,margin,height);
+        Rectangle2D topRect = new Rectangle2D.Double(marginShadow, marginShadow/2,width,marginShadow*1.5);
+        Rectangle2D rightRect = new Rectangle2D.Double(width-margin*2,0,margin*2, (double) height /2);
         Rectangle2D rightSquare = new Rectangle2D.Double(width-margin-mainArcShadow,0,margin+mainArcShadow,margin+mainArcShadow);
 
         Polygon triangleLeft = new Polygon();
@@ -75,44 +86,48 @@ public class ChonkyButton extends JButton {
         areaShadow.add(areaTriangleRight);
 
         //Overlap with mainRect
-        areaShadow.intersect(new Area(new RoundRectangle2D.Double(margin,margin,width-margin,height-margin,mainArc,mainArc)));
+        areaShadow.intersect(new Area(new RoundRectangle2D.Double((double) margin /2, (double) margin /2,width-margin,height-margin,mainArc,mainArc)));
 
         Color shadowColor = ColorManipulation.darken(color,0.79f);
         Color shadowColorAlpha = new Color(shadowColor.getRed(),
                 shadowColor.getGreen(),
                 shadowColor.getBlue(),
-                125
+                189
                 );
-//        g2.setPaint(new GradientPaint(width/2,height/2,new Color(0,0,0,0) , width, 0, shadowColorAlpha));
-        g2.setPaint(shadowColor);
+        g2.setPaint(shadowColorAlpha);
         g2.fill(areaShadow);
 
         //setting inner rectangle
-        int marginInner = Math.max(5,(int) ((Math.min(width,height)-margin/2 )*0.22));
+        int marginInner = Math.max(5,(int) ((Math.min(width,height)- (double) margin )*0.22));
         int innerArc = (int) (height * 0.25);
-        int innerWidth = width-heightZ;
+        int innerWidth = width-heightZ ;
         int innerHeight = height-heightZ;
 
         //TODO: Make inner shadow/glow (Check figma)
 
+        innerRectangle = new RoundRectangle2D.Double(heightZ - margin, marginInner- (double) margin /2,innerWidth- (double) margin /2,innerHeight,innerArc,innerArc);
         g2.setPaint(color);
-        g2.fillRoundRect(heightZ - margin, marginInner,innerWidth,innerHeight,innerArc,innerArc);
+        g2.fill(innerRectangle);
 
-        final float fontHeightRatio =  0.35f;
-
-        int newFontSize = (int) (innerHeight * fontHeightRatio);
-
-        newFontSize = Math.max(12, newFontSize);
-        newFontSize = Math.min(60, newFontSize);
-
+        float fontHeightRatio =  0.35f;
+        FontMetrics fm = getFontMetrics(getFont());
         Font currentFont = getFont();
-        Font scaledFont = currentFont.deriveFont((float) newFontSize);
-
-        setFont(scaledFont);
+        Font scaledFont;
+        int newFontSize = 0;
+        while(fm.stringWidth(getText()) > innerRectangle.getBounds().getWidth()-marginInner){
+            if(newFontSize==12){
+                return;
+            }
+            fm = getFontMetrics(getFont());
+            newFontSize = (int) (innerHeight * fontHeightRatio);
+            fontHeightRatio-=0.01f;
+            newFontSize = Math.max(12, newFontSize);
+            newFontSize = Math.min(60, newFontSize);
+            scaledFont = currentFont.deriveFont((float) newFontSize);
+            setFont(scaledFont);
+        }
 
         g2.dispose();
         super.paintComponent(g);
-
-
     }
 }

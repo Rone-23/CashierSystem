@@ -1,4 +1,4 @@
-package viewsRework.GP;
+package viewsRework.Components;
 
 import javax.swing.border.AbstractBorder;
 import java.awt.*;

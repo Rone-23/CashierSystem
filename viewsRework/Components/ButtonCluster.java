@@ -1,9 +1,8 @@
-package viewsRework.GP;
+package viewsRework.Components;
 
 import assets.Colors;
 import utility.ButtonBuilder;
 import utility.GridBagConstraintsBuilder;
-import utility.PanelBuilder;
 
 import javax.swing.*;
 import java.awt.*;
