@@ -19,7 +19,6 @@ public class ButtonCluster extends JPanel{
         GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
 
         //Making and Adding buttons
-        gbc.gridwidth = 1;
         for (int numberIndex = 0; numberIndex < 7; numberIndex++) {
             JButton[] keypadButtons = new JButton[7];
             keypadButtons[numberIndex] = ButtonBuilder.buildChonkyButton(buttonNames[numberIndex], Colors.DEFAULT_BLUE.getColor());

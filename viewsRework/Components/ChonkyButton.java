@@ -114,7 +114,7 @@ public class ChonkyButton extends JButton {
         Font currentFont = getFont();
         Font scaledFont;
         int newFontSize = 0;
-        while(fm.stringWidth(getText()) > innerRectangle.getBounds().getWidth()-marginInner){
+        while(fm.stringWidth(getText()) > innerRectangle.getBounds().getWidth()-marginInner/2){
             if(newFontSize==12){
                 return;
             }

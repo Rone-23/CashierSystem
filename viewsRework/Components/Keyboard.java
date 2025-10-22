@@ -28,20 +28,17 @@ public class Keyboard extends JPanel{
         GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
 
         //Adding delete button
-        gbc.gridwidth = 1;
         JButton delete = ButtonBuilder.buildChonkyButton("Delete", color);
         delete.setPreferredSize(utilityButtonDimensions);
         topPanel.add(delete,gbc);
 
         //Adding delete button
-        gbc.gridwidth = 1;
         gbc.gridx = 1;
         JButton backspace = ButtonBuilder.buildChonkyButton("Backspace", color);
         backspace.setPreferredSize(utilityButtonDimensions);
         topPanel.add(backspace,gbc);
 
         //Making and Adding buttons
-        gbc.gridwidth = 1;
         gbc.gridy = 1;
         gbc.gridx = 0;
         for (int numberIndex = 0; numberIndex < 12; numberIndex++) {

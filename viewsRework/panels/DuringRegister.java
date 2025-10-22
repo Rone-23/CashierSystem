@@ -35,10 +35,13 @@ public class DuringRegister extends JPanel {
         GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints();
         gbc.gridy=0;
         gbc.gridx=0;
+        gbc.weightx=2;
         add(leftPanel, gbc);
-        gbc.weightx=0;
         gbc.gridx=1;
+        gbc.weightx=1;
+//        gbc.weightx=0;
         add(middlePanel, gbc);
+//        gbc.weightx=1;
         gbc.gridx=2;
         add(rightPanel, gbc);
 
