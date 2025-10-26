@@ -1,21 +1,22 @@
 package controllers.display;
 
 import services.Item;
-import views.leftPanel.DisplayPanel;
+import viewsRework.Components.DisplayScrollableItems;
 
 public class DisplayItemsController implements OpenTransactionObserver {
-    DisplayPanel displayPanel;
-    public DisplayItemsController(DisplayPanel displayPanel){
-        this.displayPanel = displayPanel;
+    DisplayScrollableItems displayPanel;
+    public DisplayItemsController(DisplayScrollableItems display){
+        this.displayPanel = display;
     }
 
     @Override
     public void onItemAdd(Item item) {
-        this.displayPanel.updateArticleDisplay(item.getName());
+        displayPanel.addItem(item);
     }
 
     @Override
     public void onDestroy() {
-        this.displayPanel.clearArticleDisplay();
+        //TODO: create destroy method in DisplayScrollableItems
+        //        displayPanel.clearArticleDisplay();
     }
 }

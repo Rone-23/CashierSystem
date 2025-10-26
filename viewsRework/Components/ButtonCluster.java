@@ -19,17 +19,15 @@ public class ButtonCluster extends JPanel{
         GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
 
         //Making and Adding buttons
-        for (int numberIndex = 0; numberIndex < 7; numberIndex++) {
-            JButton[] keypadButtons = new JButton[7];
-            keypadButtons[numberIndex] = ButtonBuilder.buildChonkyButton(buttonNames[numberIndex], Colors.DEFAULT_BLUE.getColor());
-            this.buttons.put(buttonNames[numberIndex], keypadButtons[numberIndex]);
-            add(keypadButtons[numberIndex],gbc);
-
+        for( String name : buttonNames){
+            JButton button = ButtonBuilder.buildChonkyButton(name,  Colors.DEFAULT_BLUE.getColor());
+            buttons.put(name.toLowerCase(), button);
+            add(button,gbc);
             gbc.gridy++;
         }
     }
 
     public  JButton getButton(String key){
-        return this.buttons.get(key);
+        return buttons.get(key.toLowerCase());
     }
 }

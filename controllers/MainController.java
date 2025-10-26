@@ -1,31 +1,31 @@
 package controllers;
 
-import controllers.display.DisplayAmountController;
+import controllers.display.ContentAmountController;
 import controllers.display.DisplayItemsController;
 import services.Item;
 import services.OpenTransaction;
 import services.SQL_Connect;
-import views.ArticlesPanel;
-import views.MainPanel;
-import views.leftPanel.LeftPanel;
-import views.rightPanel.RightPanel;
+import viewsRework.Components.Display;
+import viewsRework.Components.DisplayScrollableItems;
+import viewsRework.Components.Keyboard;
+import viewsRework.panels.DuringArticles;
+import viewsRework.panels.DuringRegister;
 
 public class MainController {
     private static OpenTransaction openTransaction;
     private static final MakeTransaction makeTransaction = new MakeTransaction();
-    public MainController(MainPanel mainPanel, ArticlesPanel articlesPanel){
+    public MainController(DuringRegister duringRegister, DuringArticles duringArticles){
+        Keyboard keyboard = (Keyboard) duringRegister.getKeyboard();
+        Display display = (Display) duringRegister.getDisplay();
         //TODO: This OpenTransaction.class need to be created every time that you start transaction not to make it here in main controller
-        LeftPanel leftPanel = mainPanel.getLeftPanel();
-        DisplayAmountController displayAmountController = new DisplayAmountController();
-        DisplayItemsController displayItemsController = new DisplayItemsController(leftPanel.getDisplayPanel());
+        ContentAmountController contentAmountController = new ContentAmountController();
+        DisplayItemsController displayItemsController = new DisplayItemsController((DisplayScrollableItems) duringRegister.getDisplayScrollableItems());
         OpenTransaction.addObserver(displayItemsController);
         createOpenTransaction();
         //TODO: Right panel should implement all the buttons like vklad vratka etc
-        RightPanel rightPanel = mainPanel.getRightPanel();
-        new KeyboardController(leftPanel.getKeyboardPanel().getKeyboard(), leftPanel.getDisplayPanel(), displayAmountController);
-        new UtilityController(leftPanel.getKeyboardPanel().getKeyboard(), leftPanel.getKeyboardPanel().getUtility(), displayAmountController);
-        new TopRightController(mainPanel,articlesPanel);
-        new ArticlePanelController(mainPanel,articlesPanel);
+        new KeyboardController(keyboard, display, contentAmountController);
+        new ButtonClusterController(duringRegister,duringArticles);
+        new ArticleController(duringArticles);
     }
 
     public static void createOpenTransaction(){

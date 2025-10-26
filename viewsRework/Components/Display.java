@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 
 public class Display extends JTextArea {
-    private final String[] text = new String[2];
+    private final String[] text = {"0.00","0"};
     private final Constants displayType;
     private final Dimension dimension = new Dimension(400,100);
     public Display() {
@@ -52,6 +52,7 @@ public class Display extends JTextArea {
         g2.setPaint(Colors.BLACK_TEXT.getColor());
         int drawTextCoordinatesX;
         int drawTextCoordinatesY;
+        int strWidth;
 
         switch(displayType){
             case TOTAL -> {
@@ -63,20 +64,15 @@ public class Display extends JTextArea {
                         (int) (getWidth()-getHeight()*0.6-inset*2),
                         (int) (getHeight()*0.8-inset*2)
                         );
-
                 drawTextCoordinatesX = writableArea.getBounds().x;
                 drawTextCoordinatesY = writableArea.getBounds().y+fm.getHeight();
 
                 g2.drawString("Total",drawTextCoordinatesX,drawTextCoordinatesY);
 
-                int strWidth = fm.stringWidth(getText() +" €");
+                strWidth = fm.stringWidth(getTextArray()[0] + " €");
                 drawTextCoordinatesX = (int) writableArea.getBounds().getWidth()+writableArea.getBounds().x-strWidth;
-                g2.drawString(getText()+" €",drawTextCoordinatesX,drawTextCoordinatesY);
+                g2.drawString(getTextArray()[0]+" €",drawTextCoordinatesX,drawTextCoordinatesY);
 
-
-                //Only for debug purposes
-//                g2.setPaint(new Color(100,100,100,100));
-//                g2.fill(writableArea);
             }
             case WEIGHT -> {
                 g2.setFont(paintVariantWeight());
@@ -93,12 +89,11 @@ public class Display extends JTextArea {
 
                 g2.drawString("Počet",drawTextCoordinatesX,drawTextCoordinatesY);
 
-                int strWidth = fm.stringWidth(getText() +" ks");
+                strWidth = fm.stringWidth(getText() +" ks");
                 drawTextCoordinatesX = (int) writableArea.getBounds().getWidth()+writableArea.getBounds().x-strWidth;
-                g2.drawString(getText()+" ks",drawTextCoordinatesX,drawTextCoordinatesY);
+                g2.drawString(getTextArray()[0]+" ks",drawTextCoordinatesX,drawTextCoordinatesY);
             }
             case SPLIT -> {
-                int strWidth;
                 g2.setFont(paintVariantSplit(g2));
                 FontMetrics fm = g2.getFontMetrics();
                 Shape writableAreaTop = new Rectangle(
@@ -131,18 +126,16 @@ public class Display extends JTextArea {
                 strWidth = fm.stringWidth(getTextArray()[1] + " ks");
                 drawTextCoordinatesX =  (int) writableAreaBottom.getBounds().getWidth()+writableAreaBottom.getBounds().x-strWidth;
                 g2.drawString(getTextArray()[1]+ " ks",drawTextCoordinatesX,drawTextCoordinatesY);
-
-
-                //Only for debug purposes
-//                g2.setPaint(new Color(100,100,100,100));
-//                g2.fill(writableAreaTop);
-//                g2.fill(writableAreaBottom);
             }
         }
-        //TODO: Ensure there is no null??
 
         g2.dispose();
         repaint();
+    }
+
+    @Override
+    public void setText(String text1){
+        text[0] = text1;
     }
 
     public void setText(String text1, String text2){
@@ -151,11 +144,7 @@ public class Display extends JTextArea {
     }
 
     public String[] getTextArray(){
-        try{
             return text;
-        }catch (IllegalArgumentException e){
-            return null;
-        }
     }
 
     private Font paintVariantTotal(){

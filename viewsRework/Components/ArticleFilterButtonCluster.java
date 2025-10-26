@@ -7,16 +7,21 @@ import utility.GridBagConstraintsBuilder;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ArticleFilterButtonCluster extends JPanel {
     private final String[] buttonNamesMainFilter = {"Oblubene", "Ovocie", "Zelenina", "Pecivo", "Instorky"};
     private final String[] buttonNamesSecondaryFilter = {"Shadow", "Velocity", "Quiver", "Electric", "Forest", "Paradox", "Glitch", "Serene", "Indigo", "Tundra", "Helix", "Echo", "Cascade", "Orbit", "Whisper", "Zenith", "Chrome", "Abyss", "Drift", "Luminous"};
+
     private int lastUsedPosition = 3;
     private final JPanel mainSecondaryPanel = new JPanel();
     private final GridBagConstraints gbcSecondaryFilterPanel = GridBagConstraintsBuilder.buildGridBagConstraints(1,1);
     private final JButton leftButton = ButtonBuilder.buildChonkyArrowButton( Colors.BUTTON_LIGHT_BLUE.getColor(),Constants.LEFT);
     private final JButton rightButton = ButtonBuilder.buildChonkyArrowButton( Colors.BUTTON_LIGHT_BLUE.getColor(),Constants.RIGHT);
     private final Dimension buttonDimensions = new Dimension(183,136);
+    private final List<JButton> mainFilterButtons = new ArrayList<>();
+    private final List<JButton> secondaryFilterButtons = new ArrayList<>();
     public ArticleFilterButtonCluster(){
         setOpaque(false);
         final GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(1,1);
@@ -37,6 +42,7 @@ public class ArticleFilterButtonCluster extends JPanel {
             JButton button = ButtonBuilder.buildChonkyButton(name, Colors.BUTTON_LIGHT_BLUE.getColor());
             button.setPreferredSize(buttonDimensions);
             main.add(button,gbc);
+            mainFilterButtons.add(button);
         }
         return main;
     }
@@ -130,5 +136,7 @@ public class ArticleFilterButtonCluster extends JPanel {
 
     public JButton getRightButton(){return rightButton;}
     public JButton getLeftButton(){return leftButton;}
+//    public JButton[] getMainFilterButtons(){return mainFilterButtons}
+
 
 }

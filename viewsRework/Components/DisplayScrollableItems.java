@@ -155,7 +155,6 @@ public class DisplayScrollableItems extends JScrollPane {
         });
     }
 
-
     private void moveSpacer(int currentGridY){
         gbcSpacer.gridx = 0;
         gbcSpacer.gridy = currentGridY+1;

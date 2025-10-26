@@ -16,8 +16,9 @@ import java.awt.*;
 
 public class DuringRegister extends JPanel {
 
-    private final Display display1 = new Display(Constants.SPLIT);
+    private final Display display1 = new Display(Constants.TOTAL);
     private final Display display2 = new Display(Constants.WEIGHT);
+    private final Dimension dimension = new Dimension(500,114);
     private final Keyboard keyboard = new Keyboard();
     private final DisplayScrollableItems displayScrollable = new DisplayScrollableItems();
     private final ButtonCluster buttonCluster = new ButtonCluster();
@@ -26,29 +27,24 @@ public class DuringRegister extends JPanel {
 
     public DuringRegister(){
         setLayout(new GridBagLayout());
-
         JPanel leftPanel = createLeftPanel();
         JPanel middlePanel = createMiddlePanel();
         JPanel rightPanel = createRightPanel();
 
         //Assign to DuringRegister panels with components
-        GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints();
-        gbc.gridy=0;
-        gbc.gridx=0;
-        gbc.weightx=2;
+        GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(1,1);
         add(leftPanel, gbc);
-        gbc.gridx=1;
-        gbc.weightx=1;
-//        gbc.weightx=0;
+        gbc.gridx++;
+        gbc.weightx=0.3;
         add(middlePanel, gbc);
-//        gbc.weightx=1;
-        gbc.gridx=2;
+        gbc.gridx++;
+        gbc.weightx=0.3;
         add(rightPanel, gbc);
 
     }
 
     private JPanel createLeftPanel(){
-        final GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints();
+        final GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(1,1);
         final JPanel leftPanel = new JPanel();
 
         Border rightBorder = new MatteBorder(
@@ -63,12 +59,12 @@ public class DuringRegister extends JPanel {
         leftPanel.setLayout(new GridBagLayout());
         leftPanel.setBackground(Colors.BACKGROUND_WHITE.getColor());
 
-        gbc.gridx=0;
-        gbc.gridy=0;
         leftPanel.add(displayScrollable, gbc);
 
         gbc.weighty = 0;
-        gbc.gridy=1;
+        gbc.weightx = 0;
+        gbc.gridy++;
+        display1.setPreferredSize(dimension);
         leftPanel.add(display1, gbc);
 
 
@@ -89,6 +85,7 @@ public class DuringRegister extends JPanel {
         gbc.weightx = 0;
         gbc.weighty = 0;
         gbc.gridy=0;
+        display2.setPreferredSize(dimension);
         middlePanel.add(display2,gbc);
 
 
@@ -129,7 +126,9 @@ public class DuringRegister extends JPanel {
 
 
     public JComponent getKeyboard(){return keyboard;}
-    public JComponent getDisplayScrollable(){return displayScrollable;}
+    public JComponent getDisplayScrollableItems(){return displayScrollable;}
     public JComponent getDisplay(){return display1;}
+    public JComponent getButtonCluster(){return buttonCluster;}
+
 
 }
