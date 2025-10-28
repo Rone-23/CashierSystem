@@ -1,34 +1,27 @@
 import controllers.MainController;
-import viewsRework.panels.DuringArticles;
-import viewsRework.panels.DuringRegister;
+import controllers.ViewManager;
 
 import javax.swing.*;
-import java.awt.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 
 public class Main {
     public static void main (String[] args) throws SQLException {
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
         SwingUtilities.invokeLater(()-> {
-            JFrame mainFrame = new JFrame("Cashier system");
-            mainFrame.setSize(screenSize.width,screenSize.height);
-            mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//            mainFrame.setResizable(false);
+
+            ViewManager.getInstance().getMainFrame().setTitle("Cashier system");
 
             //Logo
             Path billaLogoPath = Paths.get("Images","Billa_logo.png");
             ImageIcon billaLogo = new ImageIcon(String.valueOf(billaLogoPath));
-            mainFrame.setIconImage(billaLogo.getImage());
-            DuringRegister duringRegister = new DuringRegister();
-            DuringArticles duringArticles = new DuringArticles();
+            ViewManager.getInstance().getMainFrame().setIconImage(billaLogo.getImage());
 
-            mainFrame.add(duringRegister);
-            mainFrame.setVisible(true);
-
-            new MainController(duringRegister, duringArticles);
+            try {
+                new MainController();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         });
     }
 }

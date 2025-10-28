@@ -1,4 +1,4 @@
-package viewsRework.Components;
+package views.Components;
 
 import assets.Colors;
 import services.Item;
@@ -7,16 +7,23 @@ import utility.GridBagConstraintsBuilder;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DisplayScrollableArticles extends JScrollPane {
     JPanel mainArticlePanel = new JPanel();
     Dimension preferedDimension;
     GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
+    JPanel spacer = new JPanel();
+    GridBagConstraints gbcSpacer = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
+
+    private Map<String, JButton> buttons = new HashMap<>();
+
     public DisplayScrollableArticles(){
+        spacer.setOpaque(false);
         gbc.anchor=GridBagConstraints.NORTHWEST;
         mainArticlePanel.setLayout(new GridBagLayout());
         mainArticlePanel.setOpaque(false);
-//        mainArticlePanel.setBackground(Colors.BACKGROUND_WHITE.getColor());
         getViewport().setOpaque(false);
         setBorder(null);
         setOpaque(false);
@@ -40,9 +47,17 @@ public class DisplayScrollableArticles extends JScrollPane {
         }
         JButton button = new ArticleButton(Colors.BUTTON_LIGHT_BLUE.getColor(),item);
         button.setPreferredSize(preferedDimension);
+
+        buttons.put(item.getName().toLowerCase(),button);
+
         mainArticlePanel.add(button,gbc);
         mainArticlePanel.revalidate();
         gbc.gridx+=1;
+        moveSpacer(gbc.gridy);
+    }
+
+    public Map<String, JButton> getButtons(){
+        return buttons;
     }
 
     private void recalculate(){
@@ -90,7 +105,13 @@ public class DisplayScrollableArticles extends JScrollPane {
         });
     }
 
-
-
+    private void moveSpacer(int currentGridY){
+        gbcSpacer.gridx = 0;
+        gbcSpacer.gridy = currentGridY+1;
+        gbcSpacer.weightx = 0.0;
+        gbcSpacer.weighty = 1.0;
+        gbcSpacer.fill = GridBagConstraints.BOTH;
+        mainArticlePanel.add(spacer,gbcSpacer);
+    }
 
 }

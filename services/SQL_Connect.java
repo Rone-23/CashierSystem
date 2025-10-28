@@ -108,6 +108,26 @@ public class SQL_Connect {
         }
     }
 
+    public Item[] getItems(String subtype) throws SQLException {
+        String sql = "SELECT name, price FROM Articles WHERE type = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1,subtype);
+            ResultSet rs = pstmt.executeQuery();
+
+            List<Item> items = new ArrayList<>();
+            while (rs.next()) {
+                items.add(new ItemCountable(
+                        rs.getString("name"),
+                        rs.getDouble("price"),
+                        1.0
+                ));
+            }
+
+            return items.toArray(new Item[0]);
+        }
+    }
+
     public String[] getTypes() throws SQLException {
         String sql = "SELECT type FROM Articles";
 

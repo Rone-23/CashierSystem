@@ -1,4 +1,4 @@
-package viewsRework.Components;
+package views.Components;
 
 import assets.Colors;
 import assets.Constants;
@@ -67,7 +67,7 @@ public class Display extends JTextArea {
                 drawTextCoordinatesX = writableArea.getBounds().x;
                 drawTextCoordinatesY = writableArea.getBounds().y+fm.getHeight();
 
-                g2.drawString("Total",drawTextCoordinatesX,drawTextCoordinatesY);
+                g2.drawString("Dokopy",drawTextCoordinatesX,drawTextCoordinatesY);
 
                 strWidth = fm.stringWidth(getTextArray()[0] + " €");
                 drawTextCoordinatesX = (int) writableArea.getBounds().getWidth()+writableArea.getBounds().x-strWidth;
@@ -89,7 +89,7 @@ public class Display extends JTextArea {
 
                 g2.drawString("Počet",drawTextCoordinatesX,drawTextCoordinatesY);
 
-                strWidth = fm.stringWidth(getText() +" ks");
+                strWidth = fm.stringWidth(getTextArray()[0] +" ks");
                 drawTextCoordinatesX = (int) writableArea.getBounds().getWidth()+writableArea.getBounds().x-strWidth;
                 g2.drawString(getTextArray()[0]+" ks",drawTextCoordinatesX,drawTextCoordinatesY);
             }

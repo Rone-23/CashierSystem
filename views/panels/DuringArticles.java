@@ -1,11 +1,11 @@
-package viewsRework.panels;
+package views.panels;
 
 import assets.Colors;
 import assets.Constants;
 import services.Item;
 import utility.ButtonBuilder;
 import utility.GridBagConstraintsBuilder;
-import viewsRework.Components.*;
+import views.Components.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -130,6 +130,8 @@ public class DuringArticles  extends JPanel {
      public DisplayScrollableItems getDisplayScrollableItems(){return displayScrollableItems;}
 
      public DisplayScrollableArticles getDisplayScrollableArticles(){return displayScrollableArticles;}
+
+    public Display getDisplay(){return display;}
 
      public Keyboard getKeyboard(){return keyboard;}
 

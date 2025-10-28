@@ -1,6 +1,6 @@
 package services;
 
-import controllers.display.OpenTransactionObserver;
+import controllers.openTransaction.OpenTransactionObserver;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -63,5 +63,14 @@ public class OpenTransaction {
         for(OpenTransactionObserver observer : observerList){
             observer.onDestroy();
         }
+    }
+
+    public double getTotal(){
+        double sum = 0;
+
+        for(Item item : itemsInTransaction.values().toArray(new Item[0])){
+            sum += item.getPrice()*item.getAmount();
+        }
+        return sum;
     }
 }

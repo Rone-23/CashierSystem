@@ -1,15 +1,19 @@
 package controllers.display;
 
 public class ContentAmountController {
-    private final StringBuilder content = new StringBuilder("0");
+    private final StringBuilder content = new StringBuilder();
 
-    public String getContent() {
+    public String getContentDecimalFormat() {
         try {
             float contentNumber = Float.parseFloat(content.toString());
             return String.format("%.2f",contentNumber/100);
         } catch (NumberFormatException e) {
             return "0.00";
         }
+    }
+
+    public String getContent(){
+        return content.toString();
     }
 
     public void appendContent(String text) {

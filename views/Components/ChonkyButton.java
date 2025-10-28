@@ -1,4 +1,4 @@
-package viewsRework.Components;
+package views.Components;
 
 import assets.Colors;
 import utility.ColorManipulation;

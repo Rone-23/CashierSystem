@@ -1,4 +1,4 @@
-package viewsRework.Components;
+package views.Components;
 
 import assets.Colors;
 import services.Item;
@@ -40,7 +40,6 @@ public class DisplayScrollableItems extends JScrollPane {
         touchControls();
         setPreferredSize(new Dimension(0,0));
         setAlignmentY(JScrollPane.TOP_ALIGNMENT);
-
     }
 
     public void addItem(Item item){
@@ -65,6 +64,7 @@ public class DisplayScrollableItems extends JScrollPane {
         }else{
             compoundItems(item);
         }
+        revalidate();
 
     }
 
