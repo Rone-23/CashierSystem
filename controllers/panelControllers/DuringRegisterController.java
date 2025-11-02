@@ -1,5 +1,6 @@
-package controllers;
+package controllers.panelControllers;
 
+import controllers.ViewManager;
 import controllers.buttons.KeyboardController;
 import controllers.display.ContentAmountController;
 import controllers.display.DisplayController;

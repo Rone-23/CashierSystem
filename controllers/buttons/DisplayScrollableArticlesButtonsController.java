@@ -5,42 +5,89 @@ import controllers.openTransaction.OpenTransactionObserver;
 import services.Item;
 import services.OpenTransaction;
 import services.SQL_Connect;
+import views.Components.DisplayScrollableArticles;
 
 import javax.swing.*;
 import java.sql.SQLException;
 import java.util.Map;
 
-public class DisplayScrollableArticlesButtonsController implements OpenTransactionObserver {
+public class DisplayScrollableArticlesButtonsController implements OpenTransactionObserver, FilterObserver {
+    private final DisplayScrollableArticles displayScrollableArticles = ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles();
     private final Map<String, JButton> buttons = ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles().getButtons();
     private OpenTransaction openTransaction;
     private Item[] articles;
+    private String filterKeywordMain;
+    private String filterKeywordSecondary;
 
     public DisplayScrollableArticlesButtonsController(){
+        createArticles();
+    }
 
+    public void createArticles(){
         try {
-            createArticles();
+            articles =  SQL_Connect.getInstance().getAllItems();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            articles = new Item[0];
+        }
+
+        for(Item article : articles){
+            ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles().addArticle(article);
         }
 
         for(Item item : articles){
             buttons.get(item.getName().toLowerCase()).addActionListener(e -> openTransaction.addItem(item));
         }
-
     }
 
-    private void createArticles() throws SQLException {
-        String[] types= SQL_Connect.getInstance().getTypes();
-        articles =  SQL_Connect.getInstance().getItems(types[1]);
+    public void createArticles(String type){
+        try {
+            articles =  SQL_Connect.getInstance().getItems(type);
+        } catch (SQLException e) {
+            articles = new Item[0];
+        }
 
         for(Item article : articles){
             ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles().addArticle(article);
         }
+
+        for(Item item : articles){
+            buttons.get(item.getName().toLowerCase()).addActionListener(e -> openTransaction.addItem(item));
+        }
     }
 
+    public void createArticles(String type, String subtype){
+        try {
+            articles =  SQL_Connect.getInstance().getItems(type, subtype);
+        } catch (SQLException e) {
+            articles = new Item[0];
+        }
 
+        for(Item article : articles){
+            ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles().addArticle(article);
+        }
+
+        for(Item item : articles){
+            buttons.get(item.getName().toLowerCase()).addActionListener(e -> openTransaction.addItem(item));
+        }
+    }
+
+    //Observer
     @Override
     public void onCreate(OpenTransaction openTransaction) {
         this.openTransaction = openTransaction;
+    }
+
+    @Override
+    public void updateMainFilter(String filterKeyword) {
+        filterKeywordMain = filterKeyword;
+        displayScrollableArticles.clear();
+        createArticles(filterKeywordMain);
+    }
+
+    @Override
+    public void updateSecondaryFilter(String filterKeyword) {
+        filterKeywordSecondary = filterKeyword;
+        displayScrollableArticles.clear();
+        createArticles(filterKeywordMain,filterKeywordSecondary);
     }
 }

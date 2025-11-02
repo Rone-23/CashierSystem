@@ -17,7 +17,7 @@ public class DisplayScrollableArticles extends JScrollPane {
     JPanel spacer = new JPanel();
     GridBagConstraints gbcSpacer = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
 
-    private Map<String, JButton> buttons = new HashMap<>();
+    private final Map<String, JButton> buttons = new HashMap<>();
 
     public DisplayScrollableArticles(){
         spacer.setOpaque(false);
@@ -54,6 +54,10 @@ public class DisplayScrollableArticles extends JScrollPane {
         mainArticlePanel.revalidate();
         gbc.gridx+=1;
         moveSpacer(gbc.gridy);
+    }
+
+    public void clear(){
+        mainArticlePanel.removeAll();
     }
 
     public Map<String, JButton> getButtons(){

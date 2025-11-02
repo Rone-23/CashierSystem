@@ -19,7 +19,6 @@ public class DisplayController implements OpenTransactionObserver {
 
     @Override
     public void onItemAdd(Item item) {
-        System.out.println(openTransaction.getTotal());
         display.setText(String.format("%.2f",openTransaction.getTotal()));
     }
 }

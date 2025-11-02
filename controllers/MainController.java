@@ -1,10 +1,10 @@
 package controllers;
 
 import controllers.buttons.ButtonClusterController;
-import controllers.buttons.DisplayScrollableArticlesButtonsController;
 import controllers.display.ContentAmountController;
 import controllers.display.DisplayItemsController;
-import services.Item;
+import controllers.panelControllers.DuringArticlesController;
+import controllers.panelControllers.DuringRegisterController;
 import services.OpenTransaction;
 import services.SQL_Connect;
 
@@ -26,10 +26,8 @@ public class MainController {
         DisplayItemsController displayItemsController = new DisplayItemsController();
 
         new ButtonClusterController();
-        DisplayScrollableArticlesButtonsController displayScrollableArticlesButtonsController = new DisplayScrollableArticlesButtonsController();
 
         OpenTransaction.addObserver(displayItemsController);
-        OpenTransaction.addObserver(displayScrollableArticlesButtonsController);
         createOpenTransaction();
     }
 
@@ -42,7 +40,4 @@ public class MainController {
         createOpenTransaction();
     }
 
-    public static void addItem(Item item) {
-        openTransaction.addItem(item);
-    }
 }

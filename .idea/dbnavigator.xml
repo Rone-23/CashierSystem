@@ -35,12 +35,120 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5">
-      <console name="Shop" type="STANDARD" schema="main" session="Main"><![CDATA[select * from Articles
-SELECT * FROM Transactions
-update Articles set stock = stock - 1 where article_id = 1
-insert into Articles (name,price,stock,type,subtype) values ('NIECO3', 0.48, 500.00,'PECIVO','BEZNE-PECIVO')
-insert into Articles (name,price,stock,type,subtype) values ('POMARANC', 0.72, 500.001,'OVOCIE','CITRUSY')
-insert into Transactions (transaction_date,items, total_amount) values ("2024-11-15_11-21-40", 'asd,asd', 2)
+      <console name="Commit of articles" type="STANDARD" schema="main" session="Main"><![CDATA[INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('ROZOK OS SENSK', 0.29, 500.00,'PECIVO','BEZNE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('CESNAKOVA BAGETA', 1.19, 500.00,'PECIVO','BEZNE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('VREC OČ KA OS SENSKA', 0.99, 500.00,'PECIVO','BEZNE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('SVETLA BULKA SO ZEMIAKMI', 0.49, 500.00,'PECIVO','BEZNE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('ROZOK CIARAH', 0.35, 500.00,'PECIVO','BEZNE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('BAGETA SEDLÁCKA STREDNÁ', 0.79, 500.00,'PECIVO','BEZNE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('KORNBAGETA', 0.75, 500.00,'PECIVO','BEZNE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('FRANCOUZSKA', 0.99, 500.00,'PECIVO','BEZNE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('BAGETA S CASS', 0.85, 500.00,'PECIVO','BEZNE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('SPALD. BAGETA', 0.79, 500.00,'PECIVO','BEZNE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('BAGETKA SPECIAL', 0.55, 500.00,'PECIVO','BEZNE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('CEREALNA BAGETKA', 0.69, 500.00,'PECIVO','BEZNE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('TEKVICOVA BULKA', 0.45, 500.00,'PECIVO','BEZNE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('PLETTERKA S CHABOM', 0.79, 500.00,'PECIVO','BEZNE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('SPALDOVA BAGETA 130 G', 0.95, 500.00,'PECIVO','BEZNE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('KASIERKA NATURAL', 0.59, 500.00,'PECIVO','BEZNE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('RUSTIKÁLNY TWIST S OLINAMI', 1.29, 500.00,'PECIVO','BEZNE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('BAGEL BRIOCH', 0.89, 500.00,'PECIVO','BEZNE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('PECIVO TEKVIC', 0.99, 500.00,'PECIVO','BEZNE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('BAGETA 220 G', 1.15, 500.00,'PECIVO','BEZNE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('VITAL KOCKA', 0.69, 500.00,'PECIVO','BEZNE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('PREDKR. BRIOSKA', 0.99, 500.00,'PECIVO','BEZNE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('MAXI HAMBURGER BULKA', 0.75, 500.00,'PECIVO','BEZNE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('TYCINKA SLANA S OLINAMI', 0.99, 500.00,'PECIVO','SLANE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('HOT DOG', 1.99, 500.00,'PECIVO','SLANE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('VRZACENIK', 1.19, 500.00,'PECIVO','SLANE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('ROHLAMEIEN', 0.89, 500.00,'PECIVO','SLANE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('PAGAC SYROVY', 0.85, 500.00,'PECIVO','SLANE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('GONDOLA MEDI', 1.49, 500.00,'PECIVO','SLANE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('PAGAC SO ZNÍŽENÝM', 0.95, 500.00,'PECIVO','SLANE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('PAGAC SO ZNÍŽENÝM OLS.', 0.95, 500.00,'PECIVO','SLANE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('KVASK. P. TYCINKA 70 G', 1.19, 500.00,'PECIVO','SLANE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('KVASK. PARADAJKOVA', 1.09, 500.00,'PECIVO','SLANE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('PLNENY MIN', 1.35, 500.00,'PECIVO','SLANE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('VEGANSKY PAGAC SYROVÝ', 0.99, 500.00,'PECIVO','SLANE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('VAROSKY PLN. S BRYNDZOU', 1.29, 500.00,'PECIVO','SLANE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('KVAS. PIZZA SNIADANOVA', 1.45, 500.00,'PECIVO','SLANE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('BOREK BOLOGNESE', 1.99, 500.00,'PECIVO','SLANE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('SYROVY SLIMAK', 1.25, 500.00,'PECIVO','SLANE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('KVASKOVÁ BUCHTA KECHUP', 1.15, 500.00,'PECIVO','SLANE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('LÍSTKOVÁ TYCINKA 105 G', 0.99, 500.00,'PECIVO','SLANE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('CROISSANT S HRYBOAMI', 1.29, 500.00,'PECIVO','SLANE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('SYROVÉ SLIMÁK Z PILO CESTA', 1.49, 500.00,'PECIVO','SLANE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('SYROVÁ SYROVÁ ŠTRUDLA', 1.69, 500.00,'PECIVO','SLANE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('FRAKC. KRIZNA', 1.89, 500.00,'PECIVO','SLANE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('DONUT S DŽEMOM', 1.39, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('SAKA S C', 1.19, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('DONUT LIESKA', 1.39, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('MAKOVKA LUPACKA', 1.25, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('CROISSANT', 1.69, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('ČOKOLÁDOVÁ ROLKA', 1.09, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('LUPACKA P', 1.09, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('DONUT C', 1.39, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('MUFFIN PLN', 1.49, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('CROISSANT S MASLOM', 1.29, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('KOLÁČ MIX', 1.79, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('DONUT PRI', 1.39, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('HREBEŇ PL', 1.59, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('MARHUĽOVÁ TAŠTIČKA', 1.19, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('SLIMÁK S HROZ', 1.35, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('CROISSANT', 1.89, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('MRKVOVÁ TAŠTIČKA', 1.19, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('RADOSTNIK J', 1.49, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('PISTACIOVÝ CROISSANT', 1.49, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('PILLOW CAKE', 1.29, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('DONUT S B', 1.39, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('MIMIKOVÁ TAŠTIČKA', 1.09, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('JADROVY PUDING', 1.25, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('TVAROH', 1.35, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('MINI SISKA S MUSKATOM', 1.19, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('MINI SISKA RUZOVA', 1.19, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('CROISSANT SLADKY', 1.49, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('DONUT KREM', 1.39, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('DONUT KOKOS', 1.39, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('DONUT S N', 1.29, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('SLIMAK SO', 1.49, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('COKOLADOVY', 1.79, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('MINI SISKA B', 1.05, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('DONUT DÚHOVY', 1.39, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('MUFFIN MALIN', 1.59, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('DOUBLE CH', 1.99, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('JABLKO RE', 1.19, 500.00,'PECIVO','SLADKE-PECIVO');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('PSENIC CHL SKVAS', 2.19, 500.00,'PECIVO','CHLEBY');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('CHL. PODHORAN', 2.49, 500.00,'PECIVO','CHLEBY');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('1/2 CHLIEB BIELY', 1.19, 500.00,'PECIVO','CHLEBY');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('KVASKOVY CHLIEB', 2.59, 500.00,'PECIVO','CHLEBY');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('CHLIEB ZEMIAKOVY', 2.79, 500.00,'PECIVO','CHLEBY');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('CHLIEB C', 1.99, 500.00,'PECIVO','CHLEBY');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('RUSTIKALNY KVASK. CHLIEB PREMIUM', 2.99, 500.00,'PECIVO','CHLEBY');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('CHLIEB SYKON', 2.39, 500.00,'PECIVO','CHLEBY');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('CHLIEB B', 1.89, 500.00,'PECIVO','CHLEBY');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('KVASKOVY', 2.49, 500.00,'PECIVO','CHLEBY');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('RICHTARSKY KVASK. CHLIEB', 2.89, 500.00,'PECIVO','CHLEBY');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('CHLIEB NESTRUKOVY', 2.69, 500.00,'PECIVO','CHLEBY');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('CHLIEB B. Z', 2.19, 500.00,'PECIVO','CHLEBY');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('CHLIEB MAKOVY', 2.39, 500.00,'PECIVO','CHLEBY');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('OSK. CHLIEB', 2.69, 500.00,'PECIVO','CHLEBY');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('KVASKO VY CHLIEB 505 G', 1.99, 500.00,'PECIVO','CHLEBY');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('GAZDOVSKA ZEMLA SO SALAMOU', 1.89, 500.00,'PECIVO','GAZDOVSKE, PIZZA');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('GAZDOVSKA ZEMLA SO SLANINOU', 1.89, 500.00,'PECIVO','GAZDOVSKE, PIZZA');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('GAZDOVSKA ZEMLA SO SUNKOU', 1.89, 500.00,'PECIVO','GAZDOVSKE, PIZZA');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('PIZZA SALAM', 2.19, 500.00,'PECIVO','GAZDOVSKE, PIZZA');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('PIZZA SUNKOVA', 2.19, 500.00,'PECIVO','GAZDOVSKE, PIZZA');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('PIZZA SLANINOVÁ', 2.19, 500.00,'PECIVO','GAZDOVSKE, PIZZA');
+INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('PIZZA SYROVÁ', 2.09, 500.00,'PECIVO','GAZDOVSKE, PIZZA');]]></console>
+      <console name="Shop" type="STANDARD" schema="main" session="Main"><![CDATA[select * from Articles;
+
+select  subtype from "Articles";
+
+SELECT * FROM Transactions;
+update Articles set stock = stock - 1 where article_id = 1;
+insert into Articles (name,price,stock,type,subtype) values ('NIECO3', 0.48, 500.00,'PECIVO','BEZNE-PECIVO');
+insert into Articles (name,price,stock,type,subtype) values ('POMARANC', 0.72, 500.001,'OVOCIE','CITRUSY');
+insert into Transactions (transaction_date,items, total_amount) values ("2024-11-15_11-21-40", 'asd,asd', 2);
 CREATE TABLE Transactions (
     transaction_id INTEGER PRIMARY KEY,
     transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -73,7 +181,7 @@ SELECT subtype FROM Articles WHERE type = PECIVO;
 
 DELETE FROM Transactions;
 
-SELECT items FROM Transactions WHERE transaction_dayid = 0 and  datetime("2025-02-07"),]]></console>
+SELECT items FROM Transactions WHERE transaction_dayid = 0 and  datetime("2025-02-07");]]></console>
     </connection>
     <connection id="a702d7de-5ccf-4b8c-81a8-9f4c79a1aaad">
       <console name="Connection" type="STANDARD" schema="" session="Main"><![CDATA[select * from transactions
@@ -129,7 +237,9 @@ commit]]></console>
     <filters />
   </component>
   <component name="DBNavigator.Project.ScriptExecutionManager" clear-outputs="true">
-    <recently-used-interfaces />
+    <recently-used-interfaces>
+      <mapping database-type="SQLITE" interface-id="DEFAULT" />
+    </recently-used-interfaces>
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>

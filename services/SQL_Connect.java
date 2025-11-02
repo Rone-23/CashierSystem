@@ -108,11 +108,51 @@ public class SQL_Connect {
         }
     }
 
-    public Item[] getItems(String subtype) throws SQLException {
+    public Item[] getItems(String type) throws SQLException {
         String sql = "SELECT name, price FROM Articles WHERE type = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1,subtype);
+            pstmt.setString(1,type);
+            ResultSet rs = pstmt.executeQuery();
+
+            List<Item> items = new ArrayList<>();
+            while (rs.next()) {
+                items.add(new ItemCountable(
+                        rs.getString("name"),
+                        rs.getDouble("price"),
+                        1.0
+                ));
+            }
+
+            return items.toArray(new Item[0]);
+        }
+    }
+
+    public Item[] getItems(String type, String subtype) throws SQLException {
+        String sql = "SELECT name, price FROM Articles WHERE type = ? AND subtype = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1,type);
+            pstmt.setString(2,subtype);
+            ResultSet rs = pstmt.executeQuery();
+
+            List<Item> items = new ArrayList<>();
+            while (rs.next()) {
+                items.add(new ItemCountable(
+                        rs.getString("name"),
+                        rs.getDouble("price"),
+                        1.0
+                ));
+            }
+
+            return items.toArray(new Item[0]);
+        }
+    }
+
+    public Item[] getAllItems() throws SQLException {
+        String sql = "SELECT name, price FROM Articles";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             ResultSet rs = pstmt.executeQuery();
 
             List<Item> items = new ArrayList<>();

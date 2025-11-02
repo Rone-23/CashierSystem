@@ -38,7 +38,7 @@ public class OpenTransaction {
             this.itemsInTransaction.put(item.getName(),item);
         }else if(this.itemsInTransaction.containsValue(item) && item.getClass()==ItemCountable.class){
             ItemCountable itemCountable = (ItemCountable) this.itemsInTransaction.get(item.getName());
-            itemCountable.addAmount(item.getAmount());
+            itemCountable.addAmount(1);
         }else {
             ItemUncountable itemUncountable = (ItemUncountable) this.itemsInTransaction.get(item.getName());
             ItemUncountable itemUncountableToAdd = (ItemUncountable) item;

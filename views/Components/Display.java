@@ -203,5 +203,10 @@ public class Display extends JTextArea {
         return currentFont.deriveFont((float) newFontSize);
     }
 
+    public Constants getDisplayType() {
+        return displayType;
+    }
+
+
 
 }

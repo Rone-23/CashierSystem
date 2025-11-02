@@ -61,8 +61,6 @@ public class DisplayScrollableItems extends JScrollPane {
             moveSpacer(gbc.gridy);
 
             itemContainerCount++;
-        }else{
-            compoundItems(item);
         }
         revalidate();
 
@@ -111,18 +109,13 @@ public class DisplayScrollableItems extends JScrollPane {
 
                     String itemName = ((JLabel) itemNameContainer.getComponent(0)).getText();
                     double itemPrice = Double.parseDouble(((JLabel) itemPriceAmountContainer.getComponent(0)).getText().split(" ")[0]);
-                    double itemAmount = Double.parseDouble(((JLabel) itemPriceAmountContainer.getComponent(1)).getText().split(" ")[0]);
 
                     if(itemName.equals(item.getName())){
-                        itemPrice = Math.ceil(( itemPrice + item.getPrice() ) * 100) / 100;
-                        itemAmount = Math.ceil(( itemAmount + item.getAmount() ) * 1000) / 1000;
-                        ((JLabel) itemPriceAmountContainer.getComponent(0)).setText(itemPrice +" €");
-
+                        ((JLabel) itemPriceAmountContainer.getComponent(0)).setText(String.format("%.02f €",(itemPrice + item.getPrice())));
                         if (item instanceof ItemUncountable){
-                            ((JLabel) itemPriceAmountContainer.getComponent(1)).setText(itemAmount + " kg");
+                            ((JLabel) itemPriceAmountContainer.getComponent(1)).setText(item.getAmount() + " kg");
                         }else{
-                            int intItemAmount = (int) Math.round(itemAmount);
-                            ((JLabel) itemPriceAmountContainer.getComponent(1)).setText(intItemAmount + " ks");
+                            ((JLabel) itemPriceAmountContainer.getComponent(1)).setText(item.getAmount() + " ks");
                         }
                         return 1;
                     }
