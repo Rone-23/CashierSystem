@@ -1,10 +1,11 @@
 package controllers;
 
-import controllers.buttons.ButtonClusterController;
-import controllers.display.ContentAmountController;
-import controllers.display.DisplayItemsController;
-import controllers.panelControllers.DuringArticlesController;
-import controllers.panelControllers.DuringRegisterController;
+import controllers.buttons.UtilityController;
+import controllers.display.ContentController;
+import controllers.display.DisplayItemController;
+import controllers.transaction.MakeTransaction;
+import controllers.panels.DuringArticlesController;
+import controllers.panels.DuringRegisterController;
 import services.OpenTransaction;
 import services.SQL_Connect;
 
@@ -17,22 +18,22 @@ public class MainController {
     public MainController() throws SQLException {
         //TODO: This OpenTransaction.class need to be created every time that you start transaction not to make it here in main controller
 
+        ContentController contentController = new ContentController();
+        OpenTransaction.addObserver(contentController);
+        new DuringRegisterController(contentController);
+        new DuringArticlesController(contentController);
 
+        DisplayItemController displayItemController = new DisplayItemController();
+        OpenTransaction.addObserver(displayItemController);
 
-        ContentAmountController contentAmountController = new ContentAmountController();
-        new DuringRegisterController(contentAmountController);
-        new DuringArticlesController(contentAmountController);
+        new UtilityController();
 
-        DisplayItemsController displayItemsController = new DisplayItemsController();
-
-        new ButtonClusterController();
-
-        OpenTransaction.addObserver(displayItemsController);
         createOpenTransaction();
     }
 
     public static void createOpenTransaction() {
         openTransaction = new OpenTransaction(Integer.parseInt(SQL_Connect.getInstance().getLastTimeStamp().split(" ")[0].split("-")[2]));
+        ContentController.addObserver(openTransaction);
     }
 
     public static void makeTransaction() {

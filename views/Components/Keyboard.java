@@ -3,7 +3,6 @@ package views.Components;
 import assets.Colors;
 import utility.ButtonBuilder;
 import utility.GridBagConstraintsBuilder;
-import utility.PanelBuilder;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,8 +11,8 @@ import java.util.Map;
 
 public class Keyboard extends JPanel{
     final String[] buttonNames = {"7", "8", "9", "4", "5", "6", "1", "2", "3", "0", "00", ","};
-    private final JPanel topPanel = PanelBuilder.createPanel(new GridBagLayout());
-    private final JPanel bottomPanel = PanelBuilder.createPanel(new GridBagLayout());
+    private final JPanel topPanel = new JPanel();
+    private final JPanel bottomPanel = new JPanel();
     private final Map<String, JButton> buttons = new HashMap<>();
     private final Dimension numberButtonDimensions = new Dimension(183,136);
     private final Dimension utilityButtonDimensions = new Dimension(280,136);
@@ -21,6 +20,9 @@ public class Keyboard extends JPanel{
     private final JButton backspaceButton;
 
     public Keyboard(){
+        topPanel.setLayout( new GridBagLayout());
+        bottomPanel.setLayout( new GridBagLayout());
+
         topPanel.setOpaque(false);
         bottomPanel.setOpaque(false);
 

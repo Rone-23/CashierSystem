@@ -131,13 +131,13 @@ public class DuringArticles  extends JPanel {
 
      public DisplayScrollableArticles getDisplayScrollableArticles(){return displayScrollableArticles;}
 
-    public Display getDisplay(){return display;}
+     public Display getDisplay(){return display;}
 
      public Keyboard getKeyboard(){return keyboard;}
 
-    public ArticleFilterButtonCluster getArticleFilterButtonCluster(){return articleFilterButtonCluster;}
+     public ArticleFilterButtonCluster getArticleFilterButtonCluster(){return articleFilterButtonCluster;}
 
-    public JButton getUtilityButton(String name){
+     public JButton getUtilityButton(String name){
         for(Component c : clusterBottom.getComponents()){
             if(c instanceof  JButton){
                 if(Objects.equals(c.getName(), name)){

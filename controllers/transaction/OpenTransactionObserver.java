@@ -1,4 +1,4 @@
-package controllers.openTransaction;
+package controllers.transaction;
 
 import services.Item;
 import services.OpenTransaction;

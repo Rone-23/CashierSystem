@@ -3,7 +3,6 @@ package assets;
 import java.awt.Color;
 
 public enum Colors {
-    DEFAULT_BUTTON("#C8D3E0"),
     GRAY("#736E7E"),
     BLACK_TEXT("#43484E"),
     BACKGROUND_WHITE("#FAFCFE"),
@@ -21,9 +20,5 @@ public enum Colors {
     public Color getColor() {
         return Color.decode(hexCode);
     }
-
-//    public static Color getColor(String hexCode){
-//        return Color.decode(hexCode);
-//    }
 
 }

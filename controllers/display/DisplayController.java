@@ -1,6 +1,6 @@
 package controllers.display;
 
-import controllers.openTransaction.OpenTransactionObserver;
+import controllers.transaction.OpenTransactionObserver;
 import services.Item;
 import services.OpenTransaction;
 import views.Components.Display;

@@ -1,7 +1,6 @@
 package services;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import utility.ItemDeserializer;
 
 import java.util.Objects;
@@ -16,13 +15,13 @@ public abstract class Item {
         totalAmount++;
     }
 
-    protected void setName(String name){
+    public void setName(String name){
         this.name=name;
     }
-    protected void setPrice(double price){
+    public void setPrice(double price){
         this.price=price;
     }
-    protected void setAmount(double amount){
+    public void setAmount(double amount){
         this.amount=amount;
     }
     public String getName(){

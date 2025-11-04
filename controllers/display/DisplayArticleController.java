@@ -1,7 +1,8 @@
-package controllers.buttons;
+package controllers.display;
 
-import controllers.ViewManager;
-import controllers.openTransaction.OpenTransactionObserver;
+import controllers.panels.ViewManager;
+import controllers.buttons.FilterObserver;
+import controllers.transaction.OpenTransactionObserver;
 import services.Item;
 import services.OpenTransaction;
 import services.SQL_Connect;
@@ -11,15 +12,16 @@ import javax.swing.*;
 import java.sql.SQLException;
 import java.util.Map;
 
-public class DisplayScrollableArticlesButtonsController implements OpenTransactionObserver, FilterObserver {
+public class DisplayArticleController implements OpenTransactionObserver, FilterObserver {
     private final DisplayScrollableArticles displayScrollableArticles = ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles();
-    private final Map<String, JButton> buttons = ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles().getButtons();
     private OpenTransaction openTransaction;
     private Item[] articles;
     private String filterKeywordMain;
     private String filterKeywordSecondary;
 
-    public DisplayScrollableArticlesButtonsController(){
+    private final Map<String, JButton> buttons = ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles().getButtons();
+
+    public DisplayArticleController(){
         createArticles();
     }
 
@@ -35,7 +37,10 @@ public class DisplayScrollableArticlesButtonsController implements OpenTransacti
         }
 
         for(Item item : articles){
-            buttons.get(item.getName().toLowerCase()).addActionListener(e -> openTransaction.addItem(item));
+            buttons.get(item.getName().toLowerCase()).addActionListener(e -> {
+                System.out.println(item.getAmount());
+                openTransaction.addItem(item);
+            });
         }
     }
 

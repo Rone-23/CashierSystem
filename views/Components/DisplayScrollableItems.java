@@ -66,6 +66,9 @@ public class DisplayScrollableItems extends JScrollPane {
 
     }
 
+    public void clear(){
+        removeAll();
+    }
 
     private void makeItemContainer(Item item, JPanel itemContainer) {
         JPanel itemNameContainer = new JPanel();
@@ -85,12 +88,12 @@ public class DisplayScrollableItems extends JScrollPane {
         itemPriceAmountContainer.setForeground(Colors.BLACK_TEXT.getColor());
 
         itemNameContainer.add(new JLabel(item.getName()));
-        itemPriceAmountContainer.add(new JLabel(item.getPrice() + " €"));
+        itemPriceAmountContainer.add(new JLabel(item.getPrice() * item.getAmount() + " €"));
+
         if(item instanceof ItemUncountable){
             itemPriceAmountContainer.add(new JLabel(item.getAmount() + " kg"));
         }else{
-            int intItemAmount = (int) Math.round(item.getAmount());
-            itemPriceAmountContainer.add(new JLabel(intItemAmount + " ks"));
+            itemPriceAmountContainer.add(new JLabel(item.getAmount() + " ks"));
         }
 
         itemContainer.add(itemNameContainer);
@@ -108,10 +111,9 @@ public class DisplayScrollableItems extends JScrollPane {
                     JPanel itemPriceAmountContainer = (JPanel) itemContainers.getComponent(1);
 
                     String itemName = ((JLabel) itemNameContainer.getComponent(0)).getText();
-                    double itemPrice = Double.parseDouble(((JLabel) itemPriceAmountContainer.getComponent(0)).getText().split(" ")[0]);
 
                     if(itemName.equals(item.getName())){
-                        ((JLabel) itemPriceAmountContainer.getComponent(0)).setText(String.format("%.02f €",(itemPrice + item.getPrice())));
+                        ((JLabel) itemPriceAmountContainer.getComponent(0)).setText(String.format("%.02f €",(item.getPrice()*item.getAmount())));
                         if (item instanceof ItemUncountable){
                             ((JLabel) itemPriceAmountContainer.getComponent(1)).setText(item.getAmount() + " kg");
                         }else{

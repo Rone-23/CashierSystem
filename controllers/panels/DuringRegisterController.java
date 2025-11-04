@@ -1,20 +1,21 @@
-package controllers.panelControllers;
+package controllers.panels;
 
-import controllers.ViewManager;
 import controllers.buttons.KeyboardController;
-import controllers.display.ContentAmountController;
+import controllers.display.ContentController;
 import controllers.display.DisplayController;
 import services.OpenTransaction;
 import views.panels.DuringRegister;
 
 public class DuringRegisterController {
-    public DuringRegisterController(ContentAmountController contentAmountController) {
+    public DuringRegisterController(ContentController contentController) {
+
         DuringRegister duringRegister = ViewManager.getInstance().getDuringRegister();
 
         DisplayController displayController = new DisplayController(duringRegister.getDisplayTotal());
-        new KeyboardController(duringRegister.getKeyboard(), duringRegister.getDisplayTop(), contentAmountController);
-
         OpenTransaction.addObserver(displayController);
+
+        KeyboardController keyboardController = new KeyboardController(duringRegister.getKeyboard(), duringRegister.getDisplayTop(), contentController);
+        ContentController.addObserver(keyboardController);
 
 
 

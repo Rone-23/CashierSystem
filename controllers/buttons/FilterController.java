@@ -8,10 +8,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArticleFilterButtonClusterController implements FilterObserver{
+public class FilterController implements FilterObserver{
 
     private static final List<FilterObserver> observerList = new ArrayList<>();
-    public ArticleFilterButtonClusterController(ArticleFilterButtonCluster articleFilterButtonCluster) {
+    public FilterController(ArticleFilterButtonCluster articleFilterButtonCluster) {
 
         //Adding functionality to secondary filters
         for(JButton button : articleFilterButtonCluster.getMainFilterButtons()){

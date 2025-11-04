@@ -1,5 +1,5 @@
 import controllers.MainController;
-import controllers.ViewManager;
+import controllers.panels.ViewManager;
 
 import javax.swing.*;
 import java.nio.file.Path;

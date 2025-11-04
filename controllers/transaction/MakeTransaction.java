@@ -1,4 +1,4 @@
-package controllers;
+package controllers.transaction;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,11 +7,11 @@ import services.OpenTransaction;
 import services.SQL_Connect;
 import utility.Receipt;
 
-public class MakeTransaction {
-    public MakeTransaction(){
-    }
+public class MakeTransaction{
     public void makeTransaction( OpenTransaction openTransaction ){
+
         ObjectMapper objectMapper = new ObjectMapper();
+
         Item[] itemArray=openTransaction.getItemsInTransaction().values().toArray(new Item[0]);
         for (Item item : itemArray){
             SQL_Connect.getInstance().removeFromStock(item.getAmount(),item.getName());

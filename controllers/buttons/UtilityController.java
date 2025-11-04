@@ -1,15 +1,20 @@
 package controllers.buttons;
 
-import controllers.ViewManager;
+import controllers.panels.ViewManager;
 import views.Components.ButtonCluster;
 
-public class ButtonClusterController {
+public class UtilityController {
 
-    public ButtonClusterController() {
+    public UtilityController() {
+        /*
+        Controlling all the buttons that are on the right side in DuringRegister
+         */
         ButtonCluster buttonCluster = (ButtonCluster) ViewManager.getInstance().getDuringRegister().getButtonCluster();
-
         buttonCluster.getButton("artikle").addActionListener(e -> ViewManager.getInstance().showArticles());
 
+        /*
+        Controlling buttons on bottom side of DuringArticles
+         */
         ViewManager.getInstance().getDuringArticles().getUtilityButton("cancel").addActionListener(e -> ViewManager.getInstance().showRegister());
     }
 }

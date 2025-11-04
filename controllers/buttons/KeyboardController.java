@@ -1,13 +1,18 @@
 package controllers.buttons;
 import assets.Constants;
-import controllers.display.ContentAmountController;
+import controllers.display.ContentController;
+import controllers.display.ContentObserver;
 import views.Components.Display;
 import views.Components.Keyboard;
 
 
-public class KeyboardController  {
+public class KeyboardController implements ContentObserver {
+    Display display;
+    ContentController amountToUse;
 
-    public KeyboardController(Keyboard keyboard , Display display, ContentAmountController amountToUse){
+    public KeyboardController(Keyboard keyboard , Display display, ContentController amountToUse){
+        this.display = display;
+        this.amountToUse = amountToUse;
         keyboard.getButton("backspace").addActionListener(e -> {
             if(display.getDisplayType() == Constants.SPLIT){
                 amountToUse.removeLast();
@@ -45,4 +50,12 @@ public class KeyboardController  {
         }
     }
 
+    @Override
+    public void notifyContentUpdate(String content) {
+        if(display.getDisplayType() == Constants.SPLIT){
+            display.setText(display.getTextArray()[0],amountToUse.getContent());
+        }else {
+            display.setText(amountToUse.getContent());
+        }
+    }
 }

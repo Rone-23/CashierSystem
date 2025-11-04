@@ -1,4 +1,4 @@
-package controllers;
+package controllers.panels;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +12,7 @@ public class ViewManager {
     private final JFrame mainFrame;
     private final CardLayout cardLayout;
     private final JPanel cardPanel;
-    // Panels
+
     private final DuringRegister duringRegister;
     private final DuringArticles duringArticles;
 
@@ -25,11 +25,9 @@ public class ViewManager {
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
 
-        // Initialize panels
         duringRegister = new DuringRegister();
         duringArticles = new DuringArticles();
 
-        // Add them to the card panel
         cardPanel.add(duringRegister, "REGISTER");
         cardPanel.add(duringArticles, "ARTICLES");
 
