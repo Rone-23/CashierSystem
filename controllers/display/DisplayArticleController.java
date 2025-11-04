@@ -2,6 +2,7 @@ package controllers.display;
 
 import controllers.panels.ViewManager;
 import controllers.buttons.FilterObserver;
+import controllers.transaction.OpenTransactionManager;
 import controllers.transaction.OpenTransactionObserver;
 import services.Item;
 import services.OpenTransaction;
@@ -14,7 +15,7 @@ import java.util.Map;
 
 public class DisplayArticleController implements OpenTransactionObserver, FilterObserver {
     private final DisplayScrollableArticles displayScrollableArticles = ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles();
-    private OpenTransaction openTransaction;
+    private OpenTransaction openTransaction = OpenTransactionManager.getInstance().getOpenTransaction();
     private Item[] articles;
     private String filterKeywordMain;
     private String filterKeywordSecondary;
@@ -37,10 +38,7 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
         }
 
         for(Item item : articles){
-            buttons.get(item.getName().toLowerCase()).addActionListener(e -> {
-                System.out.println(item.getAmount());
-                openTransaction.addItem(item);
-            });
+            buttons.get(item.getName().toLowerCase()).addActionListener(e -> openTransaction.addItem(item));
         }
     }
 
@@ -77,6 +75,7 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
     }
 
     //Observer
+
     @Override
     public void onCreate(OpenTransaction openTransaction) {
         this.openTransaction = openTransaction;

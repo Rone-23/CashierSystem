@@ -21,6 +21,7 @@ public class DisplayScrollableItems extends JScrollPane {
 
     public DisplayScrollableItems(){
         spacer.setOpaque(false);
+        spacer.setName("spacer");
         gbc.fill=GridBagConstraints.HORIZONTAL;
         gbc.anchor=GridBagConstraints.NORTHWEST;
         gbc.gridx=0;
@@ -49,6 +50,7 @@ public class DisplayScrollableItems extends JScrollPane {
         itemContainer.setBackground(Colors.BACKGROUND_WHITE.getColor());
         itemContainer.setBorder(new DottedBorderTopBottom(Colors.GRAY.getColor(), 1));
         itemContainer.setPreferredSize(new Dimension(0,70));
+        itemContainer.setName("itemContainer");
 
         if(itemContainerCount % 2 == 1){
             itemContainer.setBackground(Colors.BUTTON_BACKGROUND_WHITE_ELEVATED.getColor());
@@ -67,7 +69,12 @@ public class DisplayScrollableItems extends JScrollPane {
     }
 
     public void clear(){
-        removeAll();
+        for(Component component : mainItemPanel.getComponents()){
+            if(!component.getName().equals("spacer")){
+                mainItemPanel.remove(component);
+            }
+        }
+        mainItemPanel.revalidate();
     }
 
     private void makeItemContainer(Item item, JPanel itemContainer) {
