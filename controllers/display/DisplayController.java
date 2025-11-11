@@ -1,7 +1,6 @@
 package controllers.display;
 
 import assets.Constants;
-import controllers.transaction.OpenTransactionManager;
 import controllers.transaction.OpenTransactionObserver;
 import services.Item;
 import services.OpenTransaction;
@@ -9,7 +8,7 @@ import views.Components.Display;
 
 public class DisplayController implements OpenTransactionObserver {
     Display display;
-    OpenTransaction openTransaction = OpenTransactionManager.getInstance().getOpenTransaction();
+    OpenTransaction openTransaction;
     public DisplayController(Display display){
         this.display = display;
     }
@@ -27,5 +26,10 @@ public class DisplayController implements OpenTransactionObserver {
         if(display.getDisplayType().equals(Constants.TOTAL) || display.getDisplayType().equals(Constants.SPLIT)){
             display.getTextArray()[0]="0.00";
         }
+    }
+
+    @Override
+    public void onCreate(OpenTransaction openTransaction) {
+        this.openTransaction = openTransaction;
     }
 }

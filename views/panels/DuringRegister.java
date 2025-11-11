@@ -22,7 +22,8 @@ public class DuringRegister extends JPanel {
     private final Display displayTotal = new Display(Constants.TOTAL);
     private final Display displayTop = new Display(Constants.WEIGHT);
     private final Keyboard keyboard = new Keyboard();
-    private final ButtonCluster buttonCluster = new ButtonCluster();
+    private final String[] buttonNames = {"Artikle", "Posledna polozka", "Storno", "Hotovost", "Karta", "Stravenky", "Poukazky"};
+    private final ButtonCluster buttonCluster = new ButtonCluster(buttonNames);
 
 
 
@@ -130,7 +131,7 @@ public class DuringRegister extends JPanel {
     public DisplayScrollableItems getDisplayScrollableItems(){return displayScrollableItems;}
     public Display getDisplayTotal(){return displayTotal;}
     public Display getDisplayTop(){return displayTop;}
-    public JComponent getButtonCluster(){return buttonCluster;}
+    public ButtonCluster getButtonCluster(){return buttonCluster;}
 
 
 }

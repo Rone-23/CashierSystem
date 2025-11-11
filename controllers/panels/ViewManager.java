@@ -3,6 +3,7 @@ package controllers.panels;
 import javax.swing.*;
 import java.awt.*;
 
+import views.panels.DuringIdle;
 import views.panels.DuringRegister;
 import views.panels.DuringArticles;
 
@@ -13,6 +14,7 @@ public class ViewManager {
     private final CardLayout cardLayout;
     private final JPanel cardPanel;
 
+    private final DuringIdle duringIdle;
     private final DuringRegister duringRegister;
     private final DuringArticles duringArticles;
 
@@ -27,9 +29,11 @@ public class ViewManager {
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
 
+        duringIdle = new DuringIdle();
         duringRegister = new DuringRegister();
         duringArticles = new DuringArticles();
 
+        cardPanel.add(duringIdle, "IDLE");
         cardPanel.add(duringRegister, "REGISTER");
         cardPanel.add(duringArticles, "ARTICLES");
 
@@ -53,8 +57,16 @@ public class ViewManager {
         cardLayout.show(cardPanel, "ARTICLES");
     }
 
+    public void showIdle() {
+        cardLayout.show(cardPanel, "IDLE");
+    }
+
     public JFrame getMainFrame() {
         return mainFrame;
+    }
+
+    public DuringIdle getDuringIdle() {
+        return duringIdle;
     }
 
     public DuringArticles getDuringArticles() {
@@ -64,4 +76,5 @@ public class ViewManager {
     public DuringRegister getDuringRegister() {
         return duringRegister;
     }
+
 }

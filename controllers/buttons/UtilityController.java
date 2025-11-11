@@ -8,11 +8,17 @@ public class UtilityController {
 
     public UtilityController() {
         /*
+        Controlling all the buttons that are on the right side in DuringIdle
+         */
+        ButtonCluster idleButtonCluster = ViewManager.getInstance().getDuringIdle().getButtonCluster();
+        idleButtonCluster.getButton("zacat (artikle)").addActionListener(e -> ViewManager.getInstance().showArticles());
+
+        /*
         Controlling all the buttons that are on the right side in DuringRegister
          */
-        ButtonCluster buttonCluster = (ButtonCluster) ViewManager.getInstance().getDuringRegister().getButtonCluster();
-        buttonCluster.getButton("artikle").addActionListener(e -> ViewManager.getInstance().showArticles());
-        buttonCluster.getButton("karta").addActionListener(e -> new CardPayment());
+        ButtonCluster registerButtonCluster = ViewManager.getInstance().getDuringRegister().getButtonCluster();
+        registerButtonCluster.getButton("artikle").addActionListener(e -> ViewManager.getInstance().showArticles());
+        registerButtonCluster.getButton("karta").addActionListener(e -> new CardPayment());
 
         /*
         Controlling buttons on bottom side of DuringArticles

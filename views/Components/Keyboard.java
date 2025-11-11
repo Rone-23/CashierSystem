@@ -31,13 +31,13 @@ public class Keyboard extends JPanel{
         GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
 
         //Adding delete button
-        deleteButton = ButtonBuilder.buildChonkyButton("delete", color);
+        deleteButton = ButtonBuilder.buildChonkyButton("Delete", color);
         deleteButton.setPreferredSize(utilityButtonDimensions);
         topPanel.add(deleteButton,gbc);
 
         //Adding delete button
         gbc.gridx = 1;
-        backspaceButton = ButtonBuilder.buildChonkyButton("backspace", color);
+        backspaceButton = ButtonBuilder.buildChonkyButton("Backspace", color);
         backspaceButton.setPreferredSize(utilityButtonDimensions);
         topPanel.add(backspaceButton,gbc);
 

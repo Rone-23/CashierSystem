@@ -10,10 +10,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ButtonCluster extends JPanel{
-    final String[] buttonNames = {"Artikle", "Posledna polozka", "Storno", "Hotovost", "Karta", "Stravenky", "Poukazky"};
+    String[] buttonNames;
     private final Map<String, JButton> buttons = new HashMap<>();
 
-    public ButtonCluster(){
+    public ButtonCluster(String[] buttonNames){
+        this.buttonNames =  buttonNames;
         setOpaque(false);
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);

@@ -23,7 +23,7 @@ public class DisplayScrollableArticles extends JScrollPane {
         spacer.setOpaque(false);
         gbc.anchor=GridBagConstraints.NORTHWEST;
         mainArticlePanel.setLayout(new GridBagLayout());
-        mainArticlePanel.setOpaque(false);
+        mainArticlePanel.setBackground(Colors.BACKGROUND_GRAY.getColor());
         getViewport().setOpaque(false);
         setBorder(null);
         setOpaque(false);
