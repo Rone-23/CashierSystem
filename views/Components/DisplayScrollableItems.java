@@ -52,6 +52,7 @@ public class DisplayScrollableItems extends JScrollPane {
         itemContainer.setPreferredSize(new Dimension(0,70));
         itemContainer.setName("itemContainer");
 
+        //Swapping of backgrounds
         if(itemContainerCount % 2 == 1){
             itemContainer.setBackground(Colors.BUTTON_BACKGROUND_WHITE_ELEVATED.getColor());
         }
@@ -94,13 +95,22 @@ public class DisplayScrollableItems extends JScrollPane {
         itemNameContainer.setForeground(Colors.BLACK_TEXT.getColor());
         itemPriceAmountContainer.setForeground(Colors.BLACK_TEXT.getColor());
 
-        itemNameContainer.add(new JLabel(item.getName()));
-        itemPriceAmountContainer.add(new JLabel(item.getPrice() * item.getAmount() + " €"));
+        JLabel itemNameLabel = new JLabel(item.getName());
+        itemNameLabel.setForeground(Colors.BLACK_TEXT.getColor());
+        itemNameContainer.add(itemNameLabel);
+
+        JLabel itemPriceLabel = new JLabel(item.getPrice() * item.getAmount() + " €");
+        itemPriceLabel.setForeground(Colors.BLACK_TEXT.getColor());
+        itemPriceAmountContainer.add(itemPriceLabel);
 
         if(item instanceof ItemUncountable){
-            itemPriceAmountContainer.add(new JLabel(item.getAmount() + " kg"));
+            JLabel itemAmountLabel  = new JLabel(item.getAmount() + " kg");
+            itemAmountLabel.setForeground(Colors.BLACK_TEXT.getColor());
+            itemPriceAmountContainer.add(itemAmountLabel);
         }else{
-            itemPriceAmountContainer.add(new JLabel(item.getAmount() + " ks"));
+            JLabel itemAmountLabel  = new JLabel(item.getAmount() + " ks");
+            itemAmountLabel.setForeground(Colors.BLACK_TEXT.getColor());
+            itemPriceAmountContainer.add(itemAmountLabel);
         }
 
         itemContainer.add(itemNameContainer);
@@ -120,6 +130,7 @@ public class DisplayScrollableItems extends JScrollPane {
                     String itemName = ((JLabel) itemNameContainer.getComponent(0)).getText();
 
                     if(itemName.equals(item.getName())){
+                        //Displaying price for the amount of this item in transaction
                         ((JLabel) itemPriceAmountContainer.getComponent(0)).setText(String.format("%.02f €",(item.getPrice()*item.getAmount())));
                         if (item instanceof ItemUncountable){
                             ((JLabel) itemPriceAmountContainer.getComponent(1)).setText(item.getAmount() + " kg");

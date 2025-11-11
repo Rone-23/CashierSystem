@@ -36,15 +36,18 @@ public class OpenTransaction implements ContentObserver {
     }
 
     public void addItem(Item item){
-        if (!this.itemsInTransaction.containsValue(item)){
+        if (!this.itemsInTransaction.containsKey(item.getName())){
+            item.setAmount(content);
             this.itemsInTransaction.put(item.getName(),item);
-        }else if(this.itemsInTransaction.containsValue(item) && item.getClass()==ItemCountable.class){
+        }else if(this.itemsInTransaction.containsKey(item.getName()) && item.getClass()==ItemCountable.class){
             ItemCountable itemCountable = (ItemCountable) this.itemsInTransaction.get(item.getName());
             itemCountable.addAmount(content);
+            item=itemCountable;
         }else {
             ItemUncountable itemUncountable = (ItemUncountable) this.itemsInTransaction.get(item.getName());
             ItemUncountable itemUncountableToAdd = (ItemUncountable) item;
             itemUncountable.addWeight(itemUncountableToAdd.getWeight());
+            item = itemUncountable;
         }
         for(OpenTransactionObserver observer : observerList){
             observer.onItemAdd(item);

@@ -21,6 +21,8 @@ public class ViewManager {
         mainFrame = new JFrame("Cashier System");
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setSize(screenSize.width, screenSize.height);
+        //For development purposes
+        mainFrame.setUndecorated(true);
 
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);

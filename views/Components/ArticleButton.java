@@ -2,6 +2,7 @@ package views.Components;
 
 import assets.Colors;
 import services.Item;
+import utility.ColorManipulation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +47,7 @@ public class ArticleButton extends JButton {
 
         FontMetrics fm = getFontMetrics(getFont());
 
-        g2.setPaint(Color.white);
+        g2.setPaint(ColorManipulation.lighten(color,10f));
         Shape inner = new RoundRectangle2D.Double( inset+insetSide, inset+insetTop, width, height-insetTop, arc, arc );
         g2.fill(inner);
 

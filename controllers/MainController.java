@@ -11,7 +11,6 @@ import java.sql.SQLException;
 
 public class MainController {
     public MainController() throws SQLException {
-
         ContentController contentController = new ContentController();
         OpenTransaction.addObserver(contentController);
         new DuringRegisterController(contentController);

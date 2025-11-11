@@ -14,7 +14,9 @@ public class DisplayController implements OpenTransactionObserver {
         this.display = display;
     }
 
+
     //Observer
+
     @Override
     public void onItemAdd(Item item) {
         display.setText(String.format("%.2f",openTransaction.getTotal()));
