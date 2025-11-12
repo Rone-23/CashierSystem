@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 
 public class Display extends JTextArea {
-    private final String[] text = {"0.00","0"};
+    private final String[] text = {"0.00","1"};
     private final Constants displayType;
     private final Dimension dimension = new Dimension(400,100);
     public Display() {
@@ -67,7 +67,7 @@ public class Display extends JTextArea {
                 drawTextCoordinatesX = writableArea.getBounds().x;
                 drawTextCoordinatesY = writableArea.getBounds().y+fm.getHeight();
 
-                g2.drawString("Dokopy",drawTextCoordinatesX,drawTextCoordinatesY);
+                g2.drawString("Cena",drawTextCoordinatesX,drawTextCoordinatesY);
 
                 strWidth = fm.stringWidth(getTextArray()[0] + " €");
                 drawTextCoordinatesX = (int) writableArea.getBounds().getWidth()+writableArea.getBounds().x-strWidth;
@@ -87,7 +87,7 @@ public class Display extends JTextArea {
                 drawTextCoordinatesX = writableArea.getBounds().x;
                 drawTextCoordinatesY = writableArea.getBounds().y+fm.getHeight();
 
-                g2.drawString("Počet",drawTextCoordinatesX,drawTextCoordinatesY);
+                g2.drawString("Množstvo",drawTextCoordinatesX,drawTextCoordinatesY);
 
                 strWidth = fm.stringWidth(getTextArray()[0] +" ks");
                 drawTextCoordinatesX = (int) writableArea.getBounds().getWidth()+writableArea.getBounds().x-strWidth;
@@ -112,7 +112,7 @@ public class Display extends JTextArea {
                 drawTextCoordinatesX = writableAreaTop.getBounds().x;
                 drawTextCoordinatesY = (int) (writableAreaTop.getBounds().y+fm.getHeight()*0.7);
 
-                g2.drawString("Dokopy",drawTextCoordinatesX,drawTextCoordinatesY);
+                g2.drawString("Cena",drawTextCoordinatesX,drawTextCoordinatesY);
 
                 strWidth = fm.stringWidth(getTextArray()[0] +" €");
                 drawTextCoordinatesX = (int) writableAreaTop.getBounds().getWidth()+writableAreaTop.getBounds().x-strWidth;

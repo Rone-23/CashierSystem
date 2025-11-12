@@ -5,7 +5,7 @@ import assets.Constants;
 import utility.GridBagConstraintsBuilder;
 import views.Components.ButtonCluster;
 import views.Components.Display;
-import views.Components.DisplayScrollableItems;
+import views.Components.DisplayItems;
 import views.Components.Keyboard;
 
 import javax.swing.*;
@@ -18,7 +18,7 @@ public class DuringRegister extends JPanel {
 
     private final Dimension dimension = new Dimension(500,114);
 
-    private final DisplayScrollableItems displayScrollableItems = new DisplayScrollableItems();
+    private final DisplayItems displayItems = new DisplayItems();
     private final Display displayTotal = new Display(Constants.TOTAL);
     private final Display displayTop = new Display(Constants.WEIGHT);
     private final Keyboard keyboard = new Keyboard();
@@ -61,7 +61,7 @@ public class DuringRegister extends JPanel {
         leftPanel.setLayout(new GridBagLayout());
         leftPanel.setBackground(Colors.BACKGROUND_WHITE.getColor());
 
-        leftPanel.add(displayScrollableItems, gbc);
+        leftPanel.add(displayItems, gbc);
 
         gbc.weighty = 0;
         gbc.weightx = 0;
@@ -128,7 +128,7 @@ public class DuringRegister extends JPanel {
 
 
     public Keyboard getKeyboard(){return keyboard;}
-    public DisplayScrollableItems getDisplayScrollableItems(){return displayScrollableItems;}
+    public DisplayItems getDisplayScrollableItems(){return displayItems;}
     public Display getDisplayTotal(){return displayTotal;}
     public Display getDisplayTop(){return displayTop;}
     public ButtonCluster getButtonCluster(){return buttonCluster;}

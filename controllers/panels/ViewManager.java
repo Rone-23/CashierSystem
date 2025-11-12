@@ -24,7 +24,7 @@ public class ViewManager {
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setSize(screenSize.width, screenSize.height);
         //For development purposes
-        mainFrame.setUndecorated(true);
+//        mainFrame.setUndecorated(true);
 
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);

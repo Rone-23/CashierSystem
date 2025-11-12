@@ -7,14 +7,14 @@ import controllers.transaction.OpenTransactionObserver;
 import services.Item;
 import services.OpenTransaction;
 import services.SQL_Connect;
-import views.Components.DisplayScrollableArticles;
+import views.Components.DisplayArticles;
 
 import javax.swing.*;
 import java.sql.SQLException;
 import java.util.Map;
 
 public class DisplayArticleController implements OpenTransactionObserver, FilterObserver {
-    private final DisplayScrollableArticles displayScrollableArticles = ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles();
+    private final DisplayArticles displayArticles = ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles();
     private OpenTransaction openTransaction = OpenTransactionManager.getInstance().getOpenTransaction();
     private Item[] articles;
     private String filterKeywordMain;
@@ -84,14 +84,14 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
     @Override
     public void updateMainFilter(String filterKeyword) {
         filterKeywordMain = filterKeyword;
-        displayScrollableArticles.clear();
+        displayArticles.clear();
         createArticles(filterKeywordMain);
     }
 
     @Override
     public void updateSecondaryFilter(String filterKeyword) {
         filterKeywordSecondary = filterKeyword;
-        displayScrollableArticles.clear();
+        displayArticles.clear();
         createArticles(filterKeywordMain,filterKeywordSecondary);
     }
 }

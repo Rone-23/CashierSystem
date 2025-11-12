@@ -12,14 +12,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
-public class DisplayScrollableItems extends JScrollPane {
+public class DisplayItems extends JScrollPane {
     JPanel mainItemPanel = new JPanel();
     JPanel spacer = new JPanel();
     int itemContainerCount = 0;
     GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints();
     GridBagConstraints gbcSpacer = GridBagConstraintsBuilder.buildGridBagConstraints();
+    private final Font font = new Font("Roboto",Font.BOLD,21);
 
-    public DisplayScrollableItems(){
+    public DisplayItems(){
         spacer.setOpaque(false);
         spacer.setName("spacer");
         gbc.fill=GridBagConstraints.HORIZONTAL;
@@ -45,8 +46,7 @@ public class DisplayScrollableItems extends JScrollPane {
 
     public void addItem(Item item){
         // Setting up item container
-        JPanel itemContainer = new JPanel();
-        itemContainer.setLayout(new FlowLayout());
+        JPanel itemContainer = new JPanel(new GridBagLayout());
         itemContainer.setBackground(Colors.BACKGROUND_WHITE.getColor());
         itemContainer.setBorder(new DottedBorderTopBottom(Colors.GRAY.getColor(), 1));
         itemContainer.setPreferredSize(new Dimension(0,70));
@@ -79,42 +79,50 @@ public class DisplayScrollableItems extends JScrollPane {
     }
 
     private void makeItemContainer(Item item, JPanel itemContainer) {
-        JPanel itemNameContainer = new JPanel();
-        JPanel itemPriceAmountContainer = new JPanel();
+        GridBagConstraints gbcItemContainer = GridBagConstraintsBuilder.buildGridBagConstraints(1,1);
+
+        JPanel itemNameContainer = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel itemPriceAmountContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
         itemNameContainer.setOpaque(false);
         itemPriceAmountContainer.setOpaque(false);
 
-        itemNameContainer.setLayout(new FlowLayout(FlowLayout.LEFT));
-        itemPriceAmountContainer.setLayout(new FlowLayout(FlowLayout.RIGHT));
-
         itemNameContainer.setBorder(new EmptyBorder(0,20,0,20));
         itemPriceAmountContainer.setBorder(new EmptyBorder(0,20,0,20));
-
 
         itemNameContainer.setForeground(Colors.BLACK_TEXT.getColor());
         itemPriceAmountContainer.setForeground(Colors.BLACK_TEXT.getColor());
 
-        JLabel itemNameLabel = new JLabel(item.getName());
+        JLabel itemNameLabel = new JLabel(item.getName(),SwingConstants.LEFT);
+        itemNameLabel.setFont(font);
         itemNameLabel.setForeground(Colors.BLACK_TEXT.getColor());
         itemNameContainer.add(itemNameLabel);
 
-        JLabel itemPriceLabel = new JLabel(item.getPrice() * item.getAmount() + " €");
-        itemPriceLabel.setForeground(Colors.BLACK_TEXT.getColor());
-        itemPriceAmountContainer.add(itemPriceLabel);
-
         if(item instanceof ItemUncountable){
             JLabel itemAmountLabel  = new JLabel(item.getAmount() + " kg");
+            itemAmountLabel.setFont(font);
             itemAmountLabel.setForeground(Colors.BLACK_TEXT.getColor());
+            itemAmountLabel.setBorder(new EmptyBorder(0,20,0,20));
             itemPriceAmountContainer.add(itemAmountLabel);
         }else{
             JLabel itemAmountLabel  = new JLabel(item.getAmount() + " ks");
+            itemAmountLabel.setFont(font);
             itemAmountLabel.setForeground(Colors.BLACK_TEXT.getColor());
+            itemAmountLabel.setBorder(new EmptyBorder(0,20,0,20));
             itemPriceAmountContainer.add(itemAmountLabel);
         }
 
-        itemContainer.add(itemNameContainer);
-        itemContainer.add(itemPriceAmountContainer);
+        JLabel itemPriceLabel = new JLabel(item.getPrice() * item.getAmount() + " €");
+        itemPriceLabel.setFont(font);
+        itemPriceLabel.setForeground(Colors.BLACK_TEXT.getColor());
+        itemPriceLabel.setBorder(new EmptyBorder(0,20,0,20));
+        itemPriceAmountContainer.add(itemPriceLabel);
+
+
+        itemContainer.add(itemNameContainer,gbcItemContainer);
+        gbcItemContainer.gridx++;
+        itemContainer.add(itemPriceAmountContainer,gbcItemContainer);
+
     }
 
     private int compoundItems(Item item) {
@@ -131,11 +139,11 @@ public class DisplayScrollableItems extends JScrollPane {
 
                     if(itemName.equals(item.getName())){
                         //Displaying price for the amount of this item in transaction
-                        ((JLabel) itemPriceAmountContainer.getComponent(0)).setText(String.format("%.02f €",(item.getPrice()*item.getAmount())));
+                        ((JLabel) itemPriceAmountContainer.getComponent(1)).setText(String.format("%.02f €",(item.getPrice()*item.getAmount())));
                         if (item instanceof ItemUncountable){
-                            ((JLabel) itemPriceAmountContainer.getComponent(1)).setText(item.getAmount() + " kg");
+                            ((JLabel) itemPriceAmountContainer.getComponent(0)).setText(item.getAmount() + " kg");
                         }else{
-                            ((JLabel) itemPriceAmountContainer.getComponent(1)).setText(item.getAmount() + " ks");
+                            ((JLabel) itemPriceAmountContainer.getComponent(0)).setText(item.getAmount() + " ks");
                         }
                         return 1;
                     }

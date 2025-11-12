@@ -1,6 +1,8 @@
 package utility;
 
 import assets.Constants;
+import services.Item;
+import views.Components.ArticleButton;
 import views.Components.ChonkyArrowButton;
 import views.Components.ChonkyButton;
 
@@ -18,12 +20,16 @@ public class ButtonBuilder {
     public static JButton buildChonkyButtonDisabled(Color color) {
         JButton jButton = new ChonkyButton(color);
         jButton.setEnabled(false);
-//        jButton.setPreferredSize(new Dimension(0,0));
         return jButton;
     }
 
     public static JButton buildChonkyArrowButton(Color color, Constants direction){
-        JButton jButton = new ChonkyArrowButton(color, direction);
+        return new ChonkyArrowButton(color, direction);
+    }
+
+    public static JButton buildArticleButton(Color color , Item item){
+        JButton jButton = new ArticleButton(color, item);
+        jButton.setName(item.getName());
         return jButton;
     }
 }

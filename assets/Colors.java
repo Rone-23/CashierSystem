@@ -10,6 +10,7 @@ public enum Colors {
 //    BUTTON_BACKGROUND_WHITE_ELEVATED("#F0F2F4"),
 //    BUTTON_LIGHT_BLUE("#DFE8F4"),
 //    BACKGROUND_GRAY("#F0F2F4"),
+//    ARTICLE_BUTTON("#D3D7E0"),
 //    DEFAULT_BLUE("#87B5F5");
 
     //DARK MODE
@@ -19,6 +20,7 @@ public enum Colors {
     BUTTON_BACKGROUND_WHITE_ELEVATED("#3C3C4D"),
     BUTTON_LIGHT_BLUE("#2F435F"),
     BACKGROUND_GRAY("#282836"),
+    ARTICLE_BUTTON("#5E6C7C"),
     DEFAULT_BLUE("#1D546C");
 
     private final String hexCode;

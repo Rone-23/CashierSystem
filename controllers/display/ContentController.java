@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ContentController implements  ContentObserver, OpenTransactionObserver {
     private static final List<ContentObserver> observerList = new ArrayList<>();
-    private final StringBuilder content = new StringBuilder();
+    private final StringBuilder content = new StringBuilder("1");
 
     public String getContent(){
         return content.toString();
@@ -19,7 +19,12 @@ public class ContentController implements  ContentObserver, OpenTransactionObser
         if(content.length()>6){
             throw new ArithmeticException("Maximal allowed digit is 7.");
         }
-        content.append(text);
+        if(content.toString().equals("1") && !text.equals("1")){
+            content.setLength(0);
+            content.append(text);
+        }else {
+            content.append(text);
+        }
         notifyObservers();
     }
 
@@ -32,6 +37,9 @@ public class ContentController implements  ContentObserver, OpenTransactionObser
     public void removeLast(){
         if(!content.isEmpty()){
             content.setLength(content.length()-1);
+            if(content.isEmpty()){
+                content.append("1");
+            }
         }
         notifyObservers();
     }

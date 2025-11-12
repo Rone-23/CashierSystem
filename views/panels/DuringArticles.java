@@ -9,21 +9,22 @@ import views.Components.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.util.Objects;
 
 public class DuringArticles  extends JPanel {
-     private final DisplayScrollableItems displayScrollableItems = new DisplayScrollableItems();
+     private final DisplayItems displayItems = new DisplayItems();
      private final Display display = new Display(Constants.SPLIT);
      private final Keyboard keyboard = new Keyboard();
-     private final DisplayScrollableArticles displayScrollableArticles = new DisplayScrollableArticles();
+     private final DisplayArticles displayArticles = new DisplayArticles();
      private final ArticleFilterButtonCluster articleFilterButtonCluster = new ArticleFilterButtonCluster();
-     private final JButton plusButton = ButtonBuilder.buildChonkyButton("Plus", Colors.BUTTON_LIGHT_BLUE.getColor());
-     private final JButton minusButton = ButtonBuilder.buildChonkyButton("Minus", Colors.BUTTON_LIGHT_BLUE.getColor());
-     private final JButton searchButton = ButtonBuilder.buildChonkyButton("Search", Colors.BUTTON_LIGHT_BLUE.getColor());
-     private final JButton cancelButton = ButtonBuilder.buildChonkyButton("Cancel", Colors.BUTTON_LIGHT_BLUE.getColor());
-     private final JPanel clusterBottom = createClusterBottom();
+     private final JButton plusButton = ButtonBuilder.buildChonkyButton("Pridať", Colors.DEFAULT_BLUE.getColor());
+     private final JButton minusButton = ButtonBuilder.buildChonkyButton("Ubrať", Colors.DEFAULT_BLUE.getColor());
+     private final JButton searchButton = ButtonBuilder.buildChonkyButton("Vyhladať", Colors.DEFAULT_BLUE.getColor());
+     private final JButton cancelButton = ButtonBuilder.buildChonkyButton("Naspäť", Colors.DEFAULT_BLUE.getColor());
+     private final JPanel clusterBottom = createBottomCluster();
 
      public DuringArticles(){
          GridBagConstraints gbcMain = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
@@ -45,7 +46,7 @@ public class DuringArticles  extends JPanel {
          main.setOpaque(false);
          GridBagConstraints gbcLeftPanel = GridBagConstraintsBuilder.buildGridBagConstraints(1,1);
 
-         main.add(displayScrollableItems,gbcLeftPanel);
+         main.add(displayItems,gbcLeftPanel);
 
          gbcLeftPanel.weighty = 0;
          gbcLeftPanel.weightx = 0;
@@ -87,7 +88,7 @@ public class DuringArticles  extends JPanel {
 
          gbcRightPanel.weighty=1;
          gbcRightPanel.gridy++;
-         main.add(displayScrollableArticles,gbcRightPanel);
+         main.add(displayArticles,gbcRightPanel);
 
          gbcRightPanel.weighty=0;
          gbcRightPanel.gridy++;
@@ -96,10 +97,16 @@ public class DuringArticles  extends JPanel {
         return main;
      }
 
-     private JPanel createClusterBottom(){
+     private JPanel createBottomCluster(){
          JPanel main = new JPanel();
          main.setLayout(new GridBagLayout());
          main.setOpaque(false);
+         
+         JPanel subsection = new JPanel();
+         subsection.setLayout(new GridBagLayout());
+         subsection.setBorder(new EmptyBorder(5,5,5,5));
+         subsection.setOpaque(false);
+
          Border topBorder = new MatteBorder(
                  3,
                  0,
@@ -109,27 +116,50 @@ public class DuringArticles  extends JPanel {
          );
          main.setBorder(topBorder);
          final Dimension buttonDimensions = new Dimension(183,136);
-         GridBagConstraints gbcClusterBottom = GridBagConstraintsBuilder.buildGridBagConstraints(1,1);
+         GridBagConstraints gbcBottomCluster = GridBagConstraintsBuilder.buildGridBagConstraints(1,1);
+         GridBagConstraints gbcSubsection = GridBagConstraintsBuilder.buildGridBagConstraints(1,1);
 
          plusButton.setPreferredSize(buttonDimensions);
          minusButton.setPreferredSize(buttonDimensions);
          searchButton.setPreferredSize(buttonDimensions);
          cancelButton.setPreferredSize(buttonDimensions);
 
-         main.add(plusButton,gbcClusterBottom);
-         gbcClusterBottom.gridx++;
-         main.add(minusButton,gbcClusterBottom);
-         gbcClusterBottom.gridx++;
-         main.add(searchButton,gbcClusterBottom);
-         gbcClusterBottom.gridx++;
-         main.add(cancelButton,gbcClusterBottom);
+         JLabel subsectionLabel = new JLabel("Množstvo tovaru", SwingConstants.CENTER);
+         subsectionLabel.setForeground(Colors.BLACK_TEXT.getColor());
+         subsectionLabel.setFont(new Font("Roboto", Font.BOLD, 21));
+
+
+         gbcSubsection.gridwidth=2;
+
+         subsection.add(subsectionLabel,gbcSubsection);
+
+         gbcSubsection.gridwidth=1;
+
+         gbcSubsection.gridy++;
+         subsection.add(plusButton,gbcSubsection);
+
+         gbcSubsection.gridx++;
+         subsection.add(minusButton,gbcSubsection);
+
+
+         gbcBottomCluster.gridwidth=2;
+
+         main.add(subsection,gbcBottomCluster);
+
+         gbcBottomCluster.gridwidth=1;
+
+         gbcBottomCluster.gridx+=2;
+         main.add(searchButton,gbcBottomCluster);
+
+         gbcBottomCluster.gridx++;
+         main.add(cancelButton,gbcBottomCluster);
 
          return main;
      }
 
-     public DisplayScrollableItems getDisplayScrollableItems(){return displayScrollableItems;}
+     public DisplayItems getDisplayScrollableItems(){return displayItems;}
 
-     public DisplayScrollableArticles getDisplayScrollableArticles(){return displayScrollableArticles;}
+     public DisplayArticles getDisplayScrollableArticles(){return displayArticles;}
 
      public Display getDisplay(){return display;}
 
@@ -147,9 +177,4 @@ public class DuringArticles  extends JPanel {
         }
         throw new IllegalArgumentException();
      }
-
-
-    public void updateArticles(Item item){
-        //TODO: Do what the method tells
-    }
 }

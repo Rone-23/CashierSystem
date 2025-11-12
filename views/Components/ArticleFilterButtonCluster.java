@@ -6,6 +6,7 @@ import utility.ButtonBuilder;
 import utility.GridBagConstraintsBuilder;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,7 @@ public class ArticleFilterButtonCluster extends JPanel {
 
     private JPanel makeMainFilterPanel(){
         final JPanel main = new JPanel();
+        main.setBorder(new EmptyBorder(10,10,5,10));
         main.setLayout(new GridBagLayout());
         main.setOpaque(false);
         final GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints();
@@ -56,6 +58,7 @@ public class ArticleFilterButtonCluster extends JPanel {
         String[] buttonNamesSecondaryFilter = secondaryFilterButtonsNames.toArray(new String[0]);
         main.setOpaque(false);
         main.setLayout(new GridBagLayout());
+        main.setBorder(new EmptyBorder(5,10,10,10));
         if(buttonNamesSecondaryFilter.length==5){
 
             for(String name : buttonNamesSecondaryFilter){
