@@ -1,43 +1,26 @@
 package controllers;
 
-import controllers.display.DisplayAmountController;
-import controllers.display.DisplayItemsController;
-import services.Item;
+import controllers.buttons.UtilityController;
+import controllers.display.ContentController;
+import controllers.display.DisplayItemController;
+import controllers.panels.DuringArticlesController;
+import controllers.panels.DuringRegisterController;
 import services.OpenTransaction;
-import services.SQL_Connect;
-import views.ArticlesPanel;
-import views.MainPanel;
-import views.leftPanel.LeftPanel;
-import views.rightPanel.RightPanel;
+
+import java.sql.SQLException;
 
 public class MainController {
-    private static OpenTransaction openTransaction;
-    private static final MakeTransaction makeTransaction = new MakeTransaction();
-    public MainController(MainPanel mainPanel, ArticlesPanel articlesPanel){
-        //TODO: This OpenTransaction.class need to be created every time that you start transaction not to make it here in main controller
-        LeftPanel leftPanel = mainPanel.getLeftPanel();
-        DisplayAmountController displayAmountController = new DisplayAmountController();
-        DisplayItemsController displayItemsController = new DisplayItemsController(leftPanel.getDisplayPanel());
-        OpenTransaction.addObserver(displayItemsController);
-        createOpenTransaction();
-        //TODO: Right panel should implement all the buttons like vklad vratka etc
-        RightPanel rightPanel = mainPanel.getRightPanel();
-        new KeyboardController(leftPanel.getKeyboardPanel().getKeyboard(), leftPanel.getDisplayPanel(), displayAmountController);
-        new UtilityController(leftPanel.getKeyboardPanel().getKeyboard(), leftPanel.getKeyboardPanel().getUtility(), displayAmountController);
-        new TopRightController(mainPanel,articlesPanel);
-        new ArticlePanelController(mainPanel,articlesPanel);
+    public MainController() throws SQLException {
+        ContentController contentController = new ContentController();
+        OpenTransaction.addObserver(contentController);
+        new DuringRegisterController(contentController);
+        new DuringArticlesController(contentController);
+
+        DisplayItemController displayItemController = new DisplayItemController();
+        OpenTransaction.addObserver(displayItemController);
+
+        new UtilityController();
     }
 
-    public static void createOpenTransaction(){
-        openTransaction = new OpenTransaction(Integer.parseInt(SQL_Connect.getInstance().getLastTimeStamp().split(" ")[0].split("-")[2]));
-    }
 
-    public static void makeTransaction(){
-        makeTransaction.makeTransaction(openTransaction);
-        createOpenTransaction();
-    }
-
-    public static void addItem(Item item){
-        openTransaction.addItem(item);
-    }
 }
