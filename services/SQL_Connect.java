@@ -24,7 +24,7 @@ public class SQL_Connect {
     public void connect(){
         try {
             Class.forName("org.sqlite.JDBC");
-            String url = "jdbc:sqlite:shop.db";
+            String url = "jdbc:sqlite:database.db";
             conn = DriverManager.getConnection(url);
             try (Statement stmt = conn.createStatement()) {
                 stmt.execute("PRAGMA busy_timeout = 5000;"); //wait time 5s
@@ -308,7 +308,7 @@ public class SQL_Connect {
         } catch (SQLException e) {
             System.out.println("Error getting name : " + e.getMessage());
         }
-        return null;
+        return "0-0-0";
     }
 
 }

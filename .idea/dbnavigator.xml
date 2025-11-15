@@ -151,9 +151,9 @@ insert into Articles (name,price,stock,type,subtype) values ('POMARANC', 0.72, 5
 insert into Transactions (transaction_date,items, total_amount) values ("2024-11-15_11-21-40", 'asd,asd', 2);
 CREATE TABLE Transactions (
     transaction_id INTEGER PRIMARY KEY,
-    transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    items TEXT, -- JSON representation of items
-    total_amount DECIMAL(10, 2)
+    transaction_date TEXT DEFAULT (DATETIME('now')), -- Changed type to TEXT, uses DATETIME function
+    items TEXT, 
+    total_amount REAL  -- Changed type to REAL for floating-point numbers
 );
 
 CREATE TABLE Articles (
@@ -254,7 +254,7 @@ commit]]></console>
           <driver-library value="" />
           <driver value="" />
           <url-type value="CUSTOM" />
-          <url value="jdbc:sqlite:C:\Users\tomas\Documents\Billa_system\shop.db" />
+          <url value="jdbc:sqlite:C:\Users\tomas\Documents\Billa_system\database.db" />
           <type value="NONE" />
           <user value="" />
           <deprecated-pwd value="" />
