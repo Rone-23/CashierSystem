@@ -23,6 +23,8 @@ public class UtilityController {
         /*
         Controlling buttons on bottom side of DuringArticles
          */
-        ViewManager.getInstance().getDuringArticles().getUtilityButton("naspäť").addActionListener(e -> ViewManager.getInstance().showRegister());
+        ViewManager.getInstance().getDuringArticles().getButtons("naspäť").addActionListener(e -> ViewManager.getInstance().showRegister());
+        ViewManager.getInstance().getDuringArticles().getButtons("pridať").addActionListener(new AddItemAction());
+        ViewManager.getInstance().getDuringArticles().getButtons("ubrať").addActionListener(new RemoveItemAction());
     }
 }

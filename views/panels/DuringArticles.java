@@ -2,7 +2,6 @@ package views.panels;
 
 import assets.Colors;
 import assets.Constants;
-import services.Item;
 import utility.ButtonBuilder;
 import utility.GridBagConstraintsBuilder;
 import views.Components.*;
@@ -12,7 +11,8 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
-import java.util.Objects;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DuringArticles  extends JPanel {
      private final DisplayItems displayItems = new DisplayItems();
@@ -25,6 +25,7 @@ public class DuringArticles  extends JPanel {
      private final JButton searchButton = ButtonBuilder.buildChonkyButton("Vyhladať", Colors.DEFAULT_BLUE.getColor());
      private final JButton cancelButton = ButtonBuilder.buildChonkyButton("Naspäť", Colors.DEFAULT_BLUE.getColor());
      private final JPanel clusterBottom = createBottomCluster();
+    private final Map<String, JButton> buttons = new HashMap<>();
 
      public DuringArticles(){
          GridBagConstraints gbcMain = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
@@ -37,7 +38,10 @@ public class DuringArticles  extends JPanel {
          gbcMain.gridx=1;
          add(createRightPanel(),gbcMain);
 
-
+         buttons.put(plusButton.getName(),plusButton);
+         buttons.put(minusButton.getName(),minusButton);
+         buttons.put(searchButton.getName(),searchButton);
+         buttons.put(cancelButton.getName(),cancelButton);
      }
 
      private JPanel createLeftPanel(){
@@ -167,14 +171,7 @@ public class DuringArticles  extends JPanel {
 
      public ArticleFilterButtonCluster getArticleFilterButtonCluster(){return articleFilterButtonCluster;}
 
-     public JButton getUtilityButton(String name){
-        for(Component c : clusterBottom.getComponents()){
-            if(c instanceof  JButton){
-                if(Objects.equals(c.getName(), name)){
-                    return (JButton) c;
-                }
-            }
-        }
-        throw new IllegalArgumentException();
+     public JButton getButtons(String key){
+         return buttons.get(key.toLowerCase());
      }
 }

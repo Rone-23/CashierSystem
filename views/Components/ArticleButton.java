@@ -33,7 +33,7 @@ public class ArticleButton extends JButton {
 
         ButtonModel buttonModel = getModel();
 
-        if (buttonModel.isArmed()){
+        if (buttonModel.isSelected()){
             drawButtonPressed(g2);
         } else {
             drawButtonIdle(g2);
@@ -94,7 +94,7 @@ public class ArticleButton extends JButton {
         int arc = getWidth()/9;
         int inset = getWidth()/18;
 
-        g2.setPaint(ColorManipulation.darken(color,0.98f));
+        g2.setPaint(ColorManipulation.darken(color,0.58f));
         Shape main = new RoundRectangle2D.Double(inset, inset, getWidth()-inset*2, getHeight() -inset*2, arc, arc);
         g2.fill(main);
 
@@ -136,5 +136,15 @@ public class ArticleButton extends JButton {
 //        g2.setPaint(new Color(200,200,200,150));
 //        g2.fill(writableAreaPrice);
     }
+
+    public double getItemPrice(){
+        return itemPrice;
+    }
+
+    public String getItemName(){
+        return itemName;
+    }
+
+
 
 }

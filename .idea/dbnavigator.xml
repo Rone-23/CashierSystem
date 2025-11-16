@@ -158,13 +158,15 @@ CREATE TABLE Transactions (
 
 CREATE TABLE Articles (
     article_id INTEGER PRIMARY KEY,
-    name TEXT,
+    name TEXT unique,
     price REAL,
     stock REAL,
     type TEXT,
     subtype TEXT
 );
-drop table Articles
+
+
+drop table Articles;
 
 alter table Articles add column subtype;
 alter table Articles DROP COLUMN stock;

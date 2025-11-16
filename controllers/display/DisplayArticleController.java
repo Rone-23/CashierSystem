@@ -1,5 +1,6 @@
 package controllers.display;
 
+import controllers.buttons.ArticleAction;
 import controllers.panels.ViewManager;
 import controllers.buttons.FilterObserver;
 import controllers.transaction.OpenTransactionManager;
@@ -21,12 +22,13 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
     private String filterKeywordSecondary;
 
     private final Map<String, JButton> buttons = ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles().getButtons();
-
+    private final ArticleAction articleAction = new ArticleAction();
     public DisplayArticleController(){
         createArticles();
     }
 
     public void createArticles(){
+        articleAction.deselectArticle();
         try {
             articles =  SQL_Connect.getInstance().getAllItems();
         } catch (SQLException e) {
@@ -38,11 +40,13 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
         }
 
         for(Item item : articles){
-            buttons.get(item.getName().toLowerCase()).addActionListener(e -> openTransaction.addItem(item));
+//            buttons.get(item.getName().toLowerCase()).addActionListener(e -> openTransaction.addItem(item));
+            buttons.get(item.getName().toLowerCase()).addActionListener(articleAction);
         }
     }
 
     public void createArticles(String type){
+        articleAction.deselectArticle();
         try {
             articles =  SQL_Connect.getInstance().getItems(type);
         } catch (SQLException e) {
@@ -54,11 +58,12 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
         }
 
         for(Item item : articles){
-            buttons.get(item.getName().toLowerCase()).addActionListener(e -> openTransaction.addItem(item));
+            buttons.get(item.getName().toLowerCase()).addActionListener(articleAction);
         }
     }
 
     public void createArticles(String type, String subtype){
+        articleAction.deselectArticle();
         try {
             articles =  SQL_Connect.getInstance().getItems(type, subtype);
         } catch (SQLException e) {
@@ -70,7 +75,7 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
         }
 
         for(Item item : articles){
-            buttons.get(item.getName().toLowerCase()).addActionListener(e -> openTransaction.addItem(item));
+            buttons.get(item.getName().toLowerCase()).addActionListener(articleAction);
         }
     }
 

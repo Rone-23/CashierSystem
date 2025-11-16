@@ -25,13 +25,13 @@ public class ContentController implements  ContentObserver, OpenTransactionObser
         }else {
             content.append(text);
         }
-        notifyObservers();
+        notifyContentUpdate();
     }
 
     public void clearContent() {
         content.setLength(0);
         content.append("1");
-        notifyObservers();
+        notifyContentUpdate();
     }
 
     public void removeLast(){
@@ -41,7 +41,7 @@ public class ContentController implements  ContentObserver, OpenTransactionObser
                 content.append("1");
             }
         }
-        notifyObservers();
+        notifyContentUpdate();
     }
 
     //Observer
@@ -49,7 +49,7 @@ public class ContentController implements  ContentObserver, OpenTransactionObser
 
     public static void removeObserver(ContentObserver contentObserver){observerList.remove(contentObserver);}
 
-    private void notifyObservers(){
+    private void notifyContentUpdate(){
         for (ContentObserver observer: observerList){
             observer.notifyContentUpdate(getContent());
         }

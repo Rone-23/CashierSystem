@@ -36,15 +36,16 @@ public class OpenTransaction implements ContentObserver {
     }
 
     public void addItem(Item item){
-        if (!this.itemsInTransaction.containsKey(item.getName())){
+        if(item == null){return;}
+        if (!itemsInTransaction.containsKey(item.getName())){
             item.setAmount(content);
-            this.itemsInTransaction.put(item.getName(),item);
-        }else if(this.itemsInTransaction.containsKey(item.getName()) && item.getClass()==ItemCountable.class){
-            ItemCountable itemCountable = (ItemCountable) this.itemsInTransaction.get(item.getName());
+            itemsInTransaction.put(item.getName(),item);
+        }else if(itemsInTransaction.containsKey(item.getName()) && item.getClass()==ItemCountable.class){
+            ItemCountable itemCountable = (ItemCountable) itemsInTransaction.get(item.getName());
             itemCountable.addAmount(content);
             item=itemCountable;
         }else {
-            ItemUncountable itemUncountable = (ItemUncountable) this.itemsInTransaction.get(item.getName());
+            ItemUncountable itemUncountable = (ItemUncountable) itemsInTransaction.get(item.getName());
             ItemUncountable itemUncountableToAdd = (ItemUncountable) item;
             itemUncountable.addWeight(itemUncountableToAdd.getWeight());
             item = itemUncountable;
@@ -54,7 +55,31 @@ public class OpenTransaction implements ContentObserver {
         }
     }
 
-    public Map<String,Item> getItemsInTransaction(){return this.itemsInTransaction; }
+    public void removeItem(Item item){
+        if(item == null){return;}
+        if(!itemsInTransaction.containsKey(item.getName())){
+            //TODO
+        }else if(itemsInTransaction.containsKey(item.getName()) && item.getClass()==ItemCountable.class){
+            if(item.getAmount()-content<0){
+                itemsInTransaction.remove(item.getName());
+            }else{
+                ItemCountable itemCountable = (ItemCountable) itemsInTransaction.get(item.getName());
+                itemCountable.addAmount(-content);
+            }
+        }else{
+            if(item.getAmount()-content<0){
+                itemsInTransaction.remove(item.getName());
+            }else{
+                ItemUncountable itemCountable = (ItemUncountable) itemsInTransaction.get(item.getName());
+                itemCountable.addWeight(-content);
+            }
+        }
+        for(OpenTransactionObserver observer : observerList){
+            observer.onItemAdd(item);
+        }
+    }
+
+    public Map<String,Item> getItemsInTransaction(){return itemsInTransaction; }
 
     public String getTransactionDateTime(){return this.transactionDateTime.format(this.dateTimeFormatter); }
 
