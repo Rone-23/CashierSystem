@@ -18,8 +18,8 @@ public class OpenTransaction implements ContentObserver {
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
     private Double content = 1.0;
     //**day is stored using sql.getLastTimeStamp() and split it into day ("dd-MM-yyyy HH:mm:ss")**//
-    public OpenTransaction(int lastTransactionDay ){
 
+    public OpenTransaction(int lastTransactionDay ){
         this.transactionDateTime = LocalDateTime.now();
         this.transactionDateTime.format(dateTimeFormatter);
 
@@ -60,22 +60,35 @@ public class OpenTransaction implements ContentObserver {
         if(!itemsInTransaction.containsKey(item.getName())){
             //TODO
         }else if(itemsInTransaction.containsKey(item.getName()) && item.getClass()==ItemCountable.class){
-            if(item.getAmount()-content<0){
+            if(item.getAmount()-content<=0){
                 itemsInTransaction.remove(item.getName());
+
+                for(OpenTransactionObserver observer : observerList){
+                    observer.onItemRemove(item);
+                }
             }else{
                 ItemCountable itemCountable = (ItemCountable) itemsInTransaction.get(item.getName());
                 itemCountable.addAmount(-content);
+
+                for(OpenTransactionObserver observer : observerList){
+                    observer.onItemAdd(item);
+                }
             }
         }else{
             if(item.getAmount()-content<0){
                 itemsInTransaction.remove(item.getName());
+
+                for(OpenTransactionObserver observer : observerList) {
+                    observer.onItemRemove(item);
+                }
             }else{
                 ItemUncountable itemCountable = (ItemUncountable) itemsInTransaction.get(item.getName());
                 itemCountable.addWeight(-content);
+
+                for(OpenTransactionObserver observer : observerList){
+                    observer.onItemAdd(item);
+                }
             }
-        }
-        for(OpenTransactionObserver observer : observerList){
-            observer.onItemAdd(item);
         }
     }
 

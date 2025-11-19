@@ -40,7 +40,6 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
         }
 
         for(Item item : articles){
-//            buttons.get(item.getName().toLowerCase()).addActionListener(e -> openTransaction.addItem(item));
             buttons.get(item.getName().toLowerCase()).addActionListener(articleAction);
         }
     }
@@ -84,6 +83,7 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
     @Override
     public void onCreate(OpenTransaction openTransaction) {
         this.openTransaction = openTransaction;
+        articleAction.deselectArticle();
     }
 
     @Override

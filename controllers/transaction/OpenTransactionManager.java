@@ -22,8 +22,7 @@ public class OpenTransactionManager implements OpenTransactionObserver{
     private OpenTransaction createOpenTransaction(){
         try {
             openTransaction = new OpenTransaction(Integer.parseInt(SQL_Connect.getInstance().getLastTimeStamp().split(" ")[0].split("-")[2]));
-        } catch (NumberFormatException e) {
-
+        } catch (NumberFormatException ignored) {
         }
         ContentController.addObserver(openTransaction);
         return openTransaction;

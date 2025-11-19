@@ -20,6 +20,10 @@ public class ArticleAction extends AbstractAction implements ContentObserver {
     }
 
     public void deselectArticle(){
+        try {
+            articleButton.setSelected(false);
+        } catch (NullPointerException ignored) {
+        }
         articleButton = null;
         notifyItemSelect(null);
     }
@@ -34,7 +38,6 @@ public class ArticleAction extends AbstractAction implements ContentObserver {
         articleButton.setSelected(true);
         String itemName = articleButton.getItemName();
         double itemPrice = articleButton.getItemPrice();
-//        OpenTransactionManager.getInstance().getOpenTransaction().addItem(new ItemCountable(itemName,itemPrice,Double.parseDouble(content)));
         notifyItemSelect(new ItemCountable(itemName,itemPrice,Double.parseDouble(content)));
     }
 

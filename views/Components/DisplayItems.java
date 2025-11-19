@@ -15,7 +15,6 @@ import java.awt.event.MouseMotionAdapter;
 public class DisplayItems extends JScrollPane {
     JPanel mainItemPanel = new JPanel();
     JPanel spacer = new JPanel();
-    int itemContainerCount = 0;
     GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints();
     GridBagConstraints gbcSpacer = GridBagConstraintsBuilder.buildGridBagConstraints();
     private final Font font = new Font("Roboto",Font.BOLD,21);
@@ -45,29 +44,52 @@ public class DisplayItems extends JScrollPane {
     }
 
     public void addItem(Item item){
-        // Setting up item container
-        JPanel itemContainer = new JPanel(new GridBagLayout());
-        itemContainer.setBackground(Colors.BACKGROUND_WHITE.getColor());
-        itemContainer.setBorder(new DottedBorderTopBottom(Colors.GRAY.getColor(), 1));
-        itemContainer.setPreferredSize(new Dimension(0,70));
-        itemContainer.setName("itemContainer");
-
-        //Swapping of backgrounds
-        if(itemContainerCount % 2 == 1){
-            itemContainer.setBackground(Colors.BUTTON_BACKGROUND_WHITE_ELEVATED.getColor());
-        }
 
         if(compoundItems(item) == 0){
+            // Setting up item container
+            JPanel itemContainer = new JPanel(new GridBagLayout());
+            itemContainer.setBackground(Colors.BACKGROUND_WHITE.getColor());
+            itemContainer.setBorder(new DottedBorderTopBottom(Colors.GRAY.getColor(), 1));
+            itemContainer.setPreferredSize(new Dimension(0,70));
+            itemContainer.setName(item.getName());
+
             makeItemContainer(item, itemContainer);
             mainItemPanel.add(itemContainer,gbc);
             gbc.gridy++;
             moveSpacer(gbc.gridy);
-
-            itemContainerCount++;
         }
-        revalidate();
+
+        setBackgroundVariation();
+        mainItemPanel.revalidate();
 
     }
+
+    public void removeItem(Item item){
+        for(Component component : mainItemPanel.getComponents()){
+            if(component.getName().equals(item.getName())){
+                mainItemPanel.remove(component);
+            }
+        }
+        setBackgroundVariation();
+        mainItemPanel.revalidate();
+    }
+
+    private void setBackgroundVariation() {
+        //Swapping of background colors
+        int i = 0;
+
+        for(Component component : mainItemPanel.getComponents()){
+            if(!component.getName().equals("spacer")){
+                if(i % 2 == 1) {
+                    component.setBackground(Colors.BUTTON_BACKGROUND_WHITE_ELEVATED.getColor());
+                }else{
+                    component.setBackground(Colors.BACKGROUND_GRAY.getColor());
+                }
+                i++;
+            }
+        }
+    }
+
 
     public void clear(){
         for(Component component : mainItemPanel.getComponents()){
