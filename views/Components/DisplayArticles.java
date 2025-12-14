@@ -33,6 +33,7 @@ public class DisplayArticles extends JScrollPane {
         setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
         setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
         setViewportView(container);
+        getVerticalScrollBar().setUnitIncrement(20);
 
         //Setting up spacers
         spacerVertical.setName("SPACER_VERTICAL");

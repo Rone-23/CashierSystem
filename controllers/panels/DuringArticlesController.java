@@ -18,7 +18,7 @@ public class DuringArticlesController {
         DisplayController displayController = new DisplayController(duringArticles.getDisplay());
         OpenTransaction.addObserver(displayController);
 
-        KeyboardController keyboardController = new KeyboardController(duringArticles.getKeyboard(), duringArticles.getDisplay(), contentController);
+        KeyboardController keyboardController = new KeyboardController(duringArticles, duringArticles.getDisplay(), contentController);
         ContentController.addObserver(keyboardController);
 
         DisplayArticleController displayArticleController = new DisplayArticleController();

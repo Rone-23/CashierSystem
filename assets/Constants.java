@@ -12,6 +12,10 @@ public enum Constants {
     UP(22),
     DOWN(23),
 
+    //BUTTON CLUSTER TYPE
+    HORIZONTAL(0),
+    VERTICAL(1),
+
     ;
     private final double value;
     Constants(double constant){

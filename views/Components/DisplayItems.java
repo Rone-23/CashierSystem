@@ -41,6 +41,7 @@ public class DisplayItems extends JScrollPane {
         touchControls();
         setPreferredSize(new Dimension(0,0));
         setAlignmentY(JScrollPane.TOP_ALIGNMENT);
+        getVerticalScrollBar().setUnitIncrement(20);
     }
 
     public void addItem(Item item){
@@ -205,6 +206,8 @@ public class DisplayItems extends JScrollPane {
         gbcSpacer.weighty = 1.0;
         gbcSpacer.fill = GridBagConstraints.BOTH;
         mainItemPanel.add(spacer,gbcSpacer);
+
     }
+
 
 }

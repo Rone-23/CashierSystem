@@ -1,19 +1,21 @@
 package controllers.buttons;
+import assets.ButtonSet;
 import assets.Constants;
 import controllers.display.ContentController;
 import controllers.display.ContentObserver;
 import views.Components.Display;
-import views.Components.Keyboard;
+import views.panels.ButtonFoundable;
 
 
 public class KeyboardController implements ContentObserver {
     Display display;
     ContentController amountToUse;
 
-    public KeyboardController(Keyboard keyboard , Display display, ContentController amountToUse){
+    public KeyboardController(ButtonFoundable keyboard , Display display, ContentController amountToUse){
         this.display = display;
         this.amountToUse = amountToUse;
-        keyboard.getButton("backspace").addActionListener(e -> {
+
+        keyboard.getButton(ButtonSet.ButtonLabel.BACKSPACE.toString()).addActionListener(_ -> {
             if(display.getDisplayType() == Constants.SPLIT){
                 amountToUse.removeLast();
                 display.setText( display.getTextArray()[0] ,amountToUse.getContent());
@@ -23,7 +25,7 @@ public class KeyboardController implements ContentObserver {
             }
         });
 
-        keyboard.getButton("delete").addActionListener(e -> {
+        keyboard.getButton(ButtonSet.ButtonLabel.DELETE.toString()).addActionListener(_ -> {
             if(display.getDisplayType() == Constants.SPLIT){
                 amountToUse.clearContent();
                 display.setText(display.getTextArray()[0],amountToUse.getContent());
@@ -34,15 +36,14 @@ public class KeyboardController implements ContentObserver {
         });
 
         for (int keyName=0; keyName<10; keyName++) {
+            int finalKeyName = keyName;
             if (display.getDisplayType() == Constants.SPLIT) {
-                int finalKeyName = keyName;
-                keyboard.getButton(String.valueOf(keyName)).addActionListener(e -> {
+                keyboard.getButton(String.valueOf(keyName)).addActionListener(_ -> {
                     amountToUse.appendContent(String.valueOf(finalKeyName));
                     display.setText(display.getTextArray()[0],amountToUse.getContent());
                 });
             } else {
-                int finalKeyName = keyName;
-                keyboard.getButton(String.valueOf(keyName)).addActionListener(e -> {
+                keyboard.getButton(String.valueOf(keyName)).addActionListener(_ -> {
                     amountToUse.appendContent(String.valueOf(finalKeyName));
                     display.setText(amountToUse.getContent());
                 });

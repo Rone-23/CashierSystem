@@ -1,5 +1,6 @@
 package views.panels;
 
+import assets.ButtonSet;
 import assets.Colors;
 import assets.Constants;
 import utility.ButtonBuilder;
@@ -11,21 +12,18 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
 
-public class DuringArticles  extends JPanel {
+public class DuringArticles extends JPanel implements ButtonFoundable{
      private final DisplayItems displayItems = new DisplayItems();
      private final Display display = new Display(Constants.SPLIT);
      private final Keyboard keyboard = new Keyboard();
      private final DisplayArticles displayArticles = new DisplayArticles();
      private final ArticleFilterButtonCluster articleFilterButtonCluster = new ArticleFilterButtonCluster();
-     private final JButton plusButton = ButtonBuilder.buildChonkyButton("Pridať", Colors.DEFAULT_BLUE.getColor());
+     private final JButton plusButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.ADD.toString(), Colors.DEFAULT_BLUE.getColor());
      private final JButton minusButton = ButtonBuilder.buildChonkyButton("Ubrať", Colors.DEFAULT_BLUE.getColor());
      private final JButton searchButton = ButtonBuilder.buildChonkyButton("Vyhladať", Colors.DEFAULT_BLUE.getColor());
-     private final JButton cancelButton = ButtonBuilder.buildChonkyButton("Naspäť", Colors.DEFAULT_BLUE.getColor());
+     private final JButton cancelButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.EXIT.toString(), Colors.DEFAULT_BLUE.getColor());
      private final JPanel clusterBottom = createBottomCluster();
-    private final Map<String, JButton> buttons = new HashMap<>();
 
      public DuringArticles(){
          GridBagConstraints gbcMain = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
@@ -38,10 +36,6 @@ public class DuringArticles  extends JPanel {
          gbcMain.gridx=1;
          add(createRightPanel(),gbcMain);
 
-         buttons.put(plusButton.getName(),plusButton);
-         buttons.put(minusButton.getName(),minusButton);
-         buttons.put(searchButton.getName(),searchButton);
-         buttons.put(cancelButton.getName(),cancelButton);
      }
 
      private JPanel createLeftPanel(){
@@ -167,11 +161,32 @@ public class DuringArticles  extends JPanel {
 
      public Display getDisplay(){return display;}
 
-     public Keyboard getKeyboard(){return keyboard;}
-
      public ArticleFilterButtonCluster getArticleFilterButtonCluster(){return articleFilterButtonCluster;}
 
-     public JButton getButtons(String key){
-         return buttons.get(key.toLowerCase());
+    @Override
+     public JButton getButton(String key){
+        for(Component c : keyboard.getComponentsInside()){
+            if(c instanceof JButton && c.getName().equals(key.toLowerCase())){
+                return (JButton) c;
+            }
+        }
+        for(Component c : clusterBottom.getComponents()){
+            if(c instanceof JButton && c.getName().equals(key.toLowerCase())){
+                return (JButton) c;
+            }
+        }
+        if(plusButton.getName().equals(key.toLowerCase())){
+            return plusButton;
+        }
+        if(minusButton.getName().equals(key.toLowerCase())){
+            return minusButton;
+        }
+        if(searchButton.getName().equals(key.toLowerCase())){
+            return searchButton;
+        }
+        if(cancelButton.getName().equals(key.toLowerCase())){
+            return cancelButton;
+        }
+        throw new ArrayIndexOutOfBoundsException();
      }
 }

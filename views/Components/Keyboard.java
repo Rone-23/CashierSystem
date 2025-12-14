@@ -1,11 +1,14 @@
 package views.Components;
 
+import assets.ButtonSet;
 import assets.Colors;
 import utility.ButtonBuilder;
 import utility.GridBagConstraintsBuilder;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +16,6 @@ public class Keyboard extends JPanel{
     final String[] buttonNames = {"7", "8", "9", "4", "5", "6", "1", "2", "3", "0", "00", ","};
     private final JPanel topPanel = new JPanel();
     private final JPanel bottomPanel = new JPanel();
-    private final Map<String, JButton> buttons = new HashMap<>();
     private final Dimension numberButtonDimensions = new Dimension(183,136);
     private final Dimension utilityButtonDimensions = new Dimension(280,136);
     private final JButton deleteButton;
@@ -31,13 +33,13 @@ public class Keyboard extends JPanel{
         GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
 
         //Adding delete button
-        deleteButton = ButtonBuilder.buildChonkyButton("Delete", color);
+        deleteButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.DELETE.toString(), color);
         deleteButton.setPreferredSize(utilityButtonDimensions);
         topPanel.add(deleteButton,gbc);
 
         //Adding delete button
         gbc.gridx = 1;
-        backspaceButton = ButtonBuilder.buildChonkyButton("Backspace", color);
+        backspaceButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.BACKSPACE.toString(), color);
         backspaceButton.setPreferredSize(utilityButtonDimensions);
         topPanel.add(backspaceButton,gbc);
 
@@ -48,7 +50,6 @@ public class Keyboard extends JPanel{
             JButton[] keypadButtons = new JButton[12];
             keypadButtons[numberIndex] = ButtonBuilder.buildChonkyButton(buttonNames[numberIndex], color);
             keypadButtons[numberIndex].setPreferredSize(numberButtonDimensions);
-            buttons.put(buttonNames[numberIndex], keypadButtons[numberIndex]);
             bottomPanel.add(keypadButtons[numberIndex],gbc);
 
             gbc.gridx++;
@@ -66,20 +67,12 @@ public class Keyboard extends JPanel{
         gbc.gridy = 2;
         gbc.gridx = 0;
         this.add(bottomPanel,gbc);
-
     }
 
-    public JButton getButton(String key){
-        switch (key.toLowerCase()){
-            case "delete" -> {
-                return deleteButton;
-            }
-            case "backspace" -> {
-                return  backspaceButton;
-            }
-            default -> {
-                return buttons.get(key);
-            }
-        }
+    public Component[] getComponentsInside() {
+        ArrayList<Component> components = new ArrayList<>();
+        components.addAll(Arrays.asList(bottomPanel.getComponents()));
+        components.addAll(Arrays.asList(topPanel.getComponents()));
+        return components.toArray(new Component[0]);
     }
 }

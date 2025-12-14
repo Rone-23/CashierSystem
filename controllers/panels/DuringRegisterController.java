@@ -14,7 +14,7 @@ public class DuringRegisterController {
         DisplayController displayController = new DisplayController(duringRegister.getDisplayTotal());
         OpenTransaction.addObserver(displayController);
 
-        KeyboardController keyboardController = new KeyboardController(duringRegister.getKeyboard(), duringRegister.getDisplayTop(), contentController);
+        KeyboardController keyboardController = new KeyboardController(duringRegister, duringRegister.getDisplayTop(), contentController);
         ContentController.addObserver(keyboardController);
 
 

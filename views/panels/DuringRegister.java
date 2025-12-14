@@ -1,12 +1,10 @@
 package views.panels;
 
+import assets.ButtonSet;
 import assets.Colors;
 import assets.Constants;
 import utility.GridBagConstraintsBuilder;
-import views.Components.ButtonCluster;
-import views.Components.Display;
-import views.Components.DisplayItems;
-import views.Components.Keyboard;
+import views.Components.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -14,7 +12,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 
-public class DuringRegister extends JPanel {
+public class DuringRegister extends JPanel implements ButtonFoundable{
 
     private final Dimension dimension = new Dimension(500,114);
 
@@ -22,8 +20,7 @@ public class DuringRegister extends JPanel {
     private final Display displayTotal = new Display(Constants.TOTAL);
     private final Display displayTop = new Display(Constants.WEIGHT);
     private final Keyboard keyboard = new Keyboard();
-    private final String[] buttonNames = {"Artikle", "Posledna polozka", "Storno", "Hotovost", "Karta", "Stravenky", "Poukazky"};
-    private final ButtonCluster buttonCluster = new ButtonCluster(buttonNames);
+    private final ButtonCluster buttonCluster = new ButtonCluster(ButtonSet.UTILITY_NAMES.getStringLabels(),Constants.VERTICAL);
 
 
 
@@ -48,6 +45,7 @@ public class DuringRegister extends JPanel {
     private JPanel createLeftPanel(){
         final GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(1,1);
         final JPanel leftPanel = new JPanel();
+        leftPanel.setName("leftPanel");
 
         Border rightBorder = new MatteBorder(
                 0,
@@ -76,6 +74,8 @@ public class DuringRegister extends JPanel {
     private JPanel createMiddlePanel(){
         final GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints();
         final JPanel middlePanel = new JPanel();
+        middlePanel.setName("middlePanel");
+
 
         middlePanel.setBorder(new EmptyBorder(20,0,20,0));
         middlePanel.setLayout(new GridBagLayout());
@@ -91,7 +91,7 @@ public class DuringRegister extends JPanel {
         middlePanel.add(displayTop,gbc);
 
 
-        gbc.gridy=1;
+        gbc.gridy++;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
@@ -99,10 +99,9 @@ public class DuringRegister extends JPanel {
         fillerPanel.setOpaque(false);
         middlePanel.add(fillerPanel,gbc);
 
-
-        gbc.weightx = 0;
+        gbc.gridy++;
         gbc.weighty = 0;
-        gbc.gridy=2;
+        gbc.weightx = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         middlePanel.add(keyboard,gbc);
 
@@ -112,6 +111,8 @@ public class DuringRegister extends JPanel {
     private JPanel createRightPanel(){
         final GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints();
         final JPanel rightPanel = new JPanel();
+        rightPanel.setName("rightPanel");
+
 
         rightPanel.setLayout(new GridBagLayout());
         rightPanel.setBackground(Colors.BACKGROUND_GRAY.getColor());
@@ -125,13 +126,32 @@ public class DuringRegister extends JPanel {
         rightPanel.add(buttonCluster,gbc);
         return rightPanel;
     }
+    @Override
+    public JButton getButton(String key){
+        for(Component c : keyboard.getComponentsInside()){
+            if(c instanceof JButton && c.getName().equals(key.toLowerCase())){
+                return (JButton) c;
+            }
+        }
+        for(Component c : buttonCluster.getComponents()){
+            if(c instanceof JButton && c.getName().equals(key.toLowerCase())){
+                return (JButton) c;
+            }
+        }
+        throw new ArrayIndexOutOfBoundsException();
+    }
 
+    public void replaceButton(String name, String replaceName){
+        buttonCluster.replaceButton(name, replaceName);
+    }
 
-    public Keyboard getKeyboard(){return keyboard;}
+    public void replaceButton(String[] name, String[] replaceName){
+        buttonCluster.replaceButton(name, replaceName);
+    }
+
     public DisplayItems getDisplayScrollableItems(){return displayItems;}
     public Display getDisplayTotal(){return displayTotal;}
     public Display getDisplayTop(){return displayTop;}
-    public ButtonCluster getButtonCluster(){return buttonCluster;}
 
 
 }

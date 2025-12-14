@@ -1,5 +1,6 @@
 package views.panels;
 
+import assets.ButtonSet;
 import assets.Colors;
 import utility.GridBagConstraintsBuilder;
 import views.Components.ButtonCluster;
@@ -7,7 +8,7 @@ import views.Components.ButtonCluster;
 import javax.swing.*;
 import java.awt.*;
 
-public class DuringIdle extends JPanel {
+public class DuringIdle extends JPanel implements ButtonFoundable{
     ButtonCluster buttonCluster;
     public DuringIdle(){
         GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(1,1);
@@ -17,8 +18,7 @@ public class DuringIdle extends JPanel {
         JPanel fillerPanel = new JPanel();
         fillerPanel.setOpaque(false);
 
-        String[] buttonNames = {"Zacat (Artikle)", "Vybavit kartu", "Kopia blocku", "Vratka", "Poukážky", "Pauza", "Zaučenie"};
-        buttonCluster = new ButtonCluster(buttonNames);
+        buttonCluster = new ButtonCluster(ButtonSet.IDLE_UTILITY_NAMES.getStringLabels());
 
         add(fillerPanel, gbc);
         gbc.weightx=0.2;
@@ -27,7 +27,14 @@ public class DuringIdle extends JPanel {
 
     }
 
-    public ButtonCluster getButtonCluster() {
-        return buttonCluster;
+
+    @Override
+    public JButton getButton(String key) {
+        for(Component c : buttonCluster.getComponents()){
+            if(c instanceof JButton && c.getName().equals(key.toLowerCase())){
+                return (JButton) c;
+            }
+        }
+        throw new ArrayIndexOutOfBoundsException();
     }
 }
