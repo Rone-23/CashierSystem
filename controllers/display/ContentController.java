@@ -1,21 +1,22 @@
 package controllers.display;
 
+import assets.ButtonSet;
+import controllers.buttons.KeyboardListener;
 import controllers.transaction.OpenTransactionObserver;
 import services.Item;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContentController implements  ContentObserver, OpenTransactionObserver {
+public class ContentController implements OpenTransactionObserver, KeyboardListener {
     private static final List<ContentObserver> observerList = new ArrayList<>();
-    private final StringBuilder content = new StringBuilder("1");
+    private static final StringBuilder content = new StringBuilder("1");
 
-    public String getContent(){
+    public static String getContent(){
         return content.toString();
     }
 
-    public void appendContent(String text) {
-
+    public static void appendContent(String text) {
         if(content.length()>6){
             throw new ArithmeticException("Maximal allowed digit is 7.");
         }
@@ -28,13 +29,13 @@ public class ContentController implements  ContentObserver, OpenTransactionObser
         notifyContentUpdate();
     }
 
-    public void clearContent() {
+    public static void clearContent() {
         content.setLength(0);
         content.append("1");
         notifyContentUpdate();
     }
 
-    public void removeLast(){
+    public static void removeLast(){
         if(!content.isEmpty()){
             content.setLength(content.length()-1);
             if(content.isEmpty()){
@@ -44,12 +45,13 @@ public class ContentController implements  ContentObserver, OpenTransactionObser
         notifyContentUpdate();
     }
 
+
     //Observer
     public static void addObserver(ContentObserver contentObserver){observerList.add(contentObserver);}
 
     public static void removeObserver(ContentObserver contentObserver){observerList.remove(contentObserver);}
 
-    private void notifyContentUpdate(){
+    private static void notifyContentUpdate(){
         for (ContentObserver observer: observerList){
             observer.notifyContentUpdate(getContent());
         }
@@ -58,5 +60,16 @@ public class ContentController implements  ContentObserver, OpenTransactionObser
     @Override
     public void onItemAdd(Item item) {
         clearContent();
+    }
+
+    @Override
+    public void keyboardPress(String buttonPressed) {
+        if (buttonPressed.equals(ButtonSet.ButtonLabel.DELETE.toString())){
+            clearContent();
+        } else if (buttonPressed.equals(ButtonSet.ButtonLabel.BACKSPACE.toString())) {
+            removeLast();
+        }else {
+            appendContent(buttonPressed);
+        }
     }
 }

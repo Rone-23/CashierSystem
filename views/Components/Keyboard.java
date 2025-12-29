@@ -9,8 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Keyboard extends JPanel{
     final String[] buttonNames = {"7", "8", "9", "4", "5", "6", "1", "2", "3", "0", "00", ","};
@@ -29,17 +27,16 @@ public class Keyboard extends JPanel{
         bottomPanel.setOpaque(false);
 
         setOpaque(false);
-        Color color = Colors.BUTTON_LIGHT_BLUE.getColor();
         GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
 
         //Adding delete button
-        deleteButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.DELETE.toString(), color);
+        deleteButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.DELETE.toString(), ButtonSet.ButtonLabel.DELETE.getColor());
         deleteButton.setPreferredSize(utilityButtonDimensions);
         topPanel.add(deleteButton,gbc);
 
         //Adding delete button
         gbc.gridx = 1;
-        backspaceButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.BACKSPACE.toString(), color);
+        backspaceButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.BACKSPACE.toString(), ButtonSet.ButtonLabel.BACKSPACE.getColor());
         backspaceButton.setPreferredSize(utilityButtonDimensions);
         topPanel.add(backspaceButton,gbc);
 
@@ -48,7 +45,7 @@ public class Keyboard extends JPanel{
         gbc.gridx = 0;
         for (int numberIndex = 0; numberIndex < 12; numberIndex++) {
             JButton[] keypadButtons = new JButton[12];
-            keypadButtons[numberIndex] = ButtonBuilder.buildChonkyButton(buttonNames[numberIndex], color);
+            keypadButtons[numberIndex] = ButtonBuilder.buildChonkyButton(buttonNames[numberIndex], ButtonSet.ButtonLabel.NUMBERS.getColor());
             keypadButtons[numberIndex].setPreferredSize(numberButtonDimensions);
             bottomPanel.add(keypadButtons[numberIndex],gbc);
 

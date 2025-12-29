@@ -1,9 +1,12 @@
 package controllers.buttons;
 
 import assets.ButtonSet;
+import controllers.display.ContentController;
+import controllers.display.DisplayDispatcher;
 import controllers.panels.ViewManager;
-import controllers.transaction.CardPayment;
-import controllers.transaction.CashPayment;
+import controllers.transaction.OpenTransactionManager;
+import views.panels.DuringRegister;
+
 
 public class UtilityController {
     AddItemAction addItemAction = new AddItemAction();
@@ -16,10 +19,19 @@ public class UtilityController {
         /*
         Controlling all the buttons that are on the right side in DuringRegister
          */
+        DuringRegister duringRegister = ViewManager.getInstance().getDuringRegister();
         ViewManager.getInstance().getDuringRegister().getButton(ButtonSet.ButtonLabel.ARTICLES.toString()).addActionListener(_ -> ViewManager.getInstance().showArticles());
-        ViewManager.getInstance().getDuringRegister().getButton(ButtonSet.ButtonLabel.CARD.toString()).addActionListener(_ -> new CardPayment());
         ViewManager.getInstance().getDuringRegister().getButton(ButtonSet.ButtonLabel.LAST_ARTICLE.toString()).addActionListener(addItemAction);
-        ViewManager.getInstance().getDuringRegister().getButton(ButtonSet.ButtonLabel.CASH.toString()).addActionListener(_ -> new CashPayment());
+        ViewManager.getInstance().getDuringRegister().getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(duringRegister::switchStateUtility);
+        ViewManager.getInstance().getDuringRegister().getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(_ -> DisplayDispatcher.viaDefault());
+        ViewManager.getInstance().getDuringRegister().getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(_ -> ContentController.clearContent());
+//        ViewManager.getInstance().getDuringRegister().getButton(ButtonSet.ButtonLabel.CARD.toString()).addActionListener(_ -> new CardPayment());
+        ViewManager.getInstance().getDuringRegister().getButton(ButtonSet.ButtonLabel.CARD.toString()).addActionListener(OpenTransactionManager.getInstance()::addPayment);
+        ViewManager.getInstance().getDuringRegister().getButton(ButtonSet.ButtonLabel.CASH.toString()).addActionListener(duringRegister::switchStateCash);
+        ViewManager.getInstance().getDuringRegister().getButton(ButtonSet.ButtonLabel.CASH.toString()).addActionListener(_ -> DisplayDispatcher.viaCash());
+        ViewManager.getInstance().getDuringRegister().getButton(ButtonSet.ButtonLabel.CASH.toString()).addActionListener(_ -> ContentController.clearContent());
+        ViewManager.getInstance().getDuringRegister().getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(OpenTransactionManager.getInstance()::addPayment);
+//        ViewManager.getInstance().getDuringRegister().getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(cashPayment::addCash);
 
         /*
         Controlling buttons on bottom side of DuringArticles

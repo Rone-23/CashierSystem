@@ -1,62 +1,36 @@
 package controllers.buttons;
 import assets.ButtonSet;
-import assets.Constants;
-import controllers.display.ContentController;
-import controllers.display.ContentObserver;
-import views.Components.Display;
 import views.panels.ButtonFoundable;
 
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
-public class KeyboardController implements ContentObserver {
-    Display display;
-    ContentController amountToUse;
 
-    public KeyboardController(ButtonFoundable keyboard , Display display, ContentController amountToUse){
-        this.display = display;
-        this.amountToUse = amountToUse;
+public class KeyboardController {
+    private final static ArrayList<KeyboardListener> keyboardListeners = new ArrayList<>();
 
-        keyboard.getButton(ButtonSet.ButtonLabel.BACKSPACE.toString()).addActionListener(_ -> {
-            if(display.getDisplayType() == Constants.SPLIT){
-                amountToUse.removeLast();
-                display.setText( display.getTextArray()[0] ,amountToUse.getContent());
-            }else{
-                amountToUse.removeLast();
-                display.setText(amountToUse.getContent());
-            }
-        });
+    public KeyboardController(ButtonFoundable keyboard){
 
-        keyboard.getButton(ButtonSet.ButtonLabel.DELETE.toString()).addActionListener(_ -> {
-            if(display.getDisplayType() == Constants.SPLIT){
-                amountToUse.clearContent();
-                display.setText(display.getTextArray()[0],amountToUse.getContent());
-            }else {
-                amountToUse.clearContent();
-                display.setText(amountToUse.getContent());
-            }
-        });
+        keyboard.getButton(ButtonSet.ButtonLabel.BACKSPACE.toString()).addActionListener(this::notifyListeners);
+        keyboard.getButton(ButtonSet.ButtonLabel.DELETE.toString()).addActionListener(this::notifyListeners);
 
         for (int keyName=0; keyName<10; keyName++) {
-            int finalKeyName = keyName;
-            if (display.getDisplayType() == Constants.SPLIT) {
-                keyboard.getButton(String.valueOf(keyName)).addActionListener(_ -> {
-                    amountToUse.appendContent(String.valueOf(finalKeyName));
-                    display.setText(display.getTextArray()[0],amountToUse.getContent());
-                });
-            } else {
-                keyboard.getButton(String.valueOf(keyName)).addActionListener(_ -> {
-                    amountToUse.appendContent(String.valueOf(finalKeyName));
-                    display.setText(amountToUse.getContent());
-                });
-            }
+            keyboard.getButton(String.valueOf(keyName)).addActionListener(this::notifyListeners);
         }
     }
 
-    @Override
-    public void notifyContentUpdate(String content) {
-        if(display.getDisplayType() == Constants.SPLIT){
-            display.setText(display.getTextArray()[0],amountToUse.getContent());
-        }else {
-            display.setText(amountToUse.getContent());
-        }
+    // Observer
+    public static void addListener(KeyboardListener keyboardListener){
+        keyboardListeners.add(keyboardListener);
     }
+
+    public static void removeListener(KeyboardListener keyboardListener){
+        keyboardListeners.remove(keyboardListener);
+    }
+
+    private void notifyListeners(ActionEvent e){
+        System.out.printf(e.getActionCommand());
+        keyboardListeners.forEach(keyboardListener -> keyboardListener.keyboardPress(e.getActionCommand()));
+    }
+
 }

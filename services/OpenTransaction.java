@@ -17,6 +17,10 @@ public class OpenTransaction implements ContentObserver {
     private final Map<String,Item> itemsInTransaction= new HashMap<>();
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
     private Double content = 1.0;
+    private Double payedCard = 0.0;
+    private Double payedCash = 0.0;
+    //**EPSILON is there because of using Double**//
+    private final Double EPSILON = 0.0000001;
     //**day is stored using sql.getLastTimeStamp() and split it into day ("dd-MM-yyyy HH:mm:ss")**//
 
     public OpenTransaction(int lastTransactionDay ){
@@ -106,6 +110,34 @@ public class OpenTransaction implements ContentObserver {
         }
         return sum;
     }
+
+    public double getMissing(){
+        return getTotal() - payedCard - payedCash;
+    }
+
+    public void payCard(){
+        payedCard += content*0.01;
+        checkSum();
+    }
+
+    public void payCash(){
+        payedCash += content*0.01;
+        checkSum();
+    }
+
+    private void checkSum(){
+        System.out.printf("%f Nissin %b \n",getMissing(),getMissing()<=EPSILON);
+        if(getMissing()<=EPSILON){
+            for(OpenTransactionObserver observer : observerList){
+                observer.paymentDone();
+            }
+        }else {
+            for(OpenTransactionObserver observer : observerList){
+                observer.onAddedPayment(getMissing());
+            }
+        }
+    }
+
 
     //Observer
     public static void addObserver(OpenTransactionObserver openTransactionObserver){observerList.add(openTransactionObserver);}

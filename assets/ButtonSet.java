@@ -1,5 +1,7 @@
 package assets;
 
+import java.awt.*;
+
 public enum ButtonSet {
 
     // --- Define the Button Sets (Configurations) ---
@@ -82,42 +84,45 @@ public enum ButtonSet {
      */
     public enum ButtonLabel {
         // UTILITY_BUTTON Labels
-        ARTICLES("Artikle"),
-        LAST_ARTICLE("Posledna polozka"),
-        STORNO("Storno"),
-        CASH("Hotovost"),
-        CARD("Karta"),
-        FOOD_TICKETS("Stravenky"),
-        VOUCHER("Poukazky"),
+        ARTICLES("Artikle", Colors.DEFAULT_BLUE),
+        LAST_ARTICLE("Posledna polozka", Colors.DEFAULT_BLUE),
+        STORNO("Storno", Colors.DEFAULT_BLUE),
+        CASH("Hotovost", Colors.DEFAULT_BLUE),
+        CARD("Karta", Colors.DEFAULT_BLUE),
+        FOOD_TICKETS("Stravenky", Colors.DEFAULT_BLUE),
+        VOUCHER("Poukazky", Colors.DEFAULT_BLUE),
 
         //CASH_BUTTON Labels
-        FIVE("5"),
-        TEN("10"),
-        TWENTY("20"),
-        FIFTY("50"),
-        HUNDRED("100"),
+        FIVE("5€", Colors.DEFAULT_BLUE),
+        TEN("10€", Colors.DEFAULT_BLUE),
+        TWENTY("20€", Colors.DEFAULT_BLUE),
+        FIFTY("50€", Colors.DEFAULT_BLUE),
+        HUNDRED("100€", Colors.DEFAULT_BLUE),
 
         //IDLE_UTILITY_BUTTONS
-        BEGIN("Zacat (Artikle)"),
-        CREATE_CARD("Vybavit kartu"),
-        COPY_RECEIPT("Kopia blocku"),
-        RETURN("Vratka"),
-        PAUSE("Pauza"),
-        PADAVAN("Zaucenie"),
+        BEGIN("Zacat (Artikle)", Colors.DEFAULT_BLUE),
+        CREATE_CARD("Vybavit kartu", Colors.DEFAULT_BLUE),
+        COPY_RECEIPT("Kopia blocku", Colors.DEFAULT_BLUE),
+        RETURN("Vratka", Colors.DEFAULT_BLUE),
+        PAUSE("Pauza", Colors.DEFAULT_BLUE),
+        PADAVAN("Zaucenie", Colors.DEFAULT_BLUE),
 
         //KEYBOARD
-        DELETE("Delete"),
-        BACKSPACE("Backspace"),
+        DELETE("Delete", Colors.BUTTON_LIGHT_BLUE),
+        BACKSPACE("Backspace", Colors.BUTTON_LIGHT_BLUE),
+        NUMBERS("_number_", Colors.BUTTON_LIGHT_BLUE),
 
 
         // Shared Labels
-        EXIT("Naspäť"),
-        ADD("Pridat");
+        EXIT("Naspäť", Colors.DEFAULT_BLUE),
+        ADD("Pridat", Colors.DEFAULT_BLUE);
 
         private final String displayValue;
+        private final Colors color;
 
-        ButtonLabel(String displayValue) {
+        ButtonLabel(String displayValue, Colors color) {
             this.displayValue = displayValue;
+            this.color = color;
         }
 
         /**
@@ -127,6 +132,10 @@ public enum ButtonSet {
         @Override
         public String toString() {
             return displayValue;
+        }
+
+        public Color getColor(){
+            return color.getColor();
         }
     }
 }
