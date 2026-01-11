@@ -183,7 +183,9 @@ SELECT subtype FROM Articles WHERE type = PECIVO;
 
 DELETE FROM Transactions;
 
-SELECT items FROM Transactions WHERE transaction_dayid = 0 and  datetime("2025-02-07");]]></console>
+SELECT items FROM Transactions WHERE transaction_dayid = 0 and  datetime("2025-02-07");
+
+SELECT * FROM TRANSACTIONS;]]></console>
     </connection>
     <connection id="a702d7de-5ccf-4b8c-81a8-9f4c79a1aaad">
       <console name="Connection" type="STANDARD" schema="" session="Main"><![CDATA[select * from transactions

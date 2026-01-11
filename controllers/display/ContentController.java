@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ContentController implements OpenTransactionObserver, KeyboardListener {
     private static final List<ContentObserver> observerList = new ArrayList<>();
-    private static final StringBuilder content = new StringBuilder("1");
+    private static final StringBuilder content = new StringBuilder("0");
 
     public static String getContent(){
         return content.toString();
@@ -20,7 +20,7 @@ public class ContentController implements OpenTransactionObserver, KeyboardListe
         if(content.length()>6){
             throw new ArithmeticException("Maximal allowed digit is 7.");
         }
-        if(content.toString().equals("1") && !text.equals("1")){
+        if(content.toString().equals("0") && !text.equals("0")){
             content.setLength(0);
             content.append(text);
         }else {
@@ -31,7 +31,7 @@ public class ContentController implements OpenTransactionObserver, KeyboardListe
 
     public static void clearContent() {
         content.setLength(0);
-        content.append("1");
+        content.append("0");
         notifyContentUpdate();
     }
 
@@ -39,7 +39,7 @@ public class ContentController implements OpenTransactionObserver, KeyboardListe
         if(!content.isEmpty()){
             content.setLength(content.length()-1);
             if(content.isEmpty()){
-                content.append("1");
+                content.append("0");
             }
         }
         notifyContentUpdate();
@@ -55,6 +55,11 @@ public class ContentController implements OpenTransactionObserver, KeyboardListe
         for (ContentObserver observer: observerList){
             observer.notifyContentUpdate(getContent());
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        clearContent();
     }
 
     @Override

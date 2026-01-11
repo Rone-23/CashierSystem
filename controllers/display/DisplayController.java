@@ -18,18 +18,20 @@ public class DisplayController implements OpenTransactionObserver, ContentObserv
 
     @Override
     public void onItemAdd(Item item) {
-        display.setText(String.format("%.2f",openTransaction.getTotal()));
+        display.setText(String.format("%.2f",openTransaction.getMissing()));
     }
 
     @Override
     public void onItemRemove(Item item) {
-        display.setText(String.format("%.2f",openTransaction.getTotal()));
+        display.setText(String.format("%.2f",openTransaction.getMissing()));
     }
 
     @Override
     public void onDestroy() {
         if(display.getDisplayType().equals(Constants.TOTAL) || display.getDisplayType().equals(Constants.SPLIT)){
             display.getTextArray()[0]="0.00";
+        }else {
+            display.getTextArray()[0]="0";
         }
     }
 
@@ -39,7 +41,7 @@ public class DisplayController implements OpenTransactionObserver, ContentObserv
     }
 
     @Override
-    public void onAddedPayment(Double toPayLeft) {
+    public void onAddedPayment(Double toPayLeft, Double addedAmount) {
         if(display.getDisplayType().equals(Constants.TOTAL)){
             display.setText(String.format("%.2f",toPayLeft));
         }
@@ -48,9 +50,11 @@ public class DisplayController implements OpenTransactionObserver, ContentObserv
     @Override
     public void notifyContentUpdate(String content) {
         if(display.getDisplayType() == Constants.SPLIT){
-            display.setText(display.getTextArray()[0],content);
-        }else {
-            display.setText(content);
+            display.setText(display.getTextArray()[0],String.format("%s",content));
+        }else if (display.getDisplayType() == Constants.TOTAL){
+            display.setText(String.format("%.2f",Double.parseDouble(content) * 0.01));
+        }else{
+            display.setText(String.format("%s",content));
         }
     }
 }

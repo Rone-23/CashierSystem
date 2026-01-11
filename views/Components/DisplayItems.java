@@ -2,6 +2,7 @@ package views.Components;
 
 import assets.Colors;
 import services.Item;
+import services.ItemCountable;
 import services.ItemUncountable;
 import utility.GridBagConstraintsBuilder;
 
@@ -62,7 +63,55 @@ public class DisplayItems extends JScrollPane {
 
         setBackgroundVariation();
         mainItemPanel.revalidate();
+    }
 
+    public void addPayment(Double content){
+
+        JPanel itemContainer = new JPanel(new GridBagLayout());
+        itemContainer.setBackground(Colors.BACKGROUND_WHITE.getColor());
+        itemContainer.setBorder(new DottedBorderTopBottom(Colors.GRAY.getColor(), 1));
+        itemContainer.setPreferredSize(new Dimension(0,70));
+        itemContainer.setName("Payment");
+
+
+        //TODO: make prettier
+        GridBagConstraints gbcItemContainer = GridBagConstraintsBuilder.buildGridBagConstraints(1,1);
+
+        JPanel itemNameContainer = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel itemPriceAmountContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+        itemNameContainer.setOpaque(false);
+        itemPriceAmountContainer.setOpaque(false);
+
+        itemNameContainer.setBorder(new EmptyBorder(0,20,0,20));
+        itemPriceAmountContainer.setBorder(new EmptyBorder(0,20,0,20));
+
+        itemNameContainer.setForeground(Colors.BLACK_TEXT.getColor());
+        itemPriceAmountContainer.setForeground(Colors.BLACK_TEXT.getColor());
+
+        JLabel itemNameLabel = new JLabel("Platba",SwingConstants.LEFT);
+        itemNameLabel.setFont(font);
+        itemNameLabel.setForeground(Colors.BLACK_TEXT.getColor());
+        itemNameContainer.add(itemNameLabel);
+
+        JLabel itemPriceLabel = new JLabel(String.format("%.2f €", content * 0.01));
+        itemPriceLabel.setFont(font);
+        itemPriceLabel.setForeground(Colors.BLACK_TEXT.getColor());
+        itemPriceLabel.setBorder(new EmptyBorder(0,20,0,20));
+        itemPriceAmountContainer.add(itemPriceLabel);
+
+
+        itemContainer.add(itemNameContainer,gbcItemContainer);
+        gbcItemContainer.gridx++;
+        itemContainer.add(itemPriceAmountContainer,gbcItemContainer);
+
+
+        mainItemPanel.add(itemContainer,gbc);
+        gbc.gridy++;
+        moveSpacer(gbc.gridy);
+
+        setBackgroundVariation();
+        mainItemPanel.revalidate();
     }
 
     public void removeItem(Item item){

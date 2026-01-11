@@ -1,5 +1,6 @@
 package controllers.buttons;
 
+import controllers.display.ContentController;
 import controllers.display.ContentObserver;
 import controllers.transaction.OpenTransactionManager;
 import controllers.transaction.OpenTransactionObserver;
@@ -22,7 +23,11 @@ public class AddItemAction extends AbstractAction implements ContentObserver, Op
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        openTransaction.addItem(item);
+        item.setAmount(Double.parseDouble(ContentController.getContent()));
+        if(item.getAmount()!=0.0){
+            System.out.printf("Name %s Amount %.2f Price %.2f\n",item.getName(), item.getAmount(), item.getPrice());
+            openTransaction.addItem(item);
+        }
     }
 
     //Observer

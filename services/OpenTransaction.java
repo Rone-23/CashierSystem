@@ -116,13 +116,17 @@ public class OpenTransaction implements ContentObserver {
     }
 
     public void payCard(){
-        payedCard += content*0.01;
-        checkSum();
+        if(content>0){
+            payedCard += content*0.01;
+            checkSum();
+        }
     }
 
     public void payCash(){
-        payedCash += content*0.01;
-        checkSum();
+        if(content>0){
+            payedCash += content*0.01;
+            checkSum();
+        }
     }
 
     private void checkSum(){
@@ -133,7 +137,7 @@ public class OpenTransaction implements ContentObserver {
             }
         }else {
             for(OpenTransactionObserver observer : observerList){
-                observer.onAddedPayment(getMissing());
+                observer.onAddedPayment(getMissing(), content);
             }
         }
     }

@@ -29,7 +29,7 @@ public class KeyboardController {
     }
 
     private void notifyListeners(ActionEvent e){
-        System.out.printf(e.getActionCommand());
+//        System.out.printf(e.getActionCommand());
         keyboardListeners.forEach(keyboardListener -> keyboardListener.keyboardPress(e.getActionCommand()));
     }
 

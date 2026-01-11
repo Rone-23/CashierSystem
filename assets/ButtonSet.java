@@ -115,7 +115,8 @@ public enum ButtonSet {
 
         // Shared Labels
         EXIT("Naspäť", Colors.DEFAULT_BLUE),
-        ADD("Pridat", Colors.DEFAULT_BLUE);
+        ADD("Pridat", Colors.DEFAULT_BLUE),
+        REMOVE("Ubrať", Colors.DEFAULT_BLUE);
 
         private final String displayValue;
         private final Colors color;
