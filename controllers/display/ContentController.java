@@ -65,6 +65,7 @@ public class ContentController implements OpenTransactionObserver, KeyboardListe
     @Override
     public void onItemAdd(Item item) {
         clearContent();
+        appendContent("1");
     }
 
     @Override
