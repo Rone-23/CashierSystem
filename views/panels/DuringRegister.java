@@ -24,6 +24,7 @@ public class DuringRegister extends JPanel implements ButtonFoundable{
     private final Keyboard keyboard = new Keyboard();
     private final ButtonCluster utilityButtonCluster = new ButtonCluster(ButtonSet.UTILITY_NAMES.getStringLabels(),Constants.VERTICAL);
     private final ButtonCluster cashButtonCluster = new ButtonCluster(ButtonSet.CASH_NAMES.getStringLabels(),Constants.VERTICAL);
+    private final ButtonCluster commonButtonCluster = new ButtonCluster(ButtonSet.COMMON_NAMES.getStringLabels(),Constants.VERTICAL);
     private final CardLayout cardLayout =new  CardLayout();
     final JPanel rightPanel = new JPanel();
     JPanel displayPanel = new JPanel();
@@ -128,6 +129,7 @@ public class DuringRegister extends JPanel implements ButtonFoundable{
 
         rightPanel.add(utilityButtonCluster,"UTILITY_BUTTON_CLUSTER");
         rightPanel.add(cashButtonCluster,"CASH_BUTTON_CLUSTER");
+        rightPanel.add(commonButtonCluster,"COMMON_BUTTON_CLUSTER");
 
         return rightPanel;
     }
@@ -159,17 +161,33 @@ public class DuringRegister extends JPanel implements ButtonFoundable{
         utilityButtonCluster.replaceButton(name, replaceName);
     }
 
-    public void switchStateCash(ActionEvent actionEvent){
-        cardLayout.show(rightPanel,"CASH_BUTTON_CLUSTER");
-        cardLayoutDisplay.show(displayPanel,"TOTAL");
-        JButton button = (JButton) actionEvent.getSource();
-        System.out.printf(button.getName());
-        System.out.printf(actionEvent.getActionCommand());
-    }
 
-    public void switchStateUtility(ActionEvent actionEvent){
-        cardLayout.show(rightPanel,"UTILITY_BUTTON_CLUSTER");
-        cardLayoutDisplay.show(displayPanel,"AMOUNT");
+    public void switchState(ActionEvent actionEvent){
+        switch (actionEvent.getActionCommand()){
+            case "Naspäť" ->{
+                cardLayout.show(rightPanel,"UTILITY_BUTTON_CLUSTER");
+                cardLayoutDisplay.show(displayPanel,"AMOUNT");
+            }
+
+            case "Hotovost" ->{
+                cardLayout.show(rightPanel,"CASH_BUTTON_CLUSTER");
+                cardLayoutDisplay.show(displayPanel,"TOTAL");
+            }
+
+            case "Karta" ->{
+                cardLayout.show(rightPanel,"COMMON_BUTTON_CLUSTER");
+                cardLayoutDisplay.show(displayPanel,"TOTAL");
+            }
+
+            case "Stravenky" ->{
+
+            }
+
+            case "Poukážky" ->{
+
+            }
+        }
+
     }
 
     public DisplayItems getDisplayScrollableItems(){return displayItems;}

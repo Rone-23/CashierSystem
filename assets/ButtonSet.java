@@ -32,6 +32,11 @@ public enum ButtonSet {
             ButtonLabel.EXIT,
     }),
 
+    COMMON_NAMES(new ButtonLabel[]{
+            ButtonLabel.ADD,
+            ButtonLabel.EXIT
+    }),
+
     /**
      * IDLE_UTILITY_NAMES : Names of buttons on the control panel
      */
@@ -43,9 +48,7 @@ public enum ButtonSet {
             ButtonLabel.VOUCHER,
             ButtonLabel.PAUSE,
             ButtonLabel.PADAVAN,
-    }),
-
-;
+    });
     // --- Internal Properties and Constructor ---
 
     private final ButtonLabel[] labels;
@@ -90,7 +93,7 @@ public enum ButtonSet {
         CASH("Hotovost", Colors.DEFAULT_BLUE),
         CARD("Karta", Colors.DEFAULT_BLUE),
         FOOD_TICKETS("Stravenky", Colors.DEFAULT_BLUE),
-        VOUCHER("Poukazky", Colors.DEFAULT_BLUE),
+        VOUCHER("Poukážky", Colors.DEFAULT_BLUE),
 
         //CASH_BUTTON Labels
         FIVE("5€", Colors.DEFAULT_BLUE),

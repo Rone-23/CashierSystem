@@ -23,7 +23,7 @@ public class DisplayDispatcher{
         displayMap.remove(constraint,display);
     }
 
-    public static void viaDefault(){
+    public static void activeDisplayForAmount(){
         try {
             addActiveDisplay("REGISTER-AMOUNT");
             addActiveDisplay("ARTICLES-SPLIT");
@@ -32,7 +32,7 @@ public class DisplayDispatcher{
         }
     }
 
-    public static void viaCash(){
+    public static void activeDisplayForPayment(){
         try {
             removeActiveDisplay("REGISTER-AMOUNT");
             removeActiveDisplay("ARTICLES-SPLIT");

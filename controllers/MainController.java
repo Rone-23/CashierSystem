@@ -22,7 +22,7 @@ public class MainController {
         OpenTransaction.addObserver(displayItemController);
 
         new UtilityController();
-        DisplayDispatcher.viaDefault();
+        DisplayDispatcher.activeDisplayForAmount();
         KeyboardController.addListener(contentController);
     }
 

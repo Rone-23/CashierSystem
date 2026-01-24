@@ -12,6 +12,7 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class DuringArticles extends JPanel implements ButtonFoundable{
      private final DisplayItems displayItems = new DisplayItems();
@@ -177,6 +178,7 @@ public class DuringArticles extends JPanel implements ButtonFoundable{
         }
         if(plusButton.getName().equals(key.toLowerCase())){
             return plusButton;
+
         }
         if(minusButton.getName().equals(key.toLowerCase())){
             return minusButton;
