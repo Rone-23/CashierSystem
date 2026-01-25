@@ -2,8 +2,8 @@ package services;
 
 import controllers.display.ContentObserver;
 import controllers.transaction.OpenTransactionObserver;
-import org.assertj.swing.timing.Pause;
 
+import java.awt.event.ActionEvent;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -115,40 +115,53 @@ public class OpenTransaction implements ContentObserver {
     }
 
     public double getMissing(){
-        return getTotal() - payedCard - payedCash;
+        System.out.printf("Missing cash in transaction is: %.2f\n", getTotal() - payedCard - payedCash - payedFoodTicket - payedVoucher);
+        return getTotal() - payedCard - payedCash - payedFoodTicket - payedVoucher;
     }
 
-    public void payCard(){
+//    public void payCard(String typeOfPayment){
+//        if(content>0){
+//            payedCard += content*0.01;
+//            checkSum(typeOfPayment);
+//        }
+//    }
+//
+//    public void payCash(String typeOfPayment){
+//        if(content>0){
+//            payedCash += content*0.01;
+//            checkSum(typeOfPayment);
+//        }
+//    }
+//
+//    public void payFoodTicket(String typeOfPayment){
+//        if(content>0){
+//            payedFoodTicket += content*0.01;
+//            checkSum(typeOfPayment);
+//        }
+//    }
+//
+//    public void payVoucher(String typeOfPayment){
+//        if(content>0){
+//            payedVoucher += content*0.01;
+//            checkSum(typeOfPayment);
+//        }
+//    }
+
+    public void pay(ActionEvent actionEvent){
         if(content>0){
-            payedCard += content*0.01;
-            checkSum();
+            switch (actionEvent.getActionCommand()){
+                case "Hotovost" -> payedCash += content*0.01;
+                case "Karta" -> payedCard += content*0.01;
+                case "Stravenky" -> payedFoodTicket += content*0.01;
+                case "Poukážky" -> payedVoucher += content*0.01;
+            }
+            checkSum(actionEvent.getActionCommand());
         }
     }
 
-    public void payCash(){
-        if(content>0){
-            payedCash += content*0.01;
-            checkSum();
-        }
-    }
-
-    public void payFoodTicket(){
-        if(content>0){
-            payedFoodTicket += content*0.01;
-            checkSum();
-        }
-    }
-
-    public void payVoucher(){
-        if(content>0){
-            payedVoucher += content*0.01;
-            checkSum();
-        }
-    }
-
-    private void checkSum(){
+    private void checkSum(String typeOfPayment){
         for(OpenTransactionObserver observer : observerList){
-            observer.onAddedPayment(getMissing(), content);
+            observer.onAddedPayment(getMissing(), typeOfPayment, content);
         }
         if(getMissing()<=EPSILON){
             for(OpenTransactionObserver observer : observerList){

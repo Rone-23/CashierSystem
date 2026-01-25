@@ -12,7 +12,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class DuringRegister extends JPanel implements ButtonFoundable{
@@ -219,11 +218,13 @@ public class DuringRegister extends JPanel implements ButtonFoundable{
             }
 
             case "Stravenky" ->{
-
+                cardLayout.show(rightPanel,"COMMON_BUTTON_CLUSTER");
+                cardLayoutDisplay.show(displayPanel,"TOTAL");
             }
 
             case "Poukážky" ->{
-
+                cardLayout.show(rightPanel,"COMMON_BUTTON_CLUSTER");
+                cardLayoutDisplay.show(displayPanel,"TOTAL");
             }
         }
 

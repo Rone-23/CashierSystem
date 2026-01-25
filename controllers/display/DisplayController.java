@@ -41,7 +41,7 @@ public class DisplayController implements OpenTransactionObserver, ContentObserv
     }
 
     @Override
-    public void onAddedPayment(Double toPayLeft, Double addedAmount) {
+    public void onAddedPayment(Double toPayLeft, String typeOfPayment, Double addedAmount) {
         if(display.getDisplayType().equals(Constants.TOTAL)){
             display.setText(String.format("%.2f",toPayLeft));
         }

@@ -37,23 +37,24 @@ public class OpenTransactionManager implements OpenTransactionObserver{
 
     public void addPayment(ActionEvent actionEvent){
         System.out.printf("Action event when addPayment: %s \n",actionEvent.getActionCommand());
-        switch (actionEvent.getActionCommand()){
-            case "Hotovost" -> {
-                openTransaction.payCash();
-            }
-
-            case "Karta" -> {
-                openTransaction.payCard();
-            }
-
-            case "Stravenky" -> {
-                openTransaction.payFoodTicket();
-            }
-
-            case "Poukážky" -> {
-                openTransaction.payVoucher();
-            }
-        }
+        openTransaction.pay(actionEvent);
+//        switch (actionEvent.getActionCommand()){
+//            case "Hotovost" -> {
+//                openTransaction.payCash();
+//            }
+//
+//            case "Karta" -> {
+//                openTransaction.payCard();
+//            }
+//
+//            case "Stravenky" -> {
+//                openTransaction.payFoodTicket();
+//            }
+//
+//            case "Poukážky" -> {
+//                openTransaction.payVoucher();
+//            }
+//        }
     }
 
     @Override

@@ -65,14 +65,33 @@ public class UtilityController {
                 });
             }
         }
+
         duringRegister.getButton(ButtonSet.ButtonLabel.CARD.toString()).addActionListener(e -> {
             duringRegister.switchState(e);
             DisplayDispatcher.activeDisplayForPayment();
             ContentController.clearContent();
-            duringRegister.getButton(ButtonSet.ButtonLabel.ADD.toString()).setActionCommand(e.getActionCommand());
+            for (JButton b : duringRegister.getButtons(ButtonSet.ButtonLabel.ADD.toString())){
+                b.setActionCommand(e.getActionCommand());
+            }
         });
-        duringRegister.getButton(ButtonSet.ButtonLabel.FOOD_TICKETS.toString()).addActionListener(OpenTransactionManager.getInstance()::addPayment);
-        duringRegister.getButton(ButtonSet.ButtonLabel.VOUCHER.toString()).addActionListener(OpenTransactionManager.getInstance()::addPayment);
+
+        duringRegister.getButton(ButtonSet.ButtonLabel.FOOD_TICKETS.toString()).addActionListener(e -> {
+            duringRegister.switchState(e);
+            DisplayDispatcher.activeDisplayForPayment();
+            ContentController.clearContent();
+            for (JButton b : duringRegister.getButtons(ButtonSet.ButtonLabel.ADD.toString())){
+                b.setActionCommand(e.getActionCommand());
+            }
+        });
+
+        duringRegister.getButton(ButtonSet.ButtonLabel.VOUCHER.toString()).addActionListener(e -> {
+            duringRegister.switchState(e);
+            DisplayDispatcher.activeDisplayForPayment();
+            ContentController.clearContent();
+            for (JButton b : duringRegister.getButtons(ButtonSet.ButtonLabel.ADD.toString())){
+                b.setActionCommand(e.getActionCommand());
+            }
+        });
 
 
         /*

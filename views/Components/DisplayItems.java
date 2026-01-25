@@ -2,7 +2,6 @@ package views.Components;
 
 import assets.Colors;
 import services.Item;
-import services.ItemCountable;
 import services.ItemUncountable;
 import utility.GridBagConstraintsBuilder;
 
@@ -65,7 +64,7 @@ public class DisplayItems extends JScrollPane {
         mainItemPanel.revalidate();
     }
 
-    public void addPayment(Double content){
+    public void addPayment(String typeOfPayment,Double content){
 
         JPanel itemContainer = new JPanel(new GridBagLayout());
         itemContainer.setBackground(Colors.BACKGROUND_WHITE.getColor());
@@ -89,7 +88,7 @@ public class DisplayItems extends JScrollPane {
         itemNameContainer.setForeground(Colors.BLACK_TEXT.getColor());
         itemPriceAmountContainer.setForeground(Colors.BLACK_TEXT.getColor());
 
-        JLabel itemNameLabel = new JLabel("Platba",SwingConstants.LEFT);
+        JLabel itemNameLabel = new JLabel(typeOfPayment,SwingConstants.LEFT);
         itemNameLabel.setFont(font);
         itemNameLabel.setForeground(Colors.BLACK_TEXT.getColor());
         itemNameContainer.add(itemNameLabel);
