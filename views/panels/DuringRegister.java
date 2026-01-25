@@ -12,6 +12,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class DuringRegister extends JPanel implements ButtonFoundable{
 
@@ -150,6 +152,43 @@ public class DuringRegister extends JPanel implements ButtonFoundable{
                 return (JButton) c;
             }
         }
+        for(Component c : commonButtonCluster.getComponents()){
+            if(c instanceof JButton && c.getName().equals(key.toLowerCase())){
+                return (JButton) c;
+            }
+        }
+        throw new ArrayIndexOutOfBoundsException();
+    }
+
+    @Override
+    public JButton[] getButtons(String key){
+        ArrayList<JButton> jButtons = new ArrayList<>();
+
+        for(Component c : keyboard.getComponentsInside()){
+            if(c instanceof JButton && c.getName().equals(key.toLowerCase())){
+                jButtons.add((JButton) c);
+            }
+        }
+        for(Component c : utilityButtonCluster.getComponents()){
+            if(c instanceof JButton && c.getName().equals(key.toLowerCase())){
+                jButtons.add((JButton) c);
+            }
+        }
+        for(Component c : cashButtonCluster.getComponents()){
+            if(c instanceof JButton && c.getName().equals(key.toLowerCase())){
+                jButtons.add((JButton) c);
+            }
+        }
+        for(Component c : commonButtonCluster.getComponents()){
+            if(c instanceof JButton && c.getName().equals(key.toLowerCase())){
+                jButtons.add((JButton) c);
+            }
+        }
+
+        if(!jButtons.isEmpty()){
+            return jButtons.toArray(new JButton[0]);
+        }
+
         throw new ArrayIndexOutOfBoundsException();
     }
 

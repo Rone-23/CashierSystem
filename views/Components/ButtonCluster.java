@@ -12,7 +12,20 @@ import java.util.Map;
 
 public class ButtonCluster extends JPanel{
     String[] buttonNames;
-    private final Map<String, JButton> buttons = new HashMap<>();
+//    private static final Map<String, JButton> buttonsMemory = new HashMap<>();
+    private final Map<String, JButton> buttons = new HashMap<>()
+//    {
+//        @Override
+//        public JButton put(String key, JButton value){
+//            if (buttonsMemory.containsKey(key)) {
+//                return super.put(key, buttonsMemory.get(key));
+//            } else {
+//                buttonsMemory.put(key, value);
+//                return super.put(key, value);
+//            }
+//        }
+//    }
+    ;
 
     public ButtonCluster(String[] buttonNames){
         this.buttonNames =  buttonNames;
@@ -89,4 +102,7 @@ public class ButtonCluster extends JPanel{
             }
         }
     }
+
+
+
 }

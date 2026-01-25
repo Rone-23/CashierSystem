@@ -7,6 +7,8 @@ import controllers.panels.ViewManager;
 import controllers.transaction.OpenTransactionManager;
 import views.panels.DuringRegister;
 
+import javax.swing.*;
+
 
 public class UtilityController {
     AddItemAction addItemAction = new AddItemAction();
@@ -27,22 +29,29 @@ public class UtilityController {
         ##Adding control for handling cash
          */
 
-        duringRegister.getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(e -> {
-            duringRegister.switchState(e);
-            DisplayDispatcher.activeDisplayForAmount();
-            ContentController.clearContent();
-        });
+        for(JButton b : duringRegister.getButtons(ButtonSet.ButtonLabel.EXIT.toString())){
+            b.addActionListener(e -> {
+                duringRegister.switchState(e);
+                DisplayDispatcher.activeDisplayForAmount();
+                ContentController.clearContent();
+            });
+        }
 
-        duringRegister.getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(e -> {
-            OpenTransactionManager.getInstance().addPayment(e);
-            ContentController.clearContent();
-        });
+        for(JButton b : duringRegister.getButtons(ButtonSet.ButtonLabel.ADD.toString())){
+            b.addActionListener(e -> {
+                OpenTransactionManager.getInstance().addPayment(e);
+                ContentController.clearContent();
+            });
+        }
+
 
         duringRegister.getButton(ButtonSet.ButtonLabel.CASH.toString()).addActionListener(e -> {
             duringRegister.switchState(e);
             DisplayDispatcher.activeDisplayForPayment();
             ContentController.clearContent();
-            duringRegister.getButton(ButtonSet.ButtonLabel.ADD.toString()).setActionCommand(e.getActionCommand());
+            for (JButton b : duringRegister.getButtons(ButtonSet.ButtonLabel.ADD.toString())){
+                b.setActionCommand(e.getActionCommand());
+            }
         });
 
         for(String buttonName : ButtonSet.CASH_NAMES.getStringLabels()){

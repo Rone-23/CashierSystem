@@ -191,4 +191,36 @@ public class DuringArticles extends JPanel implements ButtonFoundable{
         }
         throw new ArrayIndexOutOfBoundsException();
      }
+
+     @Override
+     public JButton[] getButtons(String key){
+         ArrayList<JButton> jButtons = new ArrayList<>();
+         for(Component c : keyboard.getComponentsInside()){
+             if(c instanceof JButton && c.getName().equals(key.toLowerCase())){
+                 jButtons.add((JButton) c);
+             }
+         }
+         for(Component c : clusterBottom.getComponents()){
+             if(c instanceof JButton && c.getName().equals(key.toLowerCase())){
+                 jButtons.add((JButton) c);
+             }
+         }
+         if(plusButton.getName().equals(key.toLowerCase())){
+             jButtons.add(plusButton);
+         }
+         if(minusButton.getName().equals(key.toLowerCase())){
+             jButtons.add(minusButton);
+         }
+         if(searchButton.getName().equals(key.toLowerCase())){
+             jButtons.add(searchButton);
+         }
+         if(cancelButton.getName().equals(key.toLowerCase())){
+             jButtons.add(cancelButton);
+         }
+         if(!jButtons.isEmpty()){
+             return jButtons.toArray(new JButton[0]);
+         }
+         throw new ArrayIndexOutOfBoundsException();
+
+     }
 }
