@@ -18,12 +18,12 @@ public class DisplayController implements OpenTransactionObserver, ContentObserv
 
     @Override
     public void onItemAdd(Item item) {
-        display.setText(String.format("%.2f",openTransaction.getMissing()));
+        display.setText(String.format("%.2f",openTransaction.getMissing()*0.01));
     }
 
     @Override
     public void onItemRemove(Item item) {
-        display.setText(String.format("%.2f",openTransaction.getMissing()));
+        display.setText(String.format("%.2f",openTransaction.getMissing()*0.01));
     }
 
     @Override
@@ -41,9 +41,9 @@ public class DisplayController implements OpenTransactionObserver, ContentObserv
     }
 
     @Override
-    public void onAddedPayment(Double toPayLeft, String typeOfPayment, Double addedAmount) {
+    public void onAddedPayment(int toPayLeft, String typeOfPayment, int addedAmount) {
         if(display.getDisplayType().equals(Constants.TOTAL)){
-            display.setText(String.format("%.2f",toPayLeft));
+            display.setText(String.format("%.2f",toPayLeft*0.01));
         }
     }
 
@@ -52,7 +52,7 @@ public class DisplayController implements OpenTransactionObserver, ContentObserv
         if(display.getDisplayType() == Constants.SPLIT){
             display.setText(display.getTextArray()[0],String.format("%s",content));
         }else if (display.getDisplayType() == Constants.TOTAL){
-            display.setText(String.format("%.2f",Double.parseDouble(content) * 0.01));
+            display.setText(String.format("%.2f",Integer.parseInt(content) * 0.01));
         }else{
             display.setText(String.format("%s",content));
         }

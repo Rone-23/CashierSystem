@@ -4,6 +4,7 @@ import controllers.display.ContentObserver;
 import controllers.transaction.OpenTransactionObserver;
 
 import java.awt.event.ActionEvent;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -17,11 +18,11 @@ public class OpenTransaction implements ContentObserver {
     private final static List<OpenTransactionObserver> observerList = new ArrayList<>();
     private final Map<String,Item> itemsInTransaction= new HashMap<>();
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-    private Double content = 1.0;
-    private Double payedCard = 0.0;
-    private Double payedCash = 0.0;
-    private Double payedFoodTicket = 0.0;
-    private Double payedVoucher = 0.0;
+    private int content = 1;
+    private int payedCard = 0;
+    private int payedCash = 0;
+    private int payedFoodTicket = 0;
+    private int payedVoucher = 0;
     //**EPSILON is there because of using Double**//
     private final Double EPSILON = 0.0000001;
     //**day is stored using sql.getLastTimeStamp() and split it into day ("dd-MM-yyyy HH:mm:ss")**//
@@ -37,21 +38,20 @@ public class OpenTransaction implements ContentObserver {
         }
     }
 
-    public void addItem(Item item){
+    public void addItem(Item item) throws SQLException {
         if(item == null){return;}
+
+        SQL_Connect.getInstance().logToDB(transactionID,SQL_Connect.instance.getArticleID(item.getName()), item.getAmount(),item.getPrice());
+
         if (!itemsInTransaction.containsKey(item.getName())){
             item.setAmount(content);
             itemsInTransaction.put(item.getName(),item);
-        }else if(itemsInTransaction.containsKey(item.getName()) && item.getClass()==ItemCountable.class){
+        }else {
             ItemCountable itemCountable = (ItemCountable) itemsInTransaction.get(item.getName());
             itemCountable.addAmount(content);
             item=itemCountable;
-        }else {
-            ItemUncountable itemUncountable = (ItemUncountable) itemsInTransaction.get(item.getName());
-            ItemUncountable itemUncountableToAdd = (ItemUncountable) item;
-            itemUncountable.addWeight(itemUncountableToAdd.getWeight());
-            item = itemUncountable;
         }
+
         for(OpenTransactionObserver observer : observerList){
             observer.onItemAdd(item);
         }
@@ -59,8 +59,8 @@ public class OpenTransaction implements ContentObserver {
 
     public void removeItem(Item item){
         if(item == null){return;}
-        if(!itemsInTransaction.containsKey(item.getName())){
             //TODO
+        if(!itemsInTransaction.containsKey(item.getName())){
         }else if(itemsInTransaction.containsKey(item.getName()) && item.getClass()==ItemCountable.class){
             if(item.getAmount()-content<=0){
                 itemsInTransaction.remove(item.getName());
@@ -100,8 +100,8 @@ public class OpenTransaction implements ContentObserver {
 
     public int getTransactionID(){return transactionID;}
 
-    public double getTotal(){
-        double sum = 0;
+    public int getTotal(){
+        int sum = 0;
 
         for(Item item : itemsInTransaction.values().toArray(new Item[0])){
             sum += item.getPrice()*item.getAmount();
@@ -109,18 +109,18 @@ public class OpenTransaction implements ContentObserver {
         return sum;
     }
 
-    public double getMissing(){
-        System.out.printf("Missing cash in transaction is: %.2f\n", getTotal() - payedCard - payedCash - payedFoodTicket - payedVoucher);
+    public int getMissing(){
+        System.out.printf("Missing cash in transaction is: %d\n", getTotal() - payedCard - payedCash - payedFoodTicket - payedVoucher);
         return getTotal() - payedCard - payedCash - payedFoodTicket - payedVoucher;
     }
 
     public void pay(ActionEvent actionEvent){
         if(content>0){
             switch (actionEvent.getActionCommand()){
-                case "Hotovost" -> payedCash += content*0.01;
-                case "Karta" -> payedCard += content*0.01;
-                case "Stravenky" -> payedFoodTicket += content*0.01;
-                case "Poukážky" -> payedVoucher += content*0.01;
+                case "Hotovost" -> payedCash += content;
+                case "Karta" -> payedCard += content;
+                case "Stravenky" -> payedFoodTicket += content;
+                case "Poukážky" -> payedVoucher += content;
             }
             checkSum(actionEvent.getActionCommand());
         }
@@ -152,9 +152,9 @@ public class OpenTransaction implements ContentObserver {
     @Override
     public void notifyContentUpdate(String content) {
         try {
-            this.content = Double.valueOf(content);
+            this.content = Integer.parseInt(content);
         } catch (NumberFormatException e) {
-            this.content = 1.0;
+            this.content = 1;
         }
     }
 }

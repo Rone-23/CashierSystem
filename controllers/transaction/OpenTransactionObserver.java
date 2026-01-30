@@ -8,6 +8,6 @@ public interface OpenTransactionObserver {
     default void onItemAdd(Item item) {}
     default void onItemRemove(Item item){}
     default void onDestroy() {}
-    default void onAddedPayment(Double toPayLeft,String typeOfPayment, Double addedAmount) {}
+    default void onAddedPayment(int toPayLeft,String typeOfPayment, int addedAmount) {}
     default void paymentDone(){}
 }

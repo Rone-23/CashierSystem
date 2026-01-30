@@ -12,10 +12,13 @@ import java.awt.geom.RoundRectangle2D;
 public class ChonkyButton extends JButton {
     protected Shape innerRectangle;
     private final Insets insets = new Insets(60,25,60,25);
-
+    Color colorActive;
+    Color colorDisabled;
     Color color;
     public ChonkyButton(Color color){
         this.color = color;
+        colorActive = color;
+        colorDisabled = color.brighter();
         setContentAreaFilled(false);
         setOpaque(false);
         setFocusPainted(false);
@@ -26,13 +29,14 @@ public class ChonkyButton extends JButton {
     public ChonkyButton(String text, Color color) {
         super(text);
         this.color = color;
+        colorActive = color;
+        colorDisabled = color.brighter();
         setContentAreaFilled(false);
         setOpaque(false);
         setFocusPainted(false);
         setBorderPainted(false);
         setFont(new Font("Roboto", Font.BOLD, 40));
         setMargin(insets);
-
     }
 
     @Override
@@ -229,5 +233,16 @@ public class ChonkyButton extends JButton {
             scaledFont = currentFont.deriveFont((float) newFontSize);
             setFont(scaledFont);
         }
+    }
+
+    @Override
+    public void setEnabled(boolean b) {
+        super.setEnabled(b);
+        if(b){
+            color = colorActive;
+        }else{
+            color = colorDisabled;
+        }
+        repaint();
     }
 }

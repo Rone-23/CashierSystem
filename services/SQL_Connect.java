@@ -59,8 +59,8 @@ public class SQL_Connect {
             while (rs.next()) {
                 items.add(new ItemCountable(
                         rs.getString("name"),
-                        rs.getDouble("price"),
-                        1.0
+                        rs.getInt("price"),
+                        1
                 ));
             }
 
@@ -83,8 +83,8 @@ public class SQL_Connect {
             while (rs.next()) {
                 items.add(new ItemCountable(
                         rs.getString("name"),
-                        rs.getDouble("price"),
-                        1.0
+                        rs.getInt("price"),
+                        1
                 ));
             }
 
@@ -102,8 +102,8 @@ public class SQL_Connect {
             while (rs.next()) {
                 items.add(new ItemCountable(
                         rs.getString("name"),
-                        rs.getDouble("price"),
-                        1.0
+                        rs.getInt("price"),
+                        1
                 ));
             }
 
@@ -203,8 +203,8 @@ public class SQL_Connect {
             while (rs.next()) {
                 items.add(new ItemCountable(
                         rs.getString("name"),
-                        rs.getDouble("price"),
-                        rs.getDouble("amount")
+                        rs.getInt("price"),
+                        rs.getInt("amount")
                 ));
             }
 

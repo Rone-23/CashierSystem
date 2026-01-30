@@ -64,7 +64,7 @@ public class DisplayItems extends JScrollPane {
         mainItemPanel.revalidate();
     }
 
-    public void addPayment(String typeOfPayment,Double content){
+    public void addPayment(String typeOfPayment,int content){
 
         JPanel itemContainer = new JPanel(new GridBagLayout());
         itemContainer.setBackground(Colors.BACKGROUND_WHITE.getColor());
@@ -210,7 +210,7 @@ public class DisplayItems extends JScrollPane {
 
                     if(itemName.equals(item.getName())){
                         //Displaying price for the amount of this item in transaction
-                        ((JLabel) itemPriceAmountContainer.getComponent(1)).setText(String.format("%.02f €",(item.getPrice()*item.getAmount())));
+                        ((JLabel) itemPriceAmountContainer.getComponent(1)).setText(String.format("%.02f €",(item.getPrice()*item.getAmount())*0.01));
                         if (item instanceof ItemUncountable){
                             ((JLabel) itemPriceAmountContainer.getComponent(0)).setText(item.getAmount() + " kg");
                         }else{

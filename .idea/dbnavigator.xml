@@ -27,6 +27,28 @@
       <charset value="UTF-8" />
     </export-instructions>
   </component>
+  <component name="DBNavigator.Project.DatabaseAssistantManager">
+    <assistants>
+      <assistant-state connection-id="ab16c47c-8eaf-4ed2-9b5c-14849f45418b" assistant-type="PUBLIC" default-profile-name="" selected-chat-id="AF6E133E68EF43F8AB42FAB8F249F16D" availability="AVAILABLE" acknowledgement="ENGAGED" selected="true">
+        <chats>
+          <chat id="AF6E133E68EF43F8AB42FAB8F249F16D" title="" session-signature="" timestamp="1769775166016">
+            <messages />
+            <context provider="" profile="" model="" action="" interactive="true" />
+          </chat>
+        </chats>
+        <tools />
+      </assistant-state>
+      <assistant-state connection-id="ab16c47c-8eaf-4ed2-9b5c-14849f45418b" assistant-type="SELECT_AI" default-profile-name="" selected-chat-id="" availability="UNAVAILABLE" acknowledgement="NONE">
+        <tools />
+      </assistant-state>
+      <assistant-state connection-id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5" assistant-type="PUBLIC" default-profile-name="" selected-chat-id="" availability="AVAILABLE" acknowledgement="NONE" selected="true">
+        <tools />
+      </assistant-state>
+    </assistants>
+    <selection-state>
+      <model-selection />
+    </selection-state>
+  </component>
   <component name="DBNavigator.Project.DatabaseBrowserManager">
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
@@ -194,17 +216,22 @@ select * from subtype;
 select * from "transaction";
 select * from "in_transaction";
 
+delete from "in_transaction" "transaction";
+
+update article set stock =  1 where article_id = 1;
+
 update article set stock = stock * 10000;
 
+--retrieve transactions and their content that occurred today
 select "transaction".transaction_id as ID, article.name as Artikel, in_transaction.amount as Pocet, "transaction".created_at as Vytoverene
 from in_transaction 
 join "transaction" on in_transaction.transaction_id = "transaction".transaction_id
 join article on in_transaction.article_id = article.article_id where date(created_at) = date('now');
 
+--select last id in transaction
 select transaction_id from "transaction" order by transaction_id desc limit 1;
-delete from "in_transaction";
 
---create transacion
+--create transaction
 insert into "transaction" (transaction_id, cashier_id, created_at, customer_id)
 values (?,?,current_timestamp, ?);
 
@@ -272,8 +299,10 @@ COMMIT;]]></console>
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files>
       <object connection-id="ab16c47c-8eaf-4ed2-9b5c-14849f45418b" object-ref="consoles/New  Database" />
-      <object connection-id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5" object-ref="consoles/Shop" />
     </open-files>
+  </component>
+  <component name="DBNavigator.Project.DatabasePrerequisiteManager">
+    <prerequisites />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5" />
@@ -320,13 +349,13 @@ COMMIT;]]></console>
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5" active="true" signed="true">
+      <connection source-id="" id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5" active="true" signed="true">
         <database>
           <name value="Shop" />
           <description value="" />
           <database-type value="SQLITE" />
           <config-type value="BASIC" />
-          <database-version value="3.45" />
+          <database-version value="3.5" />
           <driver-source value="BUNDLED" />
           <driver-library value="" />
           <driver value="" />
@@ -334,7 +363,16 @@ COMMIT;]]></console>
           <url value="jdbc:sqlite:C:\Users\tomas\Documents\Billa_system\database.db" />
           <type value="NONE" />
           <user value="" />
-          <deprecated-pwd value="" />
+          <token-type value="" />
+          <token-config-file value="" />
+          <token-profile value="" />
+          <adb-compartment-ocid value="" />
+          <adb-database-ocid value="" />
+          <azure-token-database-id-uri value="" />
+          <azure-token-tenant-id value="" />
+          <azure-token-client-id value="" />
+          <azure-token-client-certificate-file value="" />
+          <session-user value="" />
         </database>
         <properties>
           <auto-commit value="true" />
@@ -344,10 +382,8 @@ COMMIT;]]></console>
           <proxy-host value="" />
           <proxy-port value="22" />
           <proxy-user value="" />
-          <deprecated-proxy-pwd value="" />
           <auth-type value="PASSWORD" />
           <key-file value="" />
-          <key-passphrase value="" />
         </ssh-settings>
         <ssl-settings>
           <active value="false" />
@@ -373,11 +409,20 @@ COMMIT;]]></console>
         </details>
         <debugger>
           <compile-dependencies value="true" />
-          <tcp-driver-tunneling value="false" />
           <tcp-host-address value="" />
           <tcp-port-from value="4000" />
           <tcp-port-to value="4999" />
+          <jdwp-tunnel-type value="NONE" />
           <debugger-type value="ASK" />
+          <reverse-ssh-tunnel>
+            <host value="" />
+            <port value="22" />
+            <bind-host value="127.0.0.1" />
+            <bind-port value="0" />
+            <auth-type value="PASSWORD" />
+            <user value="" />
+            <key-file value="" />
+          </reverse-ssh-tunnel>
         </debugger>
         <object-filters hide-empty-schemas="false" hide-pseudo-columns="false" hide-audit-columns="false">
           <object-filters />
@@ -389,6 +434,7 @@ COMMIT;]]></console>
             <object-type name="CHARSET" enabled="true" />
             <object-type name="TABLE" enabled="true" />
             <object-type name="VIEW" enabled="true" />
+            <object-type name="JSON_VIEW" enabled="true" />
             <object-type name="MATERIALIZED_VIEW" enabled="true" />
             <object-type name="NESTED_TABLE" enabled="true" />
             <object-type name="COLUMN" enabled="true" />
@@ -404,19 +450,26 @@ COMMIT;]]></console>
             <object-type name="TYPE" enabled="true" />
             <object-type name="TYPE_ATTRIBUTE" enabled="true" />
             <object-type name="ARGUMENT" enabled="true" />
+            <object-type name="JAVA_CLASS" enabled="true" />
+            <object-type name="JAVA_FIELD" enabled="true" />
+            <object-type name="JAVA_METHOD" enabled="true" />
+            <object-type name="JAVA_RESOURCE" enabled="true" />
             <object-type name="DIMENSION" enabled="true" />
             <object-type name="CLUSTER" enabled="true" />
             <object-type name="DBLINK" enabled="true" />
+            <object-type name="CREDENTIAL" enabled="true" />
+            <object-type name="AI_PROFILE" enabled="true" />
+            <object-type name="AI_MODEL" enabled="true" />
           </object-type-filter>
         </object-filters>
       </connection>
-      <connection id="ab16c47c-8eaf-4ed2-9b5c-14849f45418b" active="true" signed="true">
+      <connection source-id="" id="ab16c47c-8eaf-4ed2-9b5c-14849f45418b" active="true" signed="true">
         <database>
           <name value="New  Database" />
           <description value="" />
           <database-type value="SQLITE" />
           <config-type value="BASIC" />
-          <database-version value="3.45" />
+          <database-version value="3.5" />
           <driver-source value="BUNDLED" />
           <driver-library value="" />
           <driver value="" />
@@ -426,12 +479,24 @@ COMMIT;]]></console>
           <database value="" />
           <tns-folder value="" />
           <tns-profile value="" />
+          <server-type value="" />
+          <protocol value="" />
+          <url-parameters />
           <files>
             <file path="C:\Users\tomas\Documents\Billa_system\cashier_system_database.db" schema="database" />
           </files>
           <type value="NONE" />
           <user value="" />
-          <deprecated-pwd value="" />
+          <token-type value="" />
+          <token-config-file value="" />
+          <token-profile value="" />
+          <adb-compartment-ocid value="" />
+          <adb-database-ocid value="" />
+          <azure-token-database-id-uri value="" />
+          <azure-token-tenant-id value="" />
+          <azure-token-client-id value="" />
+          <azure-token-client-certificate-file value="" />
+          <session-user value="" />
         </database>
         <properties>
           <auto-commit value="false" />
@@ -441,10 +506,8 @@ COMMIT;]]></console>
           <proxy-host value="" />
           <proxy-port value="22" />
           <proxy-user value="" />
-          <deprecated-proxy-pwd value="" />
           <auth-type value="PASSWORD" />
           <key-file value="" />
-          <key-passphrase value="" />
         </ssh-settings>
         <ssl-settings>
           <active value="false" />
@@ -470,11 +533,20 @@ COMMIT;]]></console>
         </details>
         <debugger>
           <compile-dependencies value="true" />
-          <tcp-driver-tunneling value="false" />
           <tcp-host-address value="" />
           <tcp-port-from value="4000" />
           <tcp-port-to value="4999" />
+          <jdwp-tunnel-type value="NONE" />
           <debugger-type value="ASK" />
+          <reverse-ssh-tunnel>
+            <host value="" />
+            <port value="22" />
+            <bind-host value="127.0.0.1" />
+            <bind-port value="0" />
+            <auth-type value="PASSWORD" />
+            <user value="" />
+            <key-file value="" />
+          </reverse-ssh-tunnel>
         </debugger>
         <object-filters hide-empty-schemas="false" hide-pseudo-columns="false" hide-audit-columns="false">
           <object-filters />
@@ -486,6 +558,7 @@ COMMIT;]]></console>
             <object-type name="CHARSET" enabled="true" />
             <object-type name="TABLE" enabled="true" />
             <object-type name="VIEW" enabled="true" />
+            <object-type name="JSON_VIEW" enabled="true" />
             <object-type name="MATERIALIZED_VIEW" enabled="true" />
             <object-type name="NESTED_TABLE" enabled="true" />
             <object-type name="COLUMN" enabled="true" />
@@ -501,9 +574,16 @@ COMMIT;]]></console>
             <object-type name="TYPE" enabled="true" />
             <object-type name="TYPE_ATTRIBUTE" enabled="true" />
             <object-type name="ARGUMENT" enabled="true" />
+            <object-type name="JAVA_CLASS" enabled="true" />
+            <object-type name="JAVA_FIELD" enabled="true" />
+            <object-type name="JAVA_METHOD" enabled="true" />
+            <object-type name="JAVA_RESOURCE" enabled="true" />
             <object-type name="DIMENSION" enabled="true" />
             <object-type name="CLUSTER" enabled="true" />
             <object-type name="DBLINK" enabled="true" />
+            <object-type name="CREDENTIAL" enabled="true" />
+            <object-type name="AI_PROFILE" enabled="true" />
+            <object-type name="AI_MODEL" enabled="true" />
           </object-type-filter>
         </object-filters>
       </connection>
@@ -514,6 +594,7 @@ COMMIT;]]></console>
         <navigation-history-size value="100" />
         <show-object-details value="false" />
         <enable-sticky-paths value="true" />
+        <enable-quick-filters value="false" />
       </general>
       <filters>
         <object-type-filter>
@@ -524,6 +605,7 @@ COMMIT;]]></console>
           <object-type name="CHARSET" enabled="true" />
           <object-type name="TABLE" enabled="true" />
           <object-type name="VIEW" enabled="true" />
+          <object-type name="JSON_VIEW" enabled="true" />
           <object-type name="MATERIALIZED_VIEW" enabled="true" />
           <object-type name="NESTED_TABLE" enabled="true" />
           <object-type name="COLUMN" enabled="true" />
@@ -539,9 +621,16 @@ COMMIT;]]></console>
           <object-type name="TYPE" enabled="true" />
           <object-type name="TYPE_ATTRIBUTE" enabled="true" />
           <object-type name="ARGUMENT" enabled="true" />
+          <object-type name="JAVA_CLASS" enabled="true" />
+          <object-type name="JAVA_FIELD" enabled="true" />
+          <object-type name="JAVA_METHOD" enabled="true" />
+          <object-type name="JAVA_RESOURCE" enabled="true" />
           <object-type name="DIMENSION" enabled="true" />
           <object-type name="CLUSTER" enabled="true" />
           <object-type name="DBLINK" enabled="true" />
+          <object-type name="CREDENTIAL" enabled="true" />
+          <object-type name="AI_PROFILE" enabled="true" />
+          <object-type name="AI_MODEL" enabled="true" />
         </object-type-filter>
       </filters>
       <sorting>
@@ -567,6 +656,7 @@ COMMIT;]]></console>
           <object-type name="CHARSET" enabled="false" />
           <object-type name="TABLE" enabled="true" />
           <object-type name="VIEW" enabled="true" />
+          <object-type name="JSON VIEW" enabled="true" />
           <object-type name="MATERIALIZED VIEW" enabled="true" />
           <object-type name="INDEX" enabled="true" />
           <object-type name="CONSTRAINT" enabled="true" />
@@ -578,9 +668,16 @@ COMMIT;]]></console>
           <object-type name="FUNCTION" enabled="true" />
           <object-type name="PACKAGE" enabled="true" />
           <object-type name="TYPE" enabled="true" />
+          <object-type name="JAVA CLASS" enabled="true" />
+          <object-type name="INNER CLASS" enabled="true" />
+          <object-type name="JAVA FIELD" enabled="true" />
+          <object-type name="JAVA METHOD" enabled="true" />
+          <object-type name="JAVA PARAMETER" enabled="true" />
+          <object-type name="JAVA RESOURCE" enabled="true" />
           <object-type name="DIMENSION" enabled="false" />
           <object-type name="CLUSTER" enabled="false" />
           <object-type name="DBLINK" enabled="true" />
+          <object-type name="CREDENTIAL" enabled="false" />
         </lookup-objects>
         <force-database-load value="false" />
         <prompt-connection-selection value="true" />
@@ -676,6 +773,7 @@ COMMIT;]]></console>
           <user-schema>
             <filter-element type="OBJECT" id="table" selected="true" />
             <filter-element type="OBJECT" id="view" selected="true" />
+            <filter-element type="OBJECT" id="json view" selected="true" />
             <filter-element type="OBJECT" id="materialized view" selected="true" />
             <filter-element type="OBJECT" id="index" selected="true" />
             <filter-element type="OBJECT" id="constraint" selected="true" />
@@ -693,6 +791,7 @@ COMMIT;]]></console>
           <public-schema>
             <filter-element type="OBJECT" id="table" selected="false" />
             <filter-element type="OBJECT" id="view" selected="false" />
+            <filter-element type="OBJECT" id="json view" selected="false" />
             <filter-element type="OBJECT" id="materialized view" selected="false" />
             <filter-element type="OBJECT" id="index" selected="false" />
             <filter-element type="OBJECT" id="constraint" selected="false" />
@@ -710,6 +809,7 @@ COMMIT;]]></console>
           <any-schema>
             <filter-element type="OBJECT" id="table" selected="true" />
             <filter-element type="OBJECT" id="view" selected="true" />
+            <filter-element type="OBJECT" id="json view" selected="true" />
             <filter-element type="OBJECT" id="materialized view" selected="true" />
             <filter-element type="OBJECT" id="index" selected="true" />
             <filter-element type="OBJECT" id="constraint" selected="true" />
@@ -738,6 +838,7 @@ COMMIT;]]></console>
           <user-schema>
             <filter-element type="OBJECT" id="table" selected="true" />
             <filter-element type="OBJECT" id="view" selected="true" />
+            <filter-element type="OBJECT" id="json view" selected="true" />
             <filter-element type="OBJECT" id="materialized view" selected="true" />
             <filter-element type="OBJECT" id="index" selected="true" />
             <filter-element type="OBJECT" id="constraint" selected="true" />
@@ -755,6 +856,7 @@ COMMIT;]]></console>
           <public-schema>
             <filter-element type="OBJECT" id="table" selected="true" />
             <filter-element type="OBJECT" id="view" selected="true" />
+            <filter-element type="OBJECT" id="json view" selected="true" />
             <filter-element type="OBJECT" id="materialized view" selected="true" />
             <filter-element type="OBJECT" id="index" selected="true" />
             <filter-element type="OBJECT" id="constraint" selected="true" />
@@ -772,6 +874,7 @@ COMMIT;]]></console>
           <any-schema>
             <filter-element type="OBJECT" id="table" selected="true" />
             <filter-element type="OBJECT" id="view" selected="true" />
+            <filter-element type="OBJECT" id="json view" selected="true" />
             <filter-element type="OBJECT" id="materialized view" selected="true" />
             <filter-element type="OBJECT" id="index" selected="true" />
             <filter-element type="OBJECT" id="constraint" selected="true" />
@@ -789,6 +892,7 @@ COMMIT;]]></console>
         </extended-filter>
       </filters>
       <sorting enabled="true">
+        <sorting-element type="OBJECT" id="json view" />
         <sorting-element type="RESERVED_WORD" id="keyword" />
         <sorting-element type="RESERVED_WORD" id="datatype" />
         <sorting-element type="OBJECT" id="column" />
@@ -834,6 +938,11 @@ COMMIT;]]></console>
         <debug-execution-timeout value="600" />
         <parameter-history-size value="10" />
       </method-execution>
+      <method-execution>
+        <execution-timeout value="30" />
+        <debug-execution-timeout value="600" />
+        <parameter-history-size value="10" />
+      </method-execution>
     </execution-engine-settings>
     <operation-settings>
       <transactions>
@@ -870,6 +979,7 @@ COMMIT;]]></console>
         <mapping file-type-id="TYPE" extensions="tpe" />
         <mapping file-type-id="TYPE_SPEC" extensions="tps" />
         <mapping file-type-id="TYPE_BODY" extensions="tpb" />
+        <mapping file-type-id="JAVA_SOURCE" extensions="sql" />
       </extensions>
       <general>
         <lookup-ddl-files value="true" />
@@ -879,6 +989,14 @@ COMMIT;]]></console>
         <make-scripts-rerunnable value="true" />
       </general>
     </ddl-file-settings>
+    <assistant-settings>
+      <credential-settings>
+        <credentials />
+      </credential-settings>
+      <profile-settings>
+        <profiles />
+      </profile-settings>
+    </assistant-settings>
     <general-settings>
       <regional-settings>
         <date-format value="MEDIUM" />

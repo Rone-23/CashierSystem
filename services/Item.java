@@ -8,7 +8,7 @@ import java.util.Objects;
 @JsonDeserialize(using = ItemDeserializer.class)
 public abstract class Item {
     protected String name;
-    protected Double price,amount;
+    protected int price,amount;
     private static double totalAmount;
     public Item(){
         //TODO: Remake so it shows how many items went through not how many types went through
@@ -18,19 +18,19 @@ public abstract class Item {
     public void setName(String name){
         this.name=name;
     }
-    public void setPrice(double price){
+    public void setPrice(int price){
         this.price=price;
     }
-    public void setAmount(double amount){
+    public void setAmount(int amount){
         this.amount=amount;
     }
     public String getName(){
         return this.name;
     }
-    public Double getPrice(){
+    public int getPrice(){
         return this.price;
     }
-    public Double getAmount(){
+    public int getAmount(){
         return this.amount;
     }
     public double getTotalAmount(){return totalAmount; }

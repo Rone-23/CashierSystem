@@ -11,12 +11,16 @@ import java.awt.geom.RoundRectangle2D;
 
 public class ArticleButton extends JButton {
     Color color;
+    Color colorActive;
+    Color colorDisabled;
     String itemName;
-    double itemPrice;
+    int itemPrice;
     public ArticleButton(Color color, Item item){
         this.itemName = item.getName();
         this.itemPrice = item.getPrice();
         this.color = color;
+        colorActive = color;
+        colorDisabled = color.brighter();
         setContentAreaFilled(false);
         setOpaque(false);
         setFocusPainted(false);
@@ -137,7 +141,7 @@ public class ArticleButton extends JButton {
 //        g2.fill(writableAreaPrice);
     }
 
-    public double getItemPrice(){
+    public int getItemPrice(){
         return itemPrice;
     }
 
@@ -145,6 +149,14 @@ public class ArticleButton extends JButton {
         return itemName;
     }
 
-
-
+    @Override
+    public void setEnabled(boolean b) {
+        super.setEnabled(b);
+        if(b){
+            color = colorActive;
+        }else{
+            color = colorDisabled;
+        }
+        repaint();
+    }
 }

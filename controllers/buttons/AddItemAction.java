@@ -20,9 +20,7 @@ public class AddItemAction extends AbstractAction implements ContentObserver, Op
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(item.getAmount()!=0.0){
-            OpenTransactionManager.getInstance().addItem(item);
-        }
+        OpenTransactionManager.getInstance().addItem(item);
     }
 
     //Observer

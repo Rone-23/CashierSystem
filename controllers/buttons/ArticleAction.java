@@ -37,8 +37,8 @@ public class ArticleAction extends AbstractAction implements ContentObserver {
         articleButton = (ArticleButton) e.getSource();
         articleButton.setSelected(true);
         String itemName = articleButton.getItemName();
-        double itemPrice = articleButton.getItemPrice();
-        notifyItemSelect(new ItemCountable(itemName,itemPrice,Double.parseDouble(content)));
+        int itemPrice = articleButton.getItemPrice();
+        notifyItemSelect(new ItemCountable(itemName,itemPrice,Integer.parseInt(content)));
     }
 
     @Override

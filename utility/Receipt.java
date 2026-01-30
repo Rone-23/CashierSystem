@@ -34,20 +34,19 @@ public class Receipt {
         //items
         for (Item item : itemArrayList) {
             //TODO: check for item name length, adjust for receipt length
-//            while (item.getName().length() != 18) {
-//
-//                item.setName(item.getName() + " ");
-//            }
+            String name = item.getName();
+            double amount =  item.getAmount();
+            double price = item.getPrice()*0.01;
             if (item.getClass() == ItemUncountable.class){
-                receiptBuilder.append(String.format("%s   %.3fkg   %9.2f B\n", item.getName(), item.getAmount(), item.getPrice() * item.getAmount()));
+                receiptBuilder.append(String.format("%s   %.3fkg   %9.2f B\n", name,amount*0.001, price * amount*0.001));
             }else{
-                receiptBuilder.append(String.format("%s   %sks   %9.2f B\n", item.getName(), item.getAmount(), item.getPrice() * item.getAmount()));
+                receiptBuilder.append(String.format("%s   %sks   %9.2f B\n", name, amount, price * amount));
             }
             totalAmount += item.getPrice() * item.getAmount();
         }
         receiptBuilder.append("----------------------------------------\n");
-        receiptBuilder.append(String.format("NA ÚHRADU EUR %26.2f\n",totalAmount));
-        receiptBuilder.append(String.format("KARTA %34.2f\n",totalAmount));
+        receiptBuilder.append(String.format("NA ÚHRADU EUR %26.2f\n",totalAmount*0.01));
+        receiptBuilder.append(String.format("KARTA %34.2f\n",totalAmount*0.01));
         receiptBuilder.append("----------------------------------------\n");
 
 

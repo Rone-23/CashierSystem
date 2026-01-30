@@ -7,13 +7,13 @@ import java.util.List;
 public class ItemUncountable extends Item{
     private double weight;
     private List<Double> weightList= new ArrayList<>();
-    public ItemUncountable(String name, Double price, double weight){
+    public ItemUncountable(String name, int price, int weight){
         this.name = name;
         this.price = price;
         this.weight = weight;
         addWeight(this.weight);
     }
-    public ItemUncountable(String name, Double price, ArrayList<Double> weightList){
+    public ItemUncountable(String name, int price, ArrayList<Double> weightList){
         this.name = name;
         this.price = price;
         this.weightList = weightList;
@@ -30,8 +30,8 @@ public class ItemUncountable extends Item{
     }
 
     @Override
-    public Double getAmount(){
-        Double resultWeight = 0.0;
+    public int getAmount(){
+        int resultWeight = 0;
         for (Double element: this.weightList.toArray(new Double[0])){
             resultWeight += element;
         }
