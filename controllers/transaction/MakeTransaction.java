@@ -1,26 +1,27 @@
 package controllers.transaction;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import services.Item;
 import services.OpenTransaction;
 import services.SQL_Connect;
 import utility.Receipt;
 
+import java.sql.SQLException;
+
 public class MakeTransaction{
     public void makeTransaction( OpenTransaction openTransaction ){
 
-        ObjectMapper objectMapper = new ObjectMapper();
 
         Item[] itemArray=openTransaction.getItemsInTransaction().values().toArray(new Item[0]);
         for (Item item : itemArray){
-            SQL_Connect.getInstance().removeFromStock(item.getAmount(),item.getName());
+            try {
+                int amount = (int) Math.round(item.getAmount());
+                int cents = (int) Math.round(item.getPrice() * 100.0);
+                SQL_Connect.getInstance().logToDB(openTransaction.getTransactionID(),SQL_Connect.getInstance().getArticleID(item.getName()), amount, cents);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
-        try {
-            SQL_Connect.getInstance().logToDB(objectMapper.writeValueAsString(openTransaction.getItemsInTransaction()), itemArray.length, openTransaction.getTransactionID());
-        }catch (JsonProcessingException e){
-            System.out.println(e);
-        }
+
         Item.setTotalAmountZero();
         Receipt.makeReceipt(itemArray, openTransaction.getTransactionDateTime(),openTransaction.getTransactionID());
         openTransaction.openTransactionDestroy();

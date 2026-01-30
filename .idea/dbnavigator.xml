@@ -187,27 +187,100 @@ SELECT items FROM Transactions WHERE transaction_dayid = 0 and  datetime("2025-0
 
 SELECT * FROM TRANSACTIONS;]]></console>
     </connection>
-    <connection id="a702d7de-5ccf-4b8c-81a8-9f4c79a1aaad">
-      <console name="Connection" type="STANDARD" schema="" session="Main"><![CDATA[select * from transactions
-commit]]></console>
+    <connection id="ab16c47c-8eaf-4ed2-9b5c-14849f45418b">
+      <console name="New  Database" type="STANDARD" schema="database" session="Main"><![CDATA[select * from article;
+select * from type;
+select * from subtype;
+select * from "transaction";
+select * from "in_transaction";
+
+update article set stock = stock * 10000;
+
+select "transaction".transaction_id as ID, article.name as Artikel, in_transaction.amount as Pocet, "transaction".created_at as Vytoverene
+from in_transaction 
+join "transaction" on in_transaction.transaction_id = "transaction".transaction_id
+join article on in_transaction.article_id = article.article_id where date(created_at) = date('now');
+
+select transaction_id from "transaction" order by transaction_id desc limit 1;
+delete from "in_transaction";
+
+--create transacion
+insert into "transaction" (transaction_id, cashier_id, created_at, customer_id)
+values (?,?,current_timestamp, ?);
+
+--transaction of the day number
+select count(*) from "transaction" 
+where date(created_at) = date('now');
+
+--get articles from transaction
+select name, amount, price_at_sale from in_transaction 
+join article on in_transaction.article_id = article.article_id 
+where transaction_id = 1;
+
+--remove x amount from transaction
+update article set stock = stock - ? where article_id = ?;
+
+--remove x amount from transaction
+update article set stock = stock + ? where article_id = ?;
+
+--insert article into transaction
+insert into in_transaction (article_id, transaction_id, amount, price_at_sale) 
+values (?,?,?,?);
+
+select subtype_name from subtype join type on subtype.parent_type_id = type.type_id where type_name = "Food";
+
+
+BEGIN TRANSACTION;
+
+-- 1. Ensure enough stock exists
+SELECT
+    CASE
+        WHEN stock < :add_amount THEN
+            RAISE(ABORT, 'Not enough stock')
+    END
+FROM article
+WHERE article_id = :article_id;
+
+-- 2. Insert or update article in transaction
+INSERT INTO in_transaction (
+    transaction_id,
+    article_id,
+    amount,
+    price_at_sale
+)
+VALUES (
+    :transaction_id,
+    :article_id,
+    :add_amount,
+    :price_at_sale
+)
+ON CONFLICT(transaction_id, article_id)
+DO UPDATE SET
+    amount = amount + :add_amount;
+
+-- 3. Decrease stock
+UPDATE article
+SET stock = stock - :add_amount
+WHERE article_id = :article_id;
+
+COMMIT;]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files />
+    <open-files>
+      <object connection-id="ab16c47c-8eaf-4ed2-9b5c-14849f45418b" object-ref="consoles/New  Database" />
+      <object connection-id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5" object-ref="consoles/Shop" />
+    </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5" />
-    <connection id="a702d7de-5ccf-4b8c-81a8-9f4c79a1aaad" />
+    <connection id="ab16c47c-8eaf-4ed2-9b5c-14849f45418b" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
-    <filter-actions connection-id="a702d7de-5ccf-4b8c-81a8-9f4c79a1aaad" dataset="main.transactions" active-filter-id="5bc0e39d-b100-4503-932c-61857a150a69">
-      <filter id="5bc0e39d-b100-4503-932c-61857a150a69" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
-        <condition column="transactions_id" operator="=" value="" active="true" />
-      </filter>
-    </filter-actions>
+    <filter-actions connection-id="ab16c47c-8eaf-4ed2-9b5c-14849f45418b" dataset="database.article" active-filter-id="" />
     <filter-actions connection-id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5" dataset="main.sqlite_sequence" active-filter-id="EMPTY_FILTER">
       <filter id="78728dea-3405-48c7-81ad-0fe1d9e2715e" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
         <condition column="name" operator="=" value="" active="true" />
@@ -337,9 +410,9 @@ commit]]></console>
           </object-type-filter>
         </object-filters>
       </connection>
-      <connection id="a702d7de-5ccf-4b8c-81a8-9f4c79a1aaad" active="true" signed="true">
+      <connection id="ab16c47c-8eaf-4ed2-9b5c-14849f45418b" active="true" signed="true">
         <database>
-          <name value="Connection" />
+          <name value="New  Database" />
           <description value="" />
           <database-type value="SQLITE" />
           <config-type value="BASIC" />
@@ -347,8 +420,15 @@ commit]]></console>
           <driver-source value="BUNDLED" />
           <driver-library value="" />
           <driver value="" />
-          <url-type value="CUSTOM" />
-          <url value="jdbc:sqlite:C:\Users\tomas\Documents\Billa_system\test.db" />
+          <url-type value="FILE" />
+          <host value="" />
+          <port value="" />
+          <database value="" />
+          <tns-folder value="" />
+          <tns-profile value="" />
+          <files>
+            <file path="C:\Users\tomas\Documents\Billa_system\cashier_system_database.db" schema="database" />
+          </files>
           <type value="NONE" />
           <user value="" />
           <deprecated-pwd value="" />

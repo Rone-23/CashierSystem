@@ -26,17 +26,12 @@ public class OpenTransaction implements ContentObserver {
     private final Double EPSILON = 0.0000001;
     //**day is stored using sql.getLastTimeStamp() and split it into day ("dd-MM-yyyy HH:mm:ss")**//
 
-    public OpenTransaction(int lastTransactionDay ){
+    public OpenTransaction(){
         this.transactionDateTime = LocalDateTime.now();
         this.transactionDateTime.format(dateTimeFormatter);
 
-        try{if(lastTransactionDay==this.transactionDateTime.getDayOfMonth()){
-            transactionID++;
-        }else{
-            transactionID = 0;
-        }}catch (NullPointerException e){
-            transactionID = 0;
-        }
+        transactionID = SQL_Connect.getInstance().createTransaction(1,1);
+
         for(OpenTransactionObserver observer : observerList){
             observer.onCreate(this);
         }
@@ -118,34 +113,6 @@ public class OpenTransaction implements ContentObserver {
         System.out.printf("Missing cash in transaction is: %.2f\n", getTotal() - payedCard - payedCash - payedFoodTicket - payedVoucher);
         return getTotal() - payedCard - payedCash - payedFoodTicket - payedVoucher;
     }
-
-//    public void payCard(String typeOfPayment){
-//        if(content>0){
-//            payedCard += content*0.01;
-//            checkSum(typeOfPayment);
-//        }
-//    }
-//
-//    public void payCash(String typeOfPayment){
-//        if(content>0){
-//            payedCash += content*0.01;
-//            checkSum(typeOfPayment);
-//        }
-//    }
-//
-//    public void payFoodTicket(String typeOfPayment){
-//        if(content>0){
-//            payedFoodTicket += content*0.01;
-//            checkSum(typeOfPayment);
-//        }
-//    }
-//
-//    public void payVoucher(String typeOfPayment){
-//        if(content>0){
-//            payedVoucher += content*0.01;
-//            checkSum(typeOfPayment);
-//        }
-//    }
 
     public void pay(ActionEvent actionEvent){
         if(content>0){
