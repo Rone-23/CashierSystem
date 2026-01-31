@@ -2,7 +2,6 @@ package views.Components;
 
 import assets.Colors;
 import services.Item;
-import services.ItemUncountable;
 import utility.GridBagConstraintsBuilder;
 
 import javax.swing.*;
@@ -47,15 +46,7 @@ public class DisplayItems extends JScrollPane {
     public void addItem(Item item){
 
         if(compoundItems(item) == 0){
-            // Setting up item container
-            JPanel itemContainer = new JPanel(new GridBagLayout());
-            itemContainer.setBackground(Colors.BACKGROUND_WHITE.getColor());
-            itemContainer.setBorder(new DottedBorderTopBottom(Colors.GRAY.getColor(), 1));
-            itemContainer.setPreferredSize(new Dimension(0,70));
-            itemContainer.setName(item.getName());
-
-            makeItemContainer(item, itemContainer);
-            mainItemPanel.add(itemContainer,gbc);
+            mainItemPanel.add(new ListItemButton(Colors.BACKGROUND_WHITE.getColor(),item),gbc);
             gbc.gridy++;
             moveSpacer(gbc.gridy);
         }
@@ -139,7 +130,6 @@ public class DisplayItems extends JScrollPane {
         }
     }
 
-
     public void clear(){
         for(Component component : mainItemPanel.getComponents()){
             if(!component.getName().equals("spacer")){
@@ -149,75 +139,13 @@ public class DisplayItems extends JScrollPane {
         mainItemPanel.revalidate();
     }
 
-    private void makeItemContainer(Item item, JPanel itemContainer) {
-        GridBagConstraints gbcItemContainer = GridBagConstraintsBuilder.buildGridBagConstraints(1,1);
-
-        JPanel itemNameContainer = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JPanel itemPriceAmountContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-
-        itemNameContainer.setOpaque(false);
-        itemPriceAmountContainer.setOpaque(false);
-
-        itemNameContainer.setBorder(new EmptyBorder(0,20,0,20));
-        itemPriceAmountContainer.setBorder(new EmptyBorder(0,20,0,20));
-
-        itemNameContainer.setForeground(Colors.BLACK_TEXT.getColor());
-        itemPriceAmountContainer.setForeground(Colors.BLACK_TEXT.getColor());
-
-        JLabel itemNameLabel = new JLabel(item.getName(),SwingConstants.LEFT);
-        itemNameLabel.setFont(font);
-        itemNameLabel.setForeground(Colors.BLACK_TEXT.getColor());
-        itemNameContainer.add(itemNameLabel);
-
-        if(item instanceof ItemUncountable){
-            JLabel itemAmountLabel  = new JLabel(item.getAmount() + " kg");
-            itemAmountLabel.setFont(font);
-            itemAmountLabel.setForeground(Colors.BLACK_TEXT.getColor());
-            itemAmountLabel.setBorder(new EmptyBorder(0,20,0,20));
-            itemPriceAmountContainer.add(itemAmountLabel);
-        }else{
-            JLabel itemAmountLabel  = new JLabel(item.getAmount() + " ks");
-            itemAmountLabel.setFont(font);
-            itemAmountLabel.setForeground(Colors.BLACK_TEXT.getColor());
-            itemAmountLabel.setBorder(new EmptyBorder(0,20,0,20));
-            itemPriceAmountContainer.add(itemAmountLabel);
-        }
-
-        JLabel itemPriceLabel = new JLabel(item.getPrice() * item.getAmount() + " €");
-        itemPriceLabel.setFont(font);
-        itemPriceLabel.setForeground(Colors.BLACK_TEXT.getColor());
-        itemPriceLabel.setBorder(new EmptyBorder(0,20,0,20));
-        itemPriceAmountContainer.add(itemPriceLabel);
-
-
-        itemContainer.add(itemNameContainer,gbcItemContainer);
-        gbcItemContainer.gridx++;
-        itemContainer.add(itemPriceAmountContainer,gbcItemContainer);
-
-    }
-
     private int compoundItems(Item item) {
         //Checking for existing item listings and adding them together
         for(Component itemContainer : mainItemPanel.getComponents()){
-            if(itemContainer instanceof JPanel itemContainers){
+            if(itemContainer instanceof ListItemButton listItemButton){
                 //Selecting out the spacer which contents are 0
-                if (itemContainers.getComponents().length!=0){
-
-                    JPanel itemNameContainer = (JPanel) itemContainers.getComponent(0);
-                    JPanel itemPriceAmountContainer = (JPanel) itemContainers.getComponent(1);
-
-                    String itemName = ((JLabel) itemNameContainer.getComponent(0)).getText();
-
-                    if(itemName.equals(item.getName())){
-                        //Displaying price for the amount of this item in transaction
-                        ((JLabel) itemPriceAmountContainer.getComponent(1)).setText(String.format("%.02f €",(item.getPrice()*item.getAmount())*0.01));
-                        if (item instanceof ItemUncountable){
-                            ((JLabel) itemPriceAmountContainer.getComponent(0)).setText(item.getAmount() + " kg");
-                        }else{
-                            ((JLabel) itemPriceAmountContainer.getComponent(0)).setText(item.getAmount() + " ks");
-                        }
-                        return 1;
-                    }
+                if(listItemButton.getName().equals(item.getName())){
+                    return 1;
                 }
             }
         }

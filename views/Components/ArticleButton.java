@@ -42,8 +42,6 @@ public class ArticleButton extends JButton {
         } else {
             drawButtonIdle(g2);
         }
-
-
         g2.dispose();
     }
 
@@ -88,7 +86,7 @@ public class ArticleButton extends JButton {
                 (double) insetBottom /2
         );
 
-        g2.drawString(String.valueOf(itemPrice),writableAreaPrice.getBounds().x,writableAreaPrice.getBounds().y+fm.getHeight()/2);
+        g2.drawString(String.format("%.2f€",itemPrice*0.01),writableAreaPrice.getBounds().x,writableAreaPrice.getBounds().y+fm.getHeight()/2);
 
 //        g2.setPaint(new Color(200,200,200,150));
 //        g2.fill(writableAreaPrice);
@@ -135,7 +133,7 @@ public class ArticleButton extends JButton {
                 (double) insetBottom /2
         );
 
-        g2.drawString(String.valueOf(itemPrice),writableAreaPrice.getBounds().x,writableAreaPrice.getBounds().y+fm.getHeight()/2);
+        g2.drawString(String.format("%.2f€",itemPrice*0.01),writableAreaPrice.getBounds().x,writableAreaPrice.getBounds().y+fm.getHeight()/2);
 
 //        g2.setPaint(new Color(200,200,200,150));
 //        g2.fill(writableAreaPrice);

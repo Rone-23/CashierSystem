@@ -29,6 +29,9 @@
   </component>
   <component name="DBNavigator.Project.DatabaseAssistantManager">
     <assistants>
+      <assistant-state connection-id="ab16c47c-8eaf-4ed2-9b5c-14849f45418b" assistant-type="SELECT_AI" default-profile-name="" selected-chat-id="" availability="UNAVAILABLE" acknowledgement="NONE">
+        <tools />
+      </assistant-state>
       <assistant-state connection-id="ab16c47c-8eaf-4ed2-9b5c-14849f45418b" assistant-type="PUBLIC" default-profile-name="" selected-chat-id="AF6E133E68EF43F8AB42FAB8F249F16D" availability="AVAILABLE" acknowledgement="ENGAGED" selected="true">
         <chats>
           <chat id="AF6E133E68EF43F8AB42FAB8F249F16D" title="" session-signature="" timestamp="1769775166016">
@@ -36,9 +39,6 @@
             <context provider="" profile="" model="" action="" interactive="true" />
           </chat>
         </chats>
-        <tools />
-      </assistant-state>
-      <assistant-state connection-id="ab16c47c-8eaf-4ed2-9b5c-14849f45418b" assistant-type="SELECT_AI" default-profile-name="" selected-chat-id="" availability="UNAVAILABLE" acknowledgement="NONE">
         <tools />
       </assistant-state>
       <assistant-state connection-id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5" assistant-type="PUBLIC" default-profile-name="" selected-chat-id="" availability="AVAILABLE" acknowledgement="NONE" selected="true">
@@ -210,6 +210,59 @@ SELECT items FROM Transactions WHERE transaction_dayid = 0 and  datetime("2025-0
 SELECT * FROM TRANSACTIONS;]]></console>
     </connection>
     <connection id="ab16c47c-8eaf-4ed2-9b5c-14849f45418b">
+      <console name="Database create" type="STANDARD" schema="database" session="Main"><![CDATA[.schema
+CREATE TABLE IF NOT EXISTS "type" (
+    "type_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "type_name" VARCHAR(100) NOT NULL
+);
+CREATE TABLE sqlite_sequence(name,seq);
+CREATE TABLE IF NOT EXISTS "subtype" (
+    "subtype_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "parent_type_id" INTEGER NOT NULL,
+    "subtype_name" VARCHAR(100) NOT NULL,
+    FOREIGN KEY ("parent_type_id") REFERENCES "type"("type_id")
+);
+CREATE TABLE IF NOT EXISTS "article" (
+    "article_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" VARCHAR(255) NOT NULL,
+    "price" INTEGER NOT NULL, -- Stored in cents/smallest unit to avoid float issues
+    "stock" INTEGER DEFAULT 0,
+    "subtype_id" INTEGER NOT NULL,
+    FOREIGN KEY ("subtype_id") REFERENCES "subtype"("subtype_id")
+);
+CREATE TABLE IF NOT EXISTS "cashier" (
+    "cashier_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" VARCHAR(255) NOT NULL
+);
+CREATE TABLE IF NOT EXISTS "customer" (
+    "customer_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" VARCHAR(255) NOT NULL
+);
+CREATE TABLE IF NOT EXISTS "transaction" (
+    "transaction_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "cashier_id" INTEGER NOT NULL,
+    "customer_id" INTEGER NOT NULL,
+    FOREIGN KEY ("cashier_id") REFERENCES "cashier"("cashier_id"),
+    FOREIGN KEY ("customer_id") REFERENCES "customer"("customer_id")
+);
+CREATE TABLE IF NOT EXISTS "in_transaction" (
+    "transaction_id" INTEGER NOT NULL,
+    "article_id" INTEGER NOT NULL,
+    "amount" INTEGER NOT NULL CHECK (amount > 0),
+    "price_at_sale" INTEGER NOT NULL,
+    PRIMARY KEY ("transaction_id", "article_id"),
+    FOREIGN KEY ("transaction_id") REFERENCES "transaction"("transaction_id"),
+    FOREIGN KEY ("article_id") REFERENCES "article"("article_id")
+);
+CREATE TABLE  IF  NOT EXISTS "favorite_article" (
+    "cashier_id" INTEGER NOT NULL,
+    "article_id" INTEGER NOT NULL,
+    FOREIGN KEY ("cashier_id") REFERENCES "cashier"("cashier_id"),
+    FOREIGN KEY ("article_id") REFERENCES "article"("article_id")
+);
+
+COMMIT;]]></console>
       <console name="New  Database" type="STANDARD" schema="database" session="Main"><![CDATA[select * from article;
 select * from type;
 select * from subtype;
@@ -218,7 +271,7 @@ select * from "in_transaction";
 
 delete from "in_transaction" "transaction";
 
-update article set stock =  1 where article_id = 1;
+update article set stock =  100000 where article_id = 1;
 
 update article set stock = stock * 10000;
 
@@ -297,9 +350,7 @@ COMMIT;]]></console>
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files>
-      <object connection-id="ab16c47c-8eaf-4ed2-9b5c-14849f45418b" object-ref="consoles/New  Database" />
-    </open-files>
+    <open-files />
   </component>
   <component name="DBNavigator.Project.DatabasePrerequisiteManager">
     <prerequisites />
@@ -483,7 +534,7 @@ COMMIT;]]></console>
           <protocol value="" />
           <url-parameters />
           <files>
-            <file path="C:\Users\tomas\Documents\Billa_system\cashier_system_database.db" schema="database" />
+            <file path="C:\Users\tomas\Documents\Billa_system\cashier_system_database.db" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />

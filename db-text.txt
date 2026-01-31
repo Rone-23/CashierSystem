@@ -1,0 +1,107 @@
+Table artikle{
+article_id integer pk
+name varchar
+price integer
+stock integer
+subtype_id integer
+}
+
+Table type{
+  type_id integer pk
+  type varchar
+}
+
+Table subtype{
+  subtype_id integer pk
+  parent_type_id integer
+  subtype varchar
+}
+
+Table transaction{
+  transaction_id integer pk
+  when timestamp
+  cashier_id integer
+  customer_id integer
+}
+
+Table in_transaction{
+  transaction_id integer pk
+  article_id integer pk
+  amount integer
+  price_at_sale integer
+}
+
+Table cashier{
+  cashier_id integer pk
+  name varchar
+}
+
+Table customer{
+  customer_id integer pk
+  name varchar
+}
+
+
+
+
+Ref: "artikle"."subtype_id" < "subtype"."subtype_id"
+
+Ref: "subtype"."parent_type_id" < "type"."type_id"
+
+Ref: "in_transaction"."article_id" < "artikle"."article_id"
+
+Ref: "in_transaction"."transaction_id" < "transaction"."transaction_id"
+
+Ref: "transaction"."cashier_id" < "cashier"."cashier_id"
+
+Ref: "customer"."customer_id" < "transaction"."customer_id"
+
+
+
+
+
+.schema
+CREATE TABLE IF NOT EXISTS "type" (
+    "type_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "type_name" VARCHAR(100) NOT NULL
+);
+CREATE TABLE sqlite_sequence(name,seq);
+CREATE TABLE IF NOT EXISTS "subtype" (
+    "subtype_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "parent_type_id" INTEGER NOT NULL,
+    "subtype_name" VARCHAR(100) NOT NULL,
+    FOREIGN KEY ("parent_type_id") REFERENCES "type"("type_id")
+);
+CREATE TABLE IF NOT EXISTS "article" (
+    "article_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" VARCHAR(255) NOT NULL,
+    "price" INTEGER NOT NULL, -- Stored in cents/smallest unit to avoid float issues
+    "stock" INTEGER DEFAULT 0,
+    "subtype_id" INTEGER NOT NULL,
+    FOREIGN KEY ("subtype_id") REFERENCES "subtype"("subtype_id")
+);
+CREATE TABLE IF NOT EXISTS "cashier" (
+    "cashier_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" VARCHAR(255) NOT NULL
+);
+CREATE TABLE IF NOT EXISTS "customer" (
+    "customer_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "name" VARCHAR(255) NOT NULL
+);
+CREATE TABLE IF NOT EXISTS "transaction" (
+    "transaction_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "cashier_id" INTEGER NOT NULL,
+    "customer_id" INTEGER NOT NULL,
+    FOREIGN KEY ("cashier_id") REFERENCES "cashier"("cashier_id"),
+    FOREIGN KEY ("customer_id") REFERENCES "customer"("customer_id")
+);
+CREATE TABLE IF NOT EXISTS "in_transaction" (
+    "transaction_id" INTEGER NOT NULL,
+    "article_id" INTEGER NOT NULL,
+    "amount" INTEGER NOT NULL CHECK (amount > 0),
+    "price_at_sale" INTEGER NOT NULL,
+    PRIMARY KEY ("transaction_id", "article_id"),
+    FOREIGN KEY ("transaction_id") REFERENCES "transaction"("transaction_id"),
+    FOREIGN KEY ("article_id") REFERENCES "article"("article_id")
+);
