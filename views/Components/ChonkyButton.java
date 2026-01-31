@@ -18,7 +18,7 @@ public class ChonkyButton extends JButton {
     public ChonkyButton(Color color){
         this.color = color;
         colorActive = color;
-        colorDisabled = color.brighter();
+        colorDisabled = ColorManipulation.darken(color,0.9f);
         setContentAreaFilled(false);
         setOpaque(false);
         setFocusPainted(false);
@@ -30,7 +30,7 @@ public class ChonkyButton extends JButton {
         super(text);
         this.color = color;
         colorActive = color;
-        colorDisabled = color.brighter();
+        colorDisabled = ColorManipulation.darken(color,0.9f);
         setContentAreaFilled(false);
         setOpaque(false);
         setFocusPainted(false);

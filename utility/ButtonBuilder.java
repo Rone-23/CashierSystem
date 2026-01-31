@@ -27,8 +27,8 @@ public class ButtonBuilder {
         return new ChonkyArrowButton(color, direction);
     }
 
-    public static JButton buildArticleButton(Color color , Item item){
-        JButton jButton = new ArticleButton(color, item);
+    public static JToggleButton buildArticleButton(Color color , Item item){
+        JToggleButton jButton = new ArticleButton(color, item);
         jButton.setName(item.getName());
         return jButton;
     }

@@ -3,7 +3,6 @@ package controllers.display;
 import controllers.buttons.ArticleAction;
 import controllers.panels.ViewManager;
 import controllers.buttons.FilterObserver;
-import controllers.transaction.OpenTransactionManager;
 import controllers.transaction.OpenTransactionObserver;
 import services.Item;
 import services.OpenTransaction;
@@ -16,12 +15,11 @@ import java.util.Map;
 
 public class DisplayArticleController implements OpenTransactionObserver, FilterObserver {
     private final DisplayArticles displayArticles = ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles();
-    private OpenTransaction openTransaction = OpenTransactionManager.getInstance().getOpenTransaction();
     private Item[] articles;
     private String filterKeywordMain;
     private String filterKeywordSecondary;
 
-    private final Map<String, JButton> buttons = ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles().getButtons();
+    private final Map<String, JToggleButton> buttons = ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles().getButtons();
     private final ArticleAction articleAction = new ArticleAction();
     public DisplayArticleController(){
         createArticles();
@@ -82,7 +80,6 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
 
     @Override
     public void onCreate(OpenTransaction openTransaction) {
-        this.openTransaction = openTransaction;
         articleAction.deselectArticle();
     }
 

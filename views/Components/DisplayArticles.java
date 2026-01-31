@@ -20,7 +20,7 @@ public class DisplayArticles extends JScrollPane {
     JPanel spacerHorizontal = new JPanel();
     GridBagConstraints gbcSpacer = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
     int componentCount = 0;
-    private final Map<String, JButton> buttons = new HashMap<>();
+    private final Map<String, JToggleButton> buttons = new HashMap<>();
 
     public DisplayArticles(){
 
@@ -69,7 +69,7 @@ public class DisplayArticles extends JScrollPane {
         gbc.gridx = componentCount % 4;
 
         //Creating button
-        JButton button = ButtonBuilder.buildArticleButton(Colors.ARTICLE_BUTTON.getColor(),item);
+        JToggleButton button = ButtonBuilder.buildArticleButton(Colors.ARTICLE_BUTTON.getColor(),item);
         button.setPreferredSize(preferedDimension);
 
         //Storing each button with key that is items name that it contains
@@ -94,7 +94,7 @@ public class DisplayArticles extends JScrollPane {
         componentCount=0;
     }
 
-    public Map<String, JButton> getButtons(){
+    public Map<String, JToggleButton> getButtons(){
         return buttons;
     }
 

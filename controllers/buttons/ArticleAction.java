@@ -4,7 +4,7 @@ import controllers.display.ContentController;
 import controllers.display.ContentObserver;
 import services.Item;
 import services.ItemCountable;
-import views.Components.ArticleButton;
+import views.Components.ContainsItem;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -14,30 +14,27 @@ import java.util.List;
 public class ArticleAction extends AbstractAction implements ContentObserver {
     private static final List<ContentObserver> observerList = new ArrayList<>();
     private String content = "1";
-    private ArticleButton articleButton;
+    private AbstractButton sourceButton;
     public ArticleAction(){
         ContentController.addObserver(this);
     }
 
     public void deselectArticle(){
-        try {
-            articleButton.setSelected(false);
-        } catch (NullPointerException ignored) {
+        if(sourceButton !=null){
+            sourceButton.setSelected(false);
         }
-        articleButton = null;
+        sourceButton = null;
         notifyItemSelect(null);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        try {
-            articleButton.setSelected(false);
-        } catch (NullPointerException ignored) {
-        }
-        articleButton = (ArticleButton) e.getSource();
-        articleButton.setSelected(true);
-        String itemName = articleButton.getItemName();
-        int itemPrice = articleButton.getItemPrice();
+        deselectArticle();
+        sourceButton = (JToggleButton) e.getSource();
+        sourceButton.setSelected(true);
+        ContainsItem containsItem = (ContainsItem) sourceButton;
+        String itemName = containsItem.getItemName();
+        int itemPrice = containsItem.getItemPrice();
         notifyItemSelect(new ItemCountable(itemName,itemPrice,Integer.parseInt(content)));
     }
 

@@ -43,16 +43,19 @@ public class DisplayItems extends JScrollPane {
         getVerticalScrollBar().setUnitIncrement(20);
     }
 
-    public void addItem(Item item){
-
+    public ListItemButton addItem(Item item){
         if(compoundItems(item) == 0){
-            mainItemPanel.add(new ListItemButton(Colors.BACKGROUND_WHITE.getColor(),item),gbc);
+            ListItemButton listItemButton =new ListItemButton(Colors.BACKGROUND_WHITE.getColor(),item);
+            mainItemPanel.add(listItemButton,gbc);
             gbc.gridy++;
             moveSpacer(gbc.gridy);
+            setBackgroundVariation();
+            mainItemPanel.revalidate();
+            return listItemButton;
         }
-
         setBackgroundVariation();
         mainItemPanel.revalidate();
+        return null;
     }
 
     public void addPayment(String typeOfPayment,int content){
@@ -144,7 +147,7 @@ public class DisplayItems extends JScrollPane {
         for(Component itemContainer : mainItemPanel.getComponents()){
             if(itemContainer instanceof ListItemButton listItemButton){
                 //Selecting out the spacer which contents are 0
-                if(listItemButton.getName().equals(item.getName())){
+                if(listItemButton.getItemName().equals(item.getName())){
                     return 1;
                 }
             }

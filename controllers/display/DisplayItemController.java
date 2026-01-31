@@ -1,15 +1,27 @@
 package controllers.display;
 
+import controllers.buttons.ArticleAction;
 import controllers.panels.ViewManager;
 import controllers.transaction.OpenTransactionObserver;
 import services.Item;
 
+import javax.swing.*;
+
 public class DisplayItemController implements OpenTransactionObserver {
+    ArticleAction articleAction;
+
+    public DisplayItemController(){
+        articleAction = new ArticleAction();
+    }
 
     @Override
     public void onItemAdd(Item item) {
-        ViewManager.getInstance().getDuringArticles().getDisplayScrollableItems().addItem(item);
-        ViewManager.getInstance().getDuringRegister().getDisplayScrollableItems().addItem(item);
+        JToggleButton jToggleButtonArticles = ViewManager.getInstance().getDuringArticles().getDisplayScrollableItems().addItem(item);
+        JToggleButton jToggleButtonRegister = ViewManager.getInstance().getDuringRegister().getDisplayScrollableItems().addItem(item);
+        if(jToggleButtonArticles != null && jToggleButtonRegister != null) {
+            jToggleButtonArticles.addActionListener(articleAction);
+            jToggleButtonRegister.addActionListener(articleAction);
+        }
     }
 
     @Override

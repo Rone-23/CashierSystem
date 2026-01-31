@@ -10,7 +10,7 @@ import java.awt.geom.Line2D;
 import java.text.DecimalFormat;
 
 
-public class ListItemButton extends JToggleButton {
+public class ListItemButton extends JToggleButton implements ContainsItem{
     private final Item item;
     private final DecimalFormat priceFormat = new DecimalFormat("0.00 €");
 
@@ -31,7 +31,7 @@ public class ListItemButton extends JToggleButton {
         setCursor(new Cursor(Cursor.HAND_CURSOR));
         setPreferredSize(new Dimension(500, BUTTON_HEIGHT));
         setMaximumSize(new Dimension(Integer.MAX_VALUE, BUTTON_HEIGHT));
-
+        setName(item.getName());
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ListItemButton extends JToggleButton {
 
         g2.drawString(item.getName(), HORIZONTAL_MARGIN, textY);
 
-        String priceStr = priceFormat.format(item.getPrice()*0.01);
+        String priceStr = priceFormat.format(item.getAmount()*item.getPrice()*0.01);
         int priceWidth = fm.stringWidth(priceStr);
         g2.drawString(priceStr, w - priceWidth - HORIZONTAL_MARGIN, textY);
 
@@ -84,13 +84,20 @@ public class ListItemButton extends JToggleButton {
     public void setBackground(Color bg) {
         BACKGROUND_COLOR = bg;
         repaint();
-    }
 
-    public String getName(){
+    }
+    @Override
+    public String getItemName(){
         return item.getName();
     }
 
-    public int getAmount(){
+    @Override
+    public int getItemPrice(){
+        return item.getPrice();
+    }
+
+    @Override
+    public int getItemAmount(){
         return item.getAmount();
     }
 
