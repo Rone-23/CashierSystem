@@ -47,11 +47,10 @@ public class OpenTransactionManager implements OpenTransactionObserver{
     public void addItem(Item item){
         try{
             getOpenTransaction().addItem(item);
+            System.out.printf("Name %s Amount %d Price %d\n",item.getName(), item.getAmount(), item.getPrice());
         }catch (SQLException e) {
             System.out.printf(String.valueOf(e));
         }
-        System.out.printf("Name %s Amount %d Price %d\n",item.getName(), item.getAmount(), item.getPrice());
-
     }
 
     @Override

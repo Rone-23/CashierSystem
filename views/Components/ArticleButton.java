@@ -35,10 +35,7 @@ public class ArticleButton extends JToggleButton implements ContainsItem {
         setMargin(new Insets(75, 50, 75, 50));
     }
 
-    /**
-     * This is the key fix. By intercepting the mouse event here,
-     * we prevent the ButtonModel from seeing the click if it's on the star.
-     */
+
     @Override
     protected void processMouseEvent(MouseEvent e) {
         if (starBounds != null && starBounds.contains(e.getPoint())) {
@@ -46,7 +43,6 @@ public class ArticleButton extends JToggleButton implements ContainsItem {
                 isStarred = !isStarred;
                 repaint();
             }
-            // Consuming and returning here prevents the button from toggling
             e.consume();
             return;
         }
@@ -71,7 +67,6 @@ public class ArticleButton extends JToggleButton implements ContainsItem {
         Shape main = new RoundRectangle2D.Double(inset, inset, getWidth() - inset * 2, getHeight() - inset * 2, arc, arc);
         g2.fill(main);
 
-        // Inner Rectangle (Image/Icon Placeholder)
         int insetTop = getHeight() / 26;
         int insetBottom = getHeight() / 3;
         int insetSide = getWidth() / 6;
@@ -82,26 +77,21 @@ public class ArticleButton extends JToggleButton implements ContainsItem {
         Shape inner = new RoundRectangle2D.Double(inset + insetSide, inset + insetTop, width, height - insetTop, arc, arc);
         g2.fill(inner);
 
-        // Star Icon
         drawStar(g2, inset);
 
-        // Typography
         FontMetrics fm = getFontMetrics(getFont());
         g2.setPaint(Colors.BLACK_TEXT.getColor());
 
-        // Name
         int textX = insetSide + inset;
         int nameY = insetTop + inset + height + fm.getAscent();
         g2.drawString(item.getName(), textX, nameY);
 
-        // Price & Amount (Lower half)
         int priceY = nameY + fm.getHeight() + 4;
         String priceText = String.format("%.2f€", item.getPrice() * 0.01);
         String amountText = "x " + item.getAmount();
 
         g2.drawString(priceText, textX, priceY);
 
-        // Align amount to the right edge of the text area
         int amountWidth = fm.stringWidth(amountText);
         int amountX = (inset + insetSide + width) - amountWidth;
         g2.drawString(amountText, amountX, priceY);
@@ -114,7 +104,6 @@ public class ArticleButton extends JToggleButton implements ContainsItem {
         int starX = getWidth() - inset - starSize - 8;
         int starY = inset + 8;
 
-        // Define click area
         starBounds = new Rectangle2D.Double(starX, starY, starSize, starSize);
 
         Path2D star = new Path2D.Double();
@@ -134,7 +123,7 @@ public class ArticleButton extends JToggleButton implements ContainsItem {
         star.closePath();
 
         if (isStarred) {
-            g2.setPaint(new Color(255, 215, 0)); // Gold
+            g2.setPaint(new Color(255, 215, 0));
             g2.fill(star);
         }
 
@@ -146,6 +135,7 @@ public class ArticleButton extends JToggleButton implements ContainsItem {
     public boolean isStarred() { return isStarred; }
     public void setStarred(boolean starred) { this.isStarred = starred; repaint(); }
 
+    @Override public Item getItem() { return item; }
     @Override public String getItemName() { return item.getName(); }
     @Override public int getItemPrice() { return item.getPrice(); }
     @Override public int getItemAmount() { return item.getAmount(); }

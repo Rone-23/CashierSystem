@@ -271,6 +271,8 @@ select * from "in_transaction";
 
 delete from "in_transaction" "transaction";
 
+insert into Article(name, price, stock, subtype_id) values('skajgfh',123,10000,1);
+
 update article set stock =  100000 where article_id = 1;
 
 update article set stock = stock * 10000;

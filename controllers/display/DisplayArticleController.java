@@ -1,12 +1,13 @@
 package controllers.display;
 
-import controllers.buttons.ArticleAction;
+import controllers.buttons.ArticleSelectAction;
 import controllers.panels.ViewManager;
 import controllers.buttons.FilterObserver;
 import controllers.transaction.OpenTransactionObserver;
 import services.Item;
 import services.OpenTransaction;
 import services.SQL_Connect;
+import views.Components.ArticleButton;
 import views.Components.DisplayArticles;
 
 import javax.swing.*;
@@ -20,13 +21,13 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
     private String filterKeywordSecondary;
 
     private final Map<String, JToggleButton> buttons = ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles().getButtons();
-    private final ArticleAction articleAction = new ArticleAction();
+    private final ArticleSelectAction articleSelectAction = new ArticleSelectAction();
     public DisplayArticleController(){
         createArticles();
     }
 
     public void createArticles(){
-        articleAction.deselectArticle();
+        articleSelectAction.deselectArticle();
         try {
             articles =  SQL_Connect.getInstance().getAllItems();
         } catch (SQLException e) {
@@ -38,12 +39,12 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
         }
 
         for(Item item : articles){
-            buttons.get(item.getName().toLowerCase()).addActionListener(articleAction);
+            buttons.get(item.getName().toLowerCase()).addActionListener(articleSelectAction);
         }
     }
 
     public void createArticles(String type){
-        articleAction.deselectArticle();
+        articleSelectAction.deselectArticle();
         try {
             articles =  SQL_Connect.getInstance().getItems(type);
         } catch (SQLException e) {
@@ -55,12 +56,12 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
         }
 
         for(Item item : articles){
-            buttons.get(item.getName().toLowerCase()).addActionListener(articleAction);
+            buttons.get(item.getName().toLowerCase()).addActionListener(articleSelectAction);
         }
     }
 
     public void createArticles(String type, String subtype){
-        articleAction.deselectArticle();
+        articleSelectAction.deselectArticle();
         try {
             articles =  SQL_Connect.getInstance().getItems(type, subtype);
         } catch (SQLException e) {
@@ -72,7 +73,7 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
         }
 
         for(Item item : articles){
-            buttons.get(item.getName().toLowerCase()).addActionListener(articleAction);
+            buttons.get(item.getName().toLowerCase()).addActionListener(articleSelectAction);
         }
     }
 
@@ -80,7 +81,7 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
 
     @Override
     public void onCreate(OpenTransaction openTransaction) {
-        articleAction.deselectArticle();
+        articleSelectAction.deselectArticle();
     }
 
     @Override
@@ -95,5 +96,12 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
         filterKeywordSecondary = filterKeyword;
         displayArticles.clear();
         createArticles(filterKeywordMain,filterKeywordSecondary);
+    }
+
+    @Override
+    public void onItemAdd(Item item) {
+        ArticleButton b = (ArticleButton) buttons.get(item.getName().toLowerCase());
+        b.setItemAmount(item.getAmount());
+        b.repaint();
     }
 }

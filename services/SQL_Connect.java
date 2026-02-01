@@ -45,6 +45,25 @@ public class SQL_Connect {
         }
     }
 
+    public Item[] getAllItems() throws SQLException {
+        String sql = "select name, price from article";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            ResultSet rs = pstmt.executeQuery();
+
+            List<Item> items = new ArrayList<>();
+            while (rs.next()) {
+                items.add(new ItemCountable(
+                        rs.getString("name"),
+                        rs.getInt("price"),
+                        0
+                ));
+            }
+
+            return items.toArray(new Item[0]);
+        }
+    }
+
     public Item[] getItems(String type) throws SQLException {
         String sql = "select name, price from article " +
                 "join subtype on article.subtype_id= subtype.subtype_id " +
@@ -60,7 +79,7 @@ public class SQL_Connect {
                 items.add(new ItemCountable(
                         rs.getString("name"),
                         rs.getInt("price"),
-                        1
+                        0
                 ));
             }
 
@@ -84,33 +103,13 @@ public class SQL_Connect {
                 items.add(new ItemCountable(
                         rs.getString("name"),
                         rs.getInt("price"),
-                        1
+                        0
                 ));
             }
 
             return items.toArray(new Item[0]);
         }
     }
-
-    public Item[] getAllItems() throws SQLException {
-        String sql = "select name, price from article";
-
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            ResultSet rs = pstmt.executeQuery();
-
-            List<Item> items = new ArrayList<>();
-            while (rs.next()) {
-                items.add(new ItemCountable(
-                        rs.getString("name"),
-                        rs.getInt("price"),
-                        1
-                ));
-            }
-
-            return items.toArray(new Item[0]);
-        }
-    }
-
 
     public String[] getSubTypes(String type) throws SQLException {
         String sql = "select subtype_name from subtype join type on subtype.parent_type_id = type.type_id where type_name = ?";

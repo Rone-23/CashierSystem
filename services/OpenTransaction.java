@@ -40,16 +40,15 @@ public class OpenTransaction implements ContentObserver {
 
     public void addItem(Item item) throws SQLException {
         if(item == null){return;}
-
-        SQL_Connect.getInstance().logToDB(transactionID,SQL_Connect.instance.getArticleID(item.getName()), item.getAmount(),item.getPrice());
-
         if (!itemsInTransaction.containsKey(item.getName())){
             item.setAmount(content);
             itemsInTransaction.put(item.getName(),item);
+            SQL_Connect.getInstance().logToDB(transactionID,SQL_Connect.instance.getArticleID(item.getName()), item.getAmount(),item.getPrice());
         }else {
             ItemCountable itemCountable = (ItemCountable) itemsInTransaction.get(item.getName());
             itemCountable.addAmount(content);
             item=itemCountable;
+            SQL_Connect.getInstance().logToDB(transactionID,SQL_Connect.instance.getArticleID(item.getName()), item.getAmount(),item.getPrice());
         }
 
         for(OpenTransactionObserver observer : observerList){

@@ -86,6 +86,12 @@ public class ListItemButton extends JToggleButton implements ContainsItem{
         repaint();
 
     }
+
+    @Override
+    public Item getItem() {
+        return item;
+    }
+
     @Override
     public String getItemName(){
         return item.getName();

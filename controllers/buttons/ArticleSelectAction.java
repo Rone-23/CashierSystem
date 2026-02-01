@@ -3,7 +3,6 @@ package controllers.buttons;
 import controllers.display.ContentController;
 import controllers.display.ContentObserver;
 import services.Item;
-import services.ItemCountable;
 import views.Components.ContainsItem;
 
 import javax.swing.*;
@@ -11,11 +10,10 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArticleAction extends AbstractAction implements ContentObserver {
+public class ArticleSelectAction extends AbstractAction implements ContentObserver {
     private static final List<ContentObserver> observerList = new ArrayList<>();
-    private String content = "1";
     private AbstractButton sourceButton;
-    public ArticleAction(){
+    public ArticleSelectAction(){
         ContentController.addObserver(this);
     }
 
@@ -33,14 +31,7 @@ public class ArticleAction extends AbstractAction implements ContentObserver {
         sourceButton = (JToggleButton) e.getSource();
         sourceButton.setSelected(true);
         ContainsItem containsItem = (ContainsItem) sourceButton;
-        String itemName = containsItem.getItemName();
-        int itemPrice = containsItem.getItemPrice();
-        notifyItemSelect(new ItemCountable(itemName,itemPrice,Integer.parseInt(content)));
-    }
-
-    @Override
-    public void notifyContentUpdate(String content) {
-        this.content = content;
+        notifyItemSelect(containsItem.getItem());
     }
 
     //Observer
