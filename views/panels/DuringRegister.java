@@ -14,44 +14,63 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
-public class DuringRegister extends JPanel implements ButtonFoundable{
+public class DuringRegister extends JPanel implements ButtonFoundable {
 
-    private final Dimension dimension = new Dimension(500,114);
+    private final Dimension dimension = new Dimension(500, 114);
 
     private final DisplayItems displayItems = new DisplayItems();
     private final Display displayTotal = new Display(Constants.TOTAL);
     private final Display displayTopAmount = new Display(Constants.WEIGHT);
     private final Display displayTopTotal = new Display(Constants.TOTAL);
     private final Keyboard keyboard = new Keyboard();
-    private final ButtonCluster utilityButtonCluster = new ButtonCluster(ButtonSet.UTILITY_NAMES.getStringLabels(),Constants.VERTICAL);
-    private final ButtonCluster cashButtonCluster = new ButtonCluster(ButtonSet.CASH_NAMES.getStringLabels(),Constants.VERTICAL);
-    private final ButtonCluster commonButtonCluster = new ButtonCluster(ButtonSet.COMMON_NAMES.getStringLabels(),Constants.VERTICAL);
-    private final CardLayout cardLayout =new  CardLayout();
+    private final ButtonCluster utilityButtonCluster = new ButtonCluster(ButtonSet.UTILITY_NAMES.getStringLabels(), Constants.VERTICAL);
+    private final ButtonCluster cashButtonCluster = new ButtonCluster(ButtonSet.CASH_NAMES.getStringLabels(), Constants.VERTICAL);
+    private final ButtonCluster commonButtonCluster = new ButtonCluster(ButtonSet.COMMON_NAMES.getStringLabels(), Constants.VERTICAL);
+    private final CardLayout cardLayout = new CardLayout();
     final JPanel rightPanel = new JPanel();
     JPanel displayPanel = new JPanel();
     CardLayout cardLayoutDisplay = new CardLayout();
+    private final StatusBar statusBar = new StatusBar();
 
-
-    public DuringRegister(){
+    public DuringRegister() {
         setLayout(new GridBagLayout());
+        setBackground(Colors.BACKGROUND_WHITE.getColor());
+
+        JPanel mainContent = new JPanel(new GridBagLayout());
+        mainContent.setOpaque(false);
+
         JPanel leftPanel = createLeftPanel();
         JPanel middlePanel = createMiddlePanel();
         JPanel rightPanel = createRightPanel();
 
-        //Assign to DuringRegister panels with components
-        GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(1,1);
-        add(leftPanel, gbc);
-        gbc.gridx++;
-        gbc.weightx=0.3;
-        add(middlePanel, gbc);
-        gbc.gridx++;
-        gbc.weightx=0.3;
-        add(rightPanel, gbc);
+        GridBagConstraints gbcMain = GridBagConstraintsBuilder.buildGridBagConstraints(1, 1);
+        gbcMain.fill = GridBagConstraints.BOTH;
+        gbcMain.weighty = 1.0;
 
+        mainContent.add(leftPanel, gbcMain);
+        gbcMain.gridx++;
+        gbcMain.weightx = 0.3;
+        mainContent.add(middlePanel, gbcMain);
+        gbcMain.gridx++;
+        gbcMain.weightx = 0.3;
+        mainContent.add(rightPanel, gbcMain);
+
+        GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(1, 1);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        add(mainContent, gbc);
+
+        gbc.gridy = 1;
+        gbc.weighty = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        add(statusBar, gbc);
     }
 
-    private JPanel createLeftPanel(){
-        final GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(1,1);
+    private JPanel createLeftPanel() {
+        final GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(1, 1);
         final JPanel leftPanel = new JPanel();
         leftPanel.setName("leftPanel");
 
@@ -75,36 +94,32 @@ public class DuringRegister extends JPanel implements ButtonFoundable{
         displayTotal.setPreferredSize(dimension);
         leftPanel.add(displayTotal, gbc);
 
-
         return leftPanel;
     }
 
-    private JPanel createMiddlePanel(){
+    private JPanel createMiddlePanel() {
         final GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints();
         final JPanel middlePanel = new JPanel();
         middlePanel.setName("middlePanel");
 
-
-        middlePanel.setBorder(new EmptyBorder(20,0,20,0));
+        middlePanel.setBorder(new EmptyBorder(20, 0, 20, 0));
         middlePanel.setLayout(new GridBagLayout());
         middlePanel.setBackground(Colors.BACKGROUND_GRAY.getColor());
 
-        gbc.gridx=0;
-
+        gbc.gridx = 0;
 
         displayPanel.setOpaque(false);
         displayPanel.setLayout(cardLayoutDisplay);
 
-        displayPanel.add(displayTopAmount,"AMOUNT");
-        displayPanel.add(displayTopTotal,"TOTAL");
+        displayPanel.add(displayTopAmount, "AMOUNT");
+        displayPanel.add(displayTopTotal, "TOTAL");
 
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 0;
         gbc.weighty = 0;
-        gbc.gridy=0;
+        gbc.gridy = 0;
         displayTopAmount.setPreferredSize(dimension);
-        middlePanel.add(displayPanel,gbc);
-
+        middlePanel.add(displayPanel, gbc);
 
         gbc.gridy++;
         gbc.weightx = 1.0;
@@ -112,47 +127,48 @@ public class DuringRegister extends JPanel implements ButtonFoundable{
         gbc.fill = GridBagConstraints.BOTH;
         JPanel fillerPanel = new JPanel();
         fillerPanel.setOpaque(false);
-        middlePanel.add(fillerPanel,gbc);
+        middlePanel.add(fillerPanel, gbc);
 
         gbc.gridy++;
         gbc.weighty = 0;
         gbc.weightx = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        middlePanel.add(keyboard,gbc);
+        middlePanel.add(keyboard, gbc);
 
         return middlePanel;
     }
 
-    private JPanel createRightPanel(){
+    private JPanel createRightPanel() {
         rightPanel.setName("rightPanel");
         rightPanel.setLayout(cardLayout);
         rightPanel.setBackground(Colors.BACKGROUND_GRAY.getColor());
 
-        rightPanel.add(utilityButtonCluster,"UTILITY_BUTTON_CLUSTER");
-        rightPanel.add(cashButtonCluster,"CASH_BUTTON_CLUSTER");
-        rightPanel.add(commonButtonCluster,"COMMON_BUTTON_CLUSTER");
+        rightPanel.add(utilityButtonCluster, "UTILITY_BUTTON_CLUSTER");
+        rightPanel.add(cashButtonCluster, "CASH_BUTTON_CLUSTER");
+        rightPanel.add(commonButtonCluster, "COMMON_BUTTON_CLUSTER");
 
         return rightPanel;
     }
+
     @Override
-    public JButton getButton(String key){
-        for(Component c : keyboard.getComponentsInside()){
-            if(c instanceof JButton && c.getName().equals(key.toLowerCase())){
+    public JButton getButton(String key) {
+        for (Component c : keyboard.getComponentsInside()) {
+            if (c instanceof JButton && c.getName() != null && c.getName().equals(key.toLowerCase())) {
                 return (JButton) c;
             }
         }
-        for(Component c : utilityButtonCluster.getComponents()){
-            if(c instanceof JButton && c.getName().equals(key.toLowerCase())){
+        for (Component c : utilityButtonCluster.getComponents()) {
+            if (c instanceof JButton && c.getName() != null && c.getName().equals(key.toLowerCase())) {
                 return (JButton) c;
             }
         }
-        for(Component c : cashButtonCluster.getComponents()){
-            if(c instanceof JButton && c.getName().equals(key.toLowerCase())){
+        for (Component c : cashButtonCluster.getComponents()) {
+            if (c instanceof JButton && c.getName() != null && c.getName().equals(key.toLowerCase())) {
                 return (JButton) c;
             }
         }
-        for(Component c : commonButtonCluster.getComponents()){
-            if(c instanceof JButton && c.getName().equals(key.toLowerCase())){
+        for (Component c : commonButtonCluster.getComponents()) {
+            if (c instanceof JButton && c.getName() != null && c.getName().equals(key.toLowerCase())) {
                 return (JButton) c;
             }
         }
@@ -160,78 +176,64 @@ public class DuringRegister extends JPanel implements ButtonFoundable{
     }
 
     @Override
-    public JButton[] getButtons(String key){
+    public JButton[] getButtons(String key) {
         ArrayList<JButton> jButtons = new ArrayList<>();
 
-        for(Component c : keyboard.getComponentsInside()){
-            if(c instanceof JButton && c.getName().equals(key.toLowerCase())){
+        for (Component c : keyboard.getComponentsInside()) {
+            if (c instanceof JButton && c.getName() != null && c.getName().equals(key.toLowerCase())) {
                 jButtons.add((JButton) c);
             }
         }
-        for(Component c : utilityButtonCluster.getComponents()){
-            if(c instanceof JButton && c.getName().equals(key.toLowerCase())){
+        for (Component c : utilityButtonCluster.getComponents()) {
+            if (c instanceof JButton && c.getName() != null && c.getName().equals(key.toLowerCase())) {
                 jButtons.add((JButton) c);
             }
         }
-        for(Component c : cashButtonCluster.getComponents()){
-            if(c instanceof JButton && c.getName().equals(key.toLowerCase())){
+        for (Component c : cashButtonCluster.getComponents()) {
+            if (c instanceof JButton && c.getName() != null && c.getName().equals(key.toLowerCase())) {
                 jButtons.add((JButton) c);
             }
         }
-        for(Component c : commonButtonCluster.getComponents()){
-            if(c instanceof JButton && c.getName().equals(key.toLowerCase())){
+        for (Component c : commonButtonCluster.getComponents()) {
+            if (c instanceof JButton && c.getName() != null && c.getName().equals(key.toLowerCase())) {
                 jButtons.add((JButton) c);
             }
         }
 
-        if(!jButtons.isEmpty()){
+        if (!jButtons.isEmpty()) {
             return jButtons.toArray(new JButton[0]);
         }
 
         throw new ArrayIndexOutOfBoundsException();
     }
 
-    public void replaceButton(String name, String replaceName){
+    public void replaceButton(String name, String replaceName) {
         utilityButtonCluster.replaceButton(name, replaceName);
     }
 
-    public void replaceButton(String[] name, String[] replaceName){
+    public void replaceButton(String[] name, String[] replaceName) {
         utilityButtonCluster.replaceButton(name, replaceName);
     }
 
-
-    public void switchState(ActionEvent actionEvent){
-        switch (actionEvent.getActionCommand()){
-            case "Naspäť" ->{
-                cardLayout.show(rightPanel,"UTILITY_BUTTON_CLUSTER");
-                cardLayoutDisplay.show(displayPanel,"AMOUNT");
+    public void switchState(ActionEvent actionEvent) {
+        switch (actionEvent.getActionCommand()) {
+            case "Naspäť" -> {
+                cardLayout.show(rightPanel, "UTILITY_BUTTON_CLUSTER");
+                cardLayoutDisplay.show(displayPanel, "AMOUNT");
             }
-
-            case "Hotovost" ->{
-                cardLayout.show(rightPanel,"CASH_BUTTON_CLUSTER");
-                cardLayoutDisplay.show(displayPanel,"TOTAL");
+            case "Hotovost" -> {
+                cardLayout.show(rightPanel, "CASH_BUTTON_CLUSTER");
+                cardLayoutDisplay.show(displayPanel, "TOTAL");
             }
-
-            case "Karta" ->{
-                cardLayout.show(rightPanel,"COMMON_BUTTON_CLUSTER");
-                cardLayoutDisplay.show(displayPanel,"TOTAL");
-            }
-
-            case "Stravenky" ->{
-                cardLayout.show(rightPanel,"COMMON_BUTTON_CLUSTER");
-                cardLayoutDisplay.show(displayPanel,"TOTAL");
-            }
-
-            case "Poukážky" ->{
-                cardLayout.show(rightPanel,"COMMON_BUTTON_CLUSTER");
-                cardLayoutDisplay.show(displayPanel,"TOTAL");
+            case "Karta", "Stravenky", "Poukážky" -> {
+                cardLayout.show(rightPanel, "COMMON_BUTTON_CLUSTER");
+                cardLayoutDisplay.show(displayPanel, "TOTAL");
             }
         }
-
     }
 
-    public DisplayItems getDisplayScrollableItems(){return displayItems;}
-    public Display getDisplayTotal(){return displayTotal;}
-    public Display getDisplayTopAmount(){return displayTopAmount;}
-    public Display getDisplayTopTotal(){return displayTopTotal;}
+    public DisplayItems getDisplayScrollableItems() { return displayItems; }
+    public Display getDisplayTotal() { return displayTotal; }
+    public Display getDisplayTopAmount() { return displayTopAmount; }
+    public Display getDisplayTopTotal() { return displayTopTotal; }
 }
