@@ -14,7 +14,7 @@ public class RemoveItemAction extends AbstractAction implements ContentObserver,
     private Item item;
 
     RemoveItemAction(){
-        ArticleAction.addObserver(this);
+        ArticleSelectAction.addObserver(this);
         OpenTransaction.addObserver(this);
         openTransaction  = OpenTransactionManager.getInstance().getOpenTransaction();
     }

@@ -10,38 +10,39 @@ import java.util.List;
 
 public class ContentController implements OpenTransactionObserver, KeyboardListener {
     private static final List<ContentObserver> observerList = new ArrayList<>();
-    private static final StringBuilder content = new StringBuilder("0");
+    private static final StringBuilder content = new StringBuilder("default");
 
     public static String getContent(){
-        return content.toString();
+        if(content.toString().equals("default")){
+            return "1";
+        }else {
+            return content.toString();
+        }
     }
 
     public static void appendContent(String text) {
+        if(content.toString().equals("default")){
+            content.setLength(0);
+        }
         if(content.length()>6){
             throw new ArithmeticException("Maximal allowed digit is 7.");
         }
-        if(content.toString().equals("0") && !text.equals("0")){
-            content.setLength(0);
+        if(!(content.isEmpty() && text.equals("0"))){
             content.append(text);
-        }else {
-            content.append(text);
+            notifyContentUpdate();
         }
-        notifyContentUpdate();
     }
 
     public static void clearContent() {
         content.setLength(0);
-        content.append("0");
+        content.append("default");
         notifyContentUpdate();
     }
 
     public static void removeLast(){
-        if(!content.isEmpty()){
+        if(!content.toString().equals("default") &&  content.length()!=1){
             content.setLength(content.length()-1);
-            if(content.isEmpty()){
-                content.append("0");
-            }
-        }
+        }else{clearContent();}
         notifyContentUpdate();
     }
 
@@ -65,7 +66,6 @@ public class ContentController implements OpenTransactionObserver, KeyboardListe
     @Override
     public void onItemAdd(Item item) {
         clearContent();
-        appendContent("1");
     }
 
     @Override

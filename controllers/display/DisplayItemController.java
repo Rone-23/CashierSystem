@@ -1,6 +1,6 @@
 package controllers.display;
 
-import controllers.buttons.ArticleAction;
+import controllers.buttons.ArticleSelectAction;
 import controllers.panels.ViewManager;
 import controllers.transaction.OpenTransactionObserver;
 import services.Item;
@@ -8,10 +8,10 @@ import services.Item;
 import javax.swing.*;
 
 public class DisplayItemController implements OpenTransactionObserver {
-    ArticleAction articleAction;
+    ArticleSelectAction articleSelectAction;
 
     public DisplayItemController(){
-        articleAction = new ArticleAction();
+        articleSelectAction = new ArticleSelectAction();
     }
 
     @Override
@@ -19,8 +19,8 @@ public class DisplayItemController implements OpenTransactionObserver {
         JToggleButton jToggleButtonArticles = ViewManager.getInstance().getDuringArticles().getDisplayScrollableItems().addItem(item);
         JToggleButton jToggleButtonRegister = ViewManager.getInstance().getDuringRegister().getDisplayScrollableItems().addItem(item);
         if(jToggleButtonArticles != null && jToggleButtonRegister != null) {
-            jToggleButtonArticles.addActionListener(articleAction);
-            jToggleButtonRegister.addActionListener(articleAction);
+            jToggleButtonArticles.addActionListener(articleSelectAction);
+            jToggleButtonRegister.addActionListener(articleSelectAction);
         }
     }
 

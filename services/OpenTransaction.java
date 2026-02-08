@@ -109,7 +109,6 @@ public class OpenTransaction implements ContentObserver {
     }
 
     public int getMissing(){
-        System.out.printf("Missing cash in transaction is: %d\n", getTotal() - payedCard - payedCash - payedFoodTicket - payedVoucher);
         return getTotal() - payedCard - payedCash - payedFoodTicket - payedVoucher;
     }
 
@@ -134,6 +133,7 @@ public class OpenTransaction implements ContentObserver {
                 observer.paymentDone();
             }
         }
+        System.out.printf("Missing cash in transaction is: %d\n", getTotal() - payedCard - payedCash - payedFoodTicket - payedVoucher);
     }
 
 
