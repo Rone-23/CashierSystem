@@ -24,6 +24,7 @@ public class MainController {
         new UtilityController();
         DisplayDispatcher.activeDisplayForAmount();
         KeyboardController.addListener(contentController);
+        ContentController.clearContent();
     }
 
 

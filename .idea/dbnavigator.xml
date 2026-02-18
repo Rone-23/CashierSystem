@@ -41,6 +41,9 @@
         </chats>
         <tools />
       </assistant-state>
+      <assistant-state connection-id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5" assistant-type="SELECT_AI" default-profile-name="" selected-chat-id="" availability="UNAVAILABLE" acknowledgement="NONE">
+        <tools />
+      </assistant-state>
       <assistant-state connection-id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5" assistant-type="PUBLIC" default-profile-name="" selected-chat-id="" availability="AVAILABLE" acknowledgement="NONE" selected="true">
         <tools />
       </assistant-state>
@@ -275,7 +278,8 @@ insert into Article(name, price, stock, subtype_id) values('skajgfh',123,10000,1
 
 update article set stock =  100000 where article_id = 1;
 
-update article set stock = stock * 10000;
+update article set stock = stock * 0.0001;
+update article set stock = 2 where article_id = 5;
 
 --retrieve transactions and their content that occurred today
 select "transaction".transaction_id as ID, article.name as Artikel, in_transaction.amount as Pocet, "transaction".created_at as Vytoverene
@@ -345,14 +349,20 @@ UPDATE article
 SET stock = stock - :add_amount
 WHERE article_id = :article_id;
 
-COMMIT;]]></console>
+COMMIT;
+
+
+UPDATE in_transaction set amount = amount - 2 where transaction_id = 268 and article_id = 1;
+UPDATE article set amount = amount + ? where article_id = ?;]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files />
+    <open-files>
+      <object connection-id="ab16c47c-8eaf-4ed2-9b5c-14849f45418b" object-ref="consoles/New  Database" />
+    </open-files>
   </component>
   <component name="DBNavigator.Project.DatabasePrerequisiteManager">
     <prerequisites />

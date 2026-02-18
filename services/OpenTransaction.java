@@ -1,6 +1,7 @@
 package services;
 
 import controllers.display.ContentObserver;
+import controllers.notifications.NotificationController;
 import controllers.transaction.OpenTransactionObserver;
 
 import java.awt.event.ActionEvent;
@@ -38,17 +39,26 @@ public class OpenTransaction implements ContentObserver {
         }
     }
 
-    public void addItem(Item item) throws SQLException {
+    public void addItem(Item item){
         if(item == null){return;}
+
         if (!itemsInTransaction.containsKey(item.getName())){
+            try {
+                SQL_Connect.getInstance().addToTransaction(transactionID,SQL_Connect.instance.getArticleID(item.getName()), item.getAmount(),item.getPrice());
+            } catch (SQLException e) {
+                NotificationController.notifyObservers(e.toString(),5000);
+            }
             item.setAmount(content);
             itemsInTransaction.put(item.getName(),item);
-            SQL_Connect.getInstance().logToDB(transactionID,SQL_Connect.instance.getArticleID(item.getName()), item.getAmount(),item.getPrice());
         }else {
             ItemCountable itemCountable = (ItemCountable) itemsInTransaction.get(item.getName());
-            itemCountable.addAmount(content);
             item=itemCountable;
-            SQL_Connect.getInstance().logToDB(transactionID,SQL_Connect.instance.getArticleID(item.getName()), item.getAmount(),item.getPrice());
+            try {
+                SQL_Connect.getInstance().addToTransaction(transactionID,SQL_Connect.instance.getArticleID(item.getName()), item.getAmount(),item.getPrice());
+            } catch (SQLException e) {
+                NotificationController.notifyObservers(e.toString(),5000);
+            }
+            itemCountable.addAmount(content);
         }
 
         for(OpenTransactionObserver observer : observerList){
@@ -56,40 +66,67 @@ public class OpenTransaction implements ContentObserver {
         }
     }
 
+//    public void removeItem(Item item){
+//        if(item == null){return;}
+//        if(!itemsInTransaction.containsKey(item.getName())){
+//        }else if(itemsInTransaction.containsKey(item.getName()) && item.getClass()==ItemCountable.class){
+//            if(item.getAmount()-content<=0){
+//                itemsInTransaction.remove(item.getName());
+//
+//                for(OpenTransactionObserver observer : observerList){
+//                    observer.onItemRemove(item);
+//                }
+//            }else{
+//                ItemCountable itemCountable = (ItemCountable) itemsInTransaction.get(item.getName());
+//                itemCountable.addAmount(-content);
+//
+//                for(OpenTransactionObserver observer : observerList){
+//                    observer.onItemAdd(item);
+//                }
+//            }
+//        }else{
+//            if(item.getAmount()-content<0){
+//                itemsInTransaction.remove(item.getName());
+//
+//                for(OpenTransactionObserver observer : observerList) {
+//                    observer.onItemRemove(item);
+//                }
+//            }else{
+//                ItemUncountable itemCountable = (ItemUncountable) itemsInTransaction.get(item.getName());
+//                itemCountable.addWeight(-content);
+//
+//                for(OpenTransactionObserver observer : observerList){
+//                    observer.onItemAdd(item);
+//                }
+//            }
+//        }
+//    }
+
     public void removeItem(Item item){
-        if(item == null){return;}
-            //TODO
-        if(!itemsInTransaction.containsKey(item.getName())){
-        }else if(itemsInTransaction.containsKey(item.getName()) && item.getClass()==ItemCountable.class){
-            if(item.getAmount()-content<=0){
-                itemsInTransaction.remove(item.getName());
+        if(item==null){return;}
 
-                for(OpenTransactionObserver observer : observerList){
-                    observer.onItemRemove(item);
-                }
-            }else{
-                ItemCountable itemCountable = (ItemCountable) itemsInTransaction.get(item.getName());
-                itemCountable.addAmount(-content);
+        if(itemsInTransaction.containsKey(item.getName())){
+            try {
+                SQL_Connect.getInstance().removeFromTransaction(transactionID, SQL_Connect.instance.getArticleID(item.getName()), content);
 
-                for(OpenTransactionObserver observer : observerList){
-                    observer.onItemAdd(item);
+                if (item.getAmount() - content <= 0) {
+                    itemsInTransaction.remove(item.getName());
+
+                    for (OpenTransactionObserver observer : observerList) {
+                        observer.onItemRemove(item);
+                    }
+                } else {
+                    ItemCountable itemCountable = (ItemCountable) itemsInTransaction.get(item.getName());
+                    itemCountable.addAmount(-content);
+
+                    for (OpenTransactionObserver observer : observerList) {
+                        observer.onItemAdd(item);
+                    }
                 }
+            }catch (SQLException e){
+                NotificationController.notifyObservers(e.toString(),5000);
             }
-        }else{
-            if(item.getAmount()-content<0){
-                itemsInTransaction.remove(item.getName());
 
-                for(OpenTransactionObserver observer : observerList) {
-                    observer.onItemRemove(item);
-                }
-            }else{
-                ItemUncountable itemCountable = (ItemUncountable) itemsInTransaction.get(item.getName());
-                itemCountable.addWeight(-content);
-
-                for(OpenTransactionObserver observer : observerList){
-                    observer.onItemAdd(item);
-                }
-            }
         }
     }
 

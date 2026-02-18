@@ -211,7 +211,7 @@ public class SQL_Connect {
         }
     }
 
-    public int logToDB(
+    public int addToTransaction(
             int transactionId,
             int articleId,
             int addAmount,
@@ -279,6 +279,66 @@ public class SQL_Connect {
             conn.rollback();
             throw e;
         } finally {
+            conn.setAutoCommit(true);
+        }
+        return 0;
+    }
+
+    public int removeFromTransaction(
+            int transactionId,
+            int articleId,
+            int removeAmount
+    ) throws SQLException{
+        conn.setAutoCommit(false);
+
+        try{
+            try(PreparedStatement removeFromInTransaction = conn.prepareStatement(
+                    "UPDATE in_transaction SET amount = amount - ? WHERE transaction_id = ? and article_id = ?"
+            )){
+                removeFromInTransaction.setInt(1,removeAmount);
+                removeFromInTransaction.setInt(2,transactionId);
+                removeFromInTransaction.setInt(3,articleId);
+                removeFromInTransaction.executeUpdate();
+            }
+
+            try(PreparedStatement inTransactionAmount = conn.prepareStatement(
+                    "SELECT amount FROM in_transaction WHERE transaction_id = ? and article_id = ?"
+            )){
+                inTransactionAmount.setInt(1,transactionId);
+                inTransactionAmount.setInt(2,articleId);
+
+                ResultSet rs = inTransactionAmount.executeQuery();
+                if(rs.next()){
+                    if(rs.getInt("amount")<=0){
+                        throw new SQLException("This transaction does not contain this item.");
+                    }
+                }
+            }
+
+            try(PreparedStatement addToStock = conn.prepareStatement(
+                    "UPDATE article SET stock = stock + ? WHERE article_id = ?"
+            )){
+                addToStock.setInt(1,removeAmount);
+                addToStock.setInt(2,articleId);
+                addToStock.executeUpdate();
+            }
+
+            try (PreparedStatement getStockStmt = conn.prepareStatement(
+                    "SELECT stock FROM article WHERE article_id = ?"
+            )) {
+                getStockStmt.setInt(1, articleId);
+                ResultSet rs = getStockStmt.executeQuery();
+                if(rs.next()){
+                    return rs.getInt("stock");
+                }
+            }
+
+            conn.commit();
+
+        }catch(SQLException e) {
+            conn.rollback();
+            throw e;
+        }finally {
             conn.setAutoCommit(true);
         }
         return 0;

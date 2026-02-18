@@ -6,7 +6,6 @@ import services.Item;
 import services.OpenTransaction;
 
 import java.awt.event.ActionEvent;
-import java.sql.SQLException;
 
 public class OpenTransactionManager implements OpenTransactionObserver{
     private static OpenTransactionManager instance;
@@ -45,12 +44,8 @@ public class OpenTransactionManager implements OpenTransactionObserver{
     }
 
     public void addItem(Item item){
-        try{
-            getOpenTransaction().addItem(item);
-            System.out.printf("Name %s Amount %d Price %d\n",item.getName(), item.getAmount(), item.getPrice());
-        }catch (SQLException e) {
-            System.out.printf(String.valueOf(e));
-        }
+        getOpenTransaction().addItem(item);
+        System.out.printf("Name %s Amount %d Price %d\n",item.getName(), item.getAmount(), item.getPrice());
     }
 
     @Override
