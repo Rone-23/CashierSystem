@@ -9,6 +9,7 @@ public class NotificationController {
         for(NotificationObserver o : observerList.toArray(new NotificationObserver[0])){
             o.updateNotification(notification,timeMs);
         }
+        System.out.printf(notification);
     }
 
     public static void addObserver(NotificationObserver observer){

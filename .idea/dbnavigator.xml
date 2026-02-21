@@ -228,7 +228,7 @@ CREATE TABLE IF NOT EXISTS "subtype" (
 CREATE TABLE IF NOT EXISTS "article" (
     "article_id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "name" VARCHAR(255) NOT NULL,
-    "price" INTEGER NOT NULL, -- Stored in cents/smallest unit to avoid float issues
+    "price" INTEGER NOT NULL,
     "stock" INTEGER DEFAULT 0,
     "subtype_id" INTEGER NOT NULL,
     FOREIGN KEY ("subtype_id") REFERENCES "subtype"("subtype_id")
@@ -264,6 +264,11 @@ CREATE TABLE  IF  NOT EXISTS "favorite_article" (
     FOREIGN KEY ("cashier_id") REFERENCES "cashier"("cashier_id"),
     FOREIGN KEY ("article_id") REFERENCES "article"("article_id")
 );
+
+ALTER TABLE "transaction" ADD COLUMN "cash" int, ADD COLUMN "card" int, ADD COLUMN "voucher" int, ADD COLUMN "food_ticket" int;
+
+
+
 
 COMMIT;]]></console>
       <console name="New  Database" type="STANDARD" schema="database" session="Main"><![CDATA[select * from article;
@@ -353,7 +358,12 @@ COMMIT;
 
 
 UPDATE in_transaction set amount = amount - 2 where transaction_id = 268 and article_id = 1;
-UPDATE article set amount = amount + ? where article_id = ?;]]></console>
+UPDATE article set amount = amount + ? where article_id = ?;
+
+
+SELECT * from "transaction" where transaction_id= 298;
+
+UPDATE "transaction" SET voucher = 1 where transaction_id = 285;]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
@@ -361,6 +371,7 @@ UPDATE article set amount = amount + ? where article_id = ?;]]></console>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files>
+      <object connection-id="ab16c47c-8eaf-4ed2-9b5c-14849f45418b" object-ref="consoles/Database create" />
       <object connection-id="ab16c47c-8eaf-4ed2-9b5c-14849f45418b" object-ref="consoles/New  Database" />
     </open-files>
   </component>

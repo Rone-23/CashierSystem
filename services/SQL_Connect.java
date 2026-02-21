@@ -344,6 +344,26 @@ public class SQL_Connect {
         return 0;
     }
 
+    public void registerPayment(int amount, String paymentOption) throws SQLException {
+        try(PreparedStatement addPaymentToTransaction = conn.prepareStatement(
+                "UPDATE \"transaction\" SET " + paymentOption + " = " + paymentOption + " + ? where transaction_id = ?"
+        )){
+            addPaymentToTransaction.setInt(1,amount);
+            addPaymentToTransaction.setInt(2,getLastTransactionNumber());
+            addPaymentToTransaction.executeUpdate();
+        }
+    }
+
+    public void registerPayment(int amount, String paymentOption, int transactionID) throws SQLException {
+        try(PreparedStatement addPaymentToTransaction = conn.prepareStatement(
+                "UPDATE \"transaction\" SET " + paymentOption + " = " + paymentOption + " + ? where transaction_id = ?"
+        )){
+            addPaymentToTransaction.setInt(1,amount);
+            addPaymentToTransaction.setInt(2,transactionID);
+            addPaymentToTransaction.executeUpdate();
+        }
+    }
+
     public int getArticleID(String articleName){
         String sql =  "SELECT article_id FROM Article WHERE name = ?";
 

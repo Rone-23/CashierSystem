@@ -150,14 +150,30 @@ public class OpenTransaction implements ContentObserver {
     }
 
     public void pay(ActionEvent actionEvent){
-        if(content>0){
-            switch (actionEvent.getActionCommand()){
-                case "Hotovost" -> payedCash += content;
-                case "Karta" -> payedCard += content;
-                case "Stravenky" -> payedFoodTicket += content;
-                case "Poukážky" -> payedVoucher += content;
+        try {
+            if(content>0){
+                switch (actionEvent.getActionCommand()){
+                    case "Hotovost" -> {
+                        SQL_Connect.getInstance().registerPayment(content,"card", transactionID);
+                        payedCash += content;
+                    }
+                    case "Karta" -> {
+                        SQL_Connect.getInstance().registerPayment(content,"card", transactionID);
+                        payedCard += content;
+                    }
+                    case "Stravenky" -> {
+                        SQL_Connect.getInstance().registerPayment(content,"food_ticket", transactionID);
+                        payedFoodTicket += content;
+                    }
+                    case "Poukážky" -> {
+                        SQL_Connect.getInstance().registerPayment(content,"voucher", transactionID);
+                        payedVoucher += content;
+                    }
+                }
+                checkSum(actionEvent.getActionCommand());
             }
-            checkSum(actionEvent.getActionCommand());
+        } catch (SQLException e) {
+            NotificationController.notifyObservers(e.toString(),5000);
         }
     }
 
