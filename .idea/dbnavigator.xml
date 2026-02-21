@@ -288,9 +288,12 @@ update article set stock = 2 where article_id = 5;
 
 --retrieve transactions and their content that occurred today
 select "transaction".transaction_id as ID, article.name as Artikel, in_transaction.amount as Pocet, "transaction".created_at as Vytoverene
-from in_transaction 
+from in_transaction
 join "transaction" on in_transaction.transaction_id = "transaction".transaction_id
 join article on in_transaction.article_id = article.article_id where date(created_at) = date('now');
+
+--retrieve last transaction parameters
+SELECT * from "transaction" order by transaction_id desc limit  1;
 
 --select last id in transaction
 select transaction_id from "transaction" order by transaction_id desc limit 1;
@@ -300,12 +303,12 @@ insert into "transaction" (transaction_id, cashier_id, created_at, customer_id)
 values (?,?,current_timestamp, ?);
 
 --transaction of the day number
-select count(*) from "transaction" 
+select count(*) from "transaction"
 where date(created_at) = date('now');
 
 --get articles from transaction
-select name, amount, price_at_sale from in_transaction 
-join article on in_transaction.article_id = article.article_id 
+select name, amount, price_at_sale from in_transaction
+join article on in_transaction.article_id = article.article_id
 where transaction_id = 1;
 
 --remove x amount from transaction
@@ -315,7 +318,7 @@ update article set stock = stock - ? where article_id = ?;
 update article set stock = stock + ? where article_id = ?;
 
 --insert article into transaction
-insert into in_transaction (article_id, transaction_id, amount, price_at_sale) 
+insert into in_transaction (article_id, transaction_id, amount, price_at_sale)
 values (?,?,?,?);
 
 select subtype_name from subtype join type on subtype.parent_type_id = type.type_id where type_name = "Food";
@@ -361,7 +364,6 @@ UPDATE in_transaction set amount = amount - 2 where transaction_id = 268 and art
 UPDATE article set amount = amount + ? where article_id = ?;
 
 
-SELECT * from "transaction" where transaction_id= 298;
 
 UPDATE "transaction" SET voucher = 1 where transaction_id = 285;]]></console>
     </connection>
@@ -371,7 +373,6 @@ UPDATE "transaction" SET voucher = 1 where transaction_id = 285;]]></console>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files>
-      <object connection-id="ab16c47c-8eaf-4ed2-9b5c-14849f45418b" object-ref="consoles/Database create" />
       <object connection-id="ab16c47c-8eaf-4ed2-9b5c-14849f45418b" object-ref="consoles/New  Database" />
     </open-files>
   </component>

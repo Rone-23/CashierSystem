@@ -47,6 +47,7 @@ public class OpenTransaction implements ContentObserver {
                 SQL_Connect.getInstance().addToTransaction(transactionID,SQL_Connect.instance.getArticleID(item.getName()), item.getAmount(),item.getPrice());
             } catch (SQLException e) {
                 NotificationController.notifyObservers(e.toString(),5000);
+                return;
             }
             item.setAmount(content);
             itemsInTransaction.put(item.getName(),item);
@@ -57,6 +58,7 @@ public class OpenTransaction implements ContentObserver {
                 SQL_Connect.getInstance().addToTransaction(transactionID,SQL_Connect.instance.getArticleID(item.getName()), item.getAmount(),item.getPrice());
             } catch (SQLException e) {
                 NotificationController.notifyObservers(e.toString(),5000);
+                return;
             }
             itemCountable.addAmount(content);
         }
@@ -65,42 +67,6 @@ public class OpenTransaction implements ContentObserver {
             observer.onItemAdd(item);
         }
     }
-
-//    public void removeItem(Item item){
-//        if(item == null){return;}
-//        if(!itemsInTransaction.containsKey(item.getName())){
-//        }else if(itemsInTransaction.containsKey(item.getName()) && item.getClass()==ItemCountable.class){
-//            if(item.getAmount()-content<=0){
-//                itemsInTransaction.remove(item.getName());
-//
-//                for(OpenTransactionObserver observer : observerList){
-//                    observer.onItemRemove(item);
-//                }
-//            }else{
-//                ItemCountable itemCountable = (ItemCountable) itemsInTransaction.get(item.getName());
-//                itemCountable.addAmount(-content);
-//
-//                for(OpenTransactionObserver observer : observerList){
-//                    observer.onItemAdd(item);
-//                }
-//            }
-//        }else{
-//            if(item.getAmount()-content<0){
-//                itemsInTransaction.remove(item.getName());
-//
-//                for(OpenTransactionObserver observer : observerList) {
-//                    observer.onItemRemove(item);
-//                }
-//            }else{
-//                ItemUncountable itemCountable = (ItemUncountable) itemsInTransaction.get(item.getName());
-//                itemCountable.addWeight(-content);
-//
-//                for(OpenTransactionObserver observer : observerList){
-//                    observer.onItemAdd(item);
-//                }
-//            }
-//        }
-//    }
 
     public void removeItem(Item item){
         if(item==null){return;}
