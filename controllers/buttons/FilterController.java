@@ -15,13 +15,13 @@ public class FilterController implements FilterObserver{
 
         //Adding functionality to secondary filters
         for(JButton button : articleFilterButtonCluster.getMainFilterButtons()){
-            button.addActionListener(e -> {
+            button.addActionListener(_ -> {
                 try {
                     articleFilterButtonCluster.setButtonNamesSecondaryFilter(SQL_Connect.getInstance().getSubTypes(button.getName().toUpperCase()));
 
-                    for(JButton buttonSecondaryFilter: articleFilterButtonCluster.getSecondaryFilterButtons()){
-                        buttonSecondaryFilter.addActionListener(e1 -> {
-                            for(FilterObserver observer: observerList){
+                    for (JButton buttonSecondaryFilter : articleFilterButtonCluster.getSecondaryFilterButtons()) {
+                        buttonSecondaryFilter.addActionListener(_ -> {
+                            for (FilterObserver observer : observerList) {
                                 //Returns in upper case for because of database
                                 observer.updateSecondaryFilter(buttonSecondaryFilter.getName().toUpperCase());
                             }
@@ -30,7 +30,7 @@ public class FilterController implements FilterObserver{
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
-                for(FilterObserver observer: observerList){
+                for (FilterObserver observer : observerList) {
                     //Returns in upper case for because of database
                     observer.updateMainFilter(button.getName().toUpperCase());
                 }

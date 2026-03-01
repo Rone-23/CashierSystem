@@ -39,14 +39,11 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
 
         for(Item article : articles){
             ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles().addArticle(article);
-        }
-
-        for(Item item : articles){
-            buttons.get(item.getName().toLowerCase()).addActionListener(articleSelectAction);
+            buttons.get(article.getName().toLowerCase()).addActionListener(articleSelectAction);
             try{
-                ArticleButton articleButton = (ArticleButton) buttons.get(item.getName().toLowerCase());
+                ArticleButton articleButton = (ArticleButton) buttons.get(article.getName().toLowerCase());
                 articleButton.addStarActionListener(favoriteArticleAction);
-                articleButton.setStarred(item.getIsFavorite());
+                articleButton.setStarred(article.getIsFavorite());
             }catch (ClassCastException e){
                 NotificationController.notifyObservers(e.toString(),5000);
             }
@@ -54,25 +51,47 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
     }
 
     public void createArticles(String type){
-        articleSelectAction.deselectArticle();
-        try {
-            articles =  SQL_Connect.getInstance().getItems(type);
-        } catch (SQLException e) {
-            articles = new Item[0];
-        }
+        if(type.equals("OBLUBENE")){
+            articleSelectAction.deselectArticle();
+            try {
+                articles = SQL_Connect.getInstance().getAllItems();
+            } catch (SQLException e) {
+                articles = new Item[0];
+            }
 
-        for(Item article : articles){
-            ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles().addArticle(article);
-        }
+            for (Item article : articles) {
+                if(article.getIsFavorite()){
+                    ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles().addArticle(article);
+                }
+                if(article.getIsFavorite()) {
+                    buttons.get(article.getName().toLowerCase()).addActionListener(articleSelectAction);
+                    try {
+                        ArticleButton articleButton = (ArticleButton) buttons.get(article.getName().toLowerCase());
+                        articleButton.addStarActionListener(favoriteArticleAction);
+                        articleButton.setStarred(article.getIsFavorite());
+                    } catch (ClassCastException e) {
+                        NotificationController.notifyObservers(e.toString(), 5000);
+                    }
+                }
+            }
+        }else {
+            articleSelectAction.deselectArticle();
+            try {
+                articles = SQL_Connect.getInstance().getItems(type);
+            } catch (SQLException e) {
+                articles = new Item[0];
+            }
 
-        for(Item item : articles){
-            buttons.get(item.getName().toLowerCase()).addActionListener(articleSelectAction);
-            try{
-                ArticleButton articleButton = (ArticleButton) buttons.get(item.getName().toLowerCase());
-                articleButton.addStarActionListener(favoriteArticleAction);
-                articleButton.setStarred(item.getIsFavorite());
-            }catch (ClassCastException e){
-                NotificationController.notifyObservers(e.toString(),5000);
+            for (Item article : articles) {
+                ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles().addArticle(article);
+                buttons.get(article.getName().toLowerCase()).addActionListener(articleSelectAction);
+                try {
+                    ArticleButton articleButton = (ArticleButton) buttons.get(article.getName().toLowerCase());
+                    articleButton.addStarActionListener(favoriteArticleAction);
+                    articleButton.setStarred(article.getIsFavorite());
+                } catch (ClassCastException e) {
+                    NotificationController.notifyObservers(e.toString(), 5000);
+                }
             }
         }
     }
@@ -87,14 +106,11 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
 
         for(Item article : articles){
             ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles().addArticle(article);
-        }
-
-        for(Item item : articles){
-            buttons.get(item.getName().toLowerCase()).addActionListener(articleSelectAction);
+            buttons.get(article.getName().toLowerCase()).addActionListener(articleSelectAction);
             try{
-                ArticleButton articleButton = (ArticleButton) buttons.get(item.getName().toLowerCase());
+                ArticleButton articleButton = (ArticleButton) buttons.get(article.getName().toLowerCase());
                 articleButton.addStarActionListener(favoriteArticleAction);
-                articleButton.setStarred(item.getIsFavorite());
+                articleButton.setStarred(article.getIsFavorite());
             }catch (ClassCastException e){
                 NotificationController.notifyObservers(e.toString(),5000);
             }
