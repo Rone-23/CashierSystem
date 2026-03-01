@@ -1,6 +1,8 @@
 package controllers.display;
 
 import controllers.buttons.ArticleSelectAction;
+import controllers.buttons.FavoriteArticleAction;
+import controllers.notifications.NotificationController;
 import controllers.panels.ViewManager;
 import controllers.buttons.FilterObserver;
 import controllers.transaction.OpenTransactionObserver;
@@ -22,6 +24,7 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
 
     private final Map<String, JToggleButton> buttons = ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles().getButtons();
     private final ArticleSelectAction articleSelectAction = new ArticleSelectAction();
+    private final FavoriteArticleAction favoriteArticleAction = new FavoriteArticleAction();
     public DisplayArticleController(){
         createArticles();
     }
@@ -40,6 +43,13 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
 
         for(Item item : articles){
             buttons.get(item.getName().toLowerCase()).addActionListener(articleSelectAction);
+            try{
+                ArticleButton articleButton = (ArticleButton) buttons.get(item.getName().toLowerCase());
+                articleButton.addStarActionListener(favoriteArticleAction);
+                articleButton.setStarred(item.getIsFavorite());
+            }catch (ClassCastException e){
+                NotificationController.notifyObservers(e.toString(),5000);
+            }
         }
     }
 
@@ -57,6 +67,13 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
 
         for(Item item : articles){
             buttons.get(item.getName().toLowerCase()).addActionListener(articleSelectAction);
+            try{
+                ArticleButton articleButton = (ArticleButton) buttons.get(item.getName().toLowerCase());
+                articleButton.addStarActionListener(favoriteArticleAction);
+                articleButton.setStarred(item.getIsFavorite());
+            }catch (ClassCastException e){
+                NotificationController.notifyObservers(e.toString(),5000);
+            }
         }
     }
 
@@ -74,6 +91,13 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
 
         for(Item item : articles){
             buttons.get(item.getName().toLowerCase()).addActionListener(articleSelectAction);
+            try{
+                ArticleButton articleButton = (ArticleButton) buttons.get(item.getName().toLowerCase());
+                articleButton.addStarActionListener(favoriteArticleAction);
+                articleButton.setStarred(item.getIsFavorite());
+            }catch (ClassCastException e){
+                NotificationController.notifyObservers(e.toString(),5000);
+            }
         }
     }
 

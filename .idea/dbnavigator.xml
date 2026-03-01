@@ -271,6 +271,61 @@ ALTER TABLE "transaction" ADD COLUMN "cash" int, ADD COLUMN "card" int, ADD COLU
 
 
 COMMIT;]]></console>
+      <console name="Import" type="STANDARD" schema="main" session="Main"><![CDATA[-- 1. INSERT TYPES
+INSERT INTO "type" VALUES (1,'OVOCIE');
+INSERT INTO "type" VALUES (2,'ZELENINA');
+INSERT INTO "type" VALUES (3,'PECIVO');
+
+-- 2. INSERT SUBTYPES (Dynamically linked to types)
+-- Ovocie (type_id 1)
+INSERT INTO "subtype" (subtype_id, parent_type_id, subtype_name) VALUES (1, 1, 'DOMÁce A SEZÓNNE');
+INSERT INTO "subtype" (subtype_id, parent_type_id, subtype_name) VALUES (2, 1, 'EXOTICKÉ');
+INSERT INTO "subtype" (subtype_id, parent_type_id, subtype_name) VALUES (3, 1, 'BOBUĽOVÉ');
+
+-- Zelenina (type_id 2)
+INSERT INTO "subtype" (subtype_id, parent_type_id, subtype_name) VALUES (4, 2, 'KOREŇOVÁ');
+INSERT INTO "subtype" (subtype_id, parent_type_id, subtype_name) VALUES (5, 2, 'LISTOVÁ A HUBOVINY');
+INSERT INTO "subtype" (subtype_id, parent_type_id, subtype_name) VALUES (6, 2, 'PLODOVÁ');
+
+-- Pecivo (type_id 3)
+INSERT INTO "subtype" (subtype_id, parent_type_id, subtype_name) VALUES (7, 3, 'SLANÉ PEČIVO');
+INSERT INTO "subtype" (subtype_id, parent_type_id, subtype_name) VALUES (8, 3, 'SLADKÉ PEČIVO');
+INSERT INTO "subtype" (subtype_id, parent_type_id, subtype_name) VALUES (9, 3, 'CHLIEB');
+
+-- 3. INSERT ARTICLES (Prices in cents: 1.49€ = 149)
+-- Articles for Ovocie - Domáce (subtype 1)
+INSERT INTO "article" (name, price, stock, subtype_id) VALUES ('Jablko Gala', 120, 150, 1);
+INSERT INTO "article" (name, price, stock, subtype_id) VALUES ('Hruška Konferencia', 189, 80, 1);
+
+-- Articles for Ovocie - Exotické (subtype 2)
+INSERT INTO "article" (name, price, stock, subtype_id) VALUES ('Banány Premium', 159, 200, 2);
+INSERT INTO "article" (name, price, stock, subtype_id) VALUES ('Mango dozreté', 250, 30, 2);
+
+-- Articles for Zelenina - Koreňová (subtype 4)
+INSERT INTO "article" (name, price, stock, subtype_id) VALUES ('Mrkva voľná', 89, 300, 4);
+INSERT INTO "article" (name, price, stock, subtype_id) VALUES ('Zeler', 110, 50, 4);
+
+-- Articles for Zelenina - Plodová (subtype 6)
+INSERT INTO "article" (name, price, stock, subtype_id) VALUES ('Paradajky kríčkové', 299, 120, 6);
+INSERT INTO "article" (name, price, stock, subtype_id) VALUES ('Uhorka šalátová', 99, 100, 6);
+
+-- Articles for Pecivo - Slané (subtype 7)
+INSERT INTO "article" (name, price, stock, subtype_id) VALUES ('Rožok biely 40g', 13, 500, 7);
+INSERT INTO "article" (name, price, stock, subtype_id) VALUES ('Kaiserka cereálna', 25, 200, 7);
+
+-- Articles for Pecivo - Sladké (subtype 8)
+INSERT INTO "article" (name, price, stock, subtype_id) VALUES ('Lupačka maková', 55, 60, 8);
+INSERT INTO "article" (name, price, stock, subtype_id) VALUES ('Šatka tvarohová', 85, 45, 8);
+
+-- Articles for Pecivo - Chlieb (subtype 9)
+INSERT INTO "article" (name, price, stock, subtype_id) VALUES ('Chlieb rascový 1kg', 165, 40, 9);
+
+-- 4. INSERT INITIAL USERS (Cashier and Customer)
+INSERT INTO "cashier" (name) VALUES ('Admin');
+INSERT INTO "cashier" (name) VALUES ('Mária Pokladníčka');
+
+INSERT INTO "customer" (name) VALUES ('Neregistrovaný zákazník');
+INSERT INTO "customer" (name) VALUES ('Ján Novák');]]></console>
       <console name="New  Database" type="STANDARD" schema="database" session="Main"><![CDATA[select * from article;
 select * from type;
 select * from subtype;
@@ -292,7 +347,14 @@ from in_transaction
 join "transaction" on in_transaction.transaction_id = "transaction".transaction_id
 join article on in_transaction.article_id = article.article_id where date(created_at) = date('now');
 
+
 --retrieve last transaction parameters
+select "transaction".transaction_id as ID, article.name as Artikel, in_transaction.amount as Pocet, "transaction".created_at as Vytoverene
+from in_transaction
+join "transaction" on in_transaction.transaction_id = "transaction".transaction_id
+join article on in_transaction.article_id = article.article_id where date(created_at) = date('now')
+order by "transaction".transaction_id desc limit  1;
+
 SELECT * from "transaction" order by transaction_id desc limit  1;
 
 --select last id in transaction
@@ -359,13 +421,78 @@ WHERE article_id = :article_id;
 
 COMMIT;
 
+--Connect favorite article with cashier
+INSERT INTO "favorite_article" VALUES(1,1);
 
-UPDATE in_transaction set amount = amount - 2 where transaction_id = 268 and article_id = 1;
-UPDATE article set amount = amount + ? where article_id = ?;
+--Disconnect favorite article with cashier
+DELETE FROM "favorite_article" WHERE cashier_id = ? AND article_id = ?;
+
+--Retrieve all favorite articles for current user
+SELECT article.name, article.price from favorite_article join article on favorite_article.article_id = article.article_id where cashier_id = 1;
+
+select subtype_name from subtype join type on subtype.parent_type_id = type.type_id where type_name = 'PECIVO';
 
 
+select * from article;
+select * from subtype;
+select * from favorite_article;
+update favorite_article set article_id = 23  where article_id = 2;
 
-UPDATE "transaction" SET voucher = 1 where transaction_id = 285;]]></console>
+select name, price from article
+join subtype on article.subtype_id= subtype.subtype_id
+join type on subtype.parent_type_id = type.type_id
+where type.type_name= 'PECIVO';
+
+select name, price from article
+join subtype on article.subtype_id= subtype.subtype_id
+join type on subtype.parent_type_id = type.type_id
+where type.type_name = 'OVOCIE' and subtype.subtype_name = 'BOBUĽOVÉ';
+
+SELECT a.name, a.price from article as a
+left join favorite_article on a.article_id = favorite_article.article_id
+join cashier on favorite_article.cashier_id = cashier.cashier_id
+where cashier.cashier_id = 1;
+
+select a.name, a.price, EXISTS (
+        SELECT 1
+        FROM cashier_favorites cf
+        WHERE cf.article_id = a.id
+        AND cf.cashier_id = 1
+    )
+ from favorite_article as f
+join article as a on f.article_id = a.article_id;
+
+select * from cashier;
+insert into cashier values(1,'tomas');
+
+SELECT
+    a.name,
+    a.price,
+    EXISTS (
+        SELECT 1
+        FROM favorite_article f
+        JOIN cashier c on f.cashier_id = c.cashier_id
+        WHERE f.article_id = a.article_id
+        AND f.cashier_id = 1
+    ) as is_favorite
+FROM article a
+INNER JOIN subtype s ON a.subtype_id = s.subtype_id
+INNER JOIN type t ON s.parent_type_id = t.type_id
+WHERE t.type_name = 'OVOCIE';
+
+SELECT
+    a.name,
+    a.price,
+    EXISTS (
+        SELECT 1
+        FROM favorite_article f
+        JOIN cashier c on f.cashier_id = c.cashier_id
+        WHERE f.article_id = a.article_id
+        AND f.cashier_id = 1
+    ) as is_favorite
+FROM article a
+INNER JOIN subtype s ON a.subtype_id = s.subtype_id
+INNER JOIN type t ON s.parent_type_id = t.type_id;]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">

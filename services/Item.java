@@ -10,6 +10,7 @@ public abstract class Item {
     protected String name;
     protected int price,amount;
     private static double totalAmount;
+    private boolean isFavorite;
     public Item(){
         //TODO: Remake so it shows how many items went through not how many types went through
         totalAmount++;
@@ -33,6 +34,8 @@ public abstract class Item {
     public int getAmount(){
         return this.amount;
     }
+    public void setIsFavorite(boolean isFavorite){this.isFavorite = isFavorite;}
+    public boolean getIsFavorite(){return isFavorite;}
     public double getTotalAmount(){return totalAmount; }
     public static void setTotalAmountZero(){totalAmount = 0;}
     String getInfo(){return String.format("Name: %s Price: %s Amount: %s",this.name, this.price, this.amount);}

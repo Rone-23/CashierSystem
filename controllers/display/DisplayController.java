@@ -2,6 +2,7 @@ package controllers.display;
 
 import assets.Constants;
 import controllers.transaction.OpenTransactionObserver;
+import services.ContentObserver;
 import services.Item;
 import services.OpenTransaction;
 import views.Components.Display;

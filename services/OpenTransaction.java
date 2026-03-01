@@ -1,6 +1,5 @@
 package services;
 
-import controllers.display.ContentObserver;
 import controllers.notifications.NotificationController;
 import controllers.transaction.OpenTransactionObserver;
 
@@ -32,7 +31,11 @@ public class OpenTransaction implements ContentObserver {
         this.transactionDateTime = LocalDateTime.now();
         this.transactionDateTime.format(dateTimeFormatter);
 
-        transactionID = SQL_Connect.getInstance().createTransaction(1,1);
+        try {
+            transactionID = SQL_Connect.getInstance().createTransaction(1,1);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
         for(OpenTransactionObserver observer : observerList){
             observer.onCreate(this);

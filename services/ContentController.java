@@ -1,9 +1,8 @@
-package controllers.display;
+package services;
 
 import assets.ButtonSet;
 import controllers.buttons.KeyboardListener;
 import controllers.transaction.OpenTransactionObserver;
-import services.Item;
 
 import java.util.ArrayList;
 import java.util.List;

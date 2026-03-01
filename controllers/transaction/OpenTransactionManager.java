@@ -1,6 +1,6 @@
 package controllers.transaction;
 
-import controllers.display.ContentController;
+import services.ContentController;
 import controllers.panels.ViewManager;
 import services.Item;
 import services.OpenTransaction;

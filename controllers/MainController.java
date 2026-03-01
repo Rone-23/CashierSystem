@@ -2,7 +2,7 @@ package controllers;
 
 import controllers.buttons.KeyboardController;
 import controllers.buttons.UtilityController;
-import controllers.display.ContentController;
+import services.ContentController;
 import controllers.display.DisplayDispatcher;
 import controllers.display.DisplayItemController;
 import controllers.panels.DuringArticlesController;

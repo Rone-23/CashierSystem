@@ -1,6 +1,6 @@
 package controllers.buttons;
 
-import controllers.display.ContentObserver;
+import services.ContentObserver;
 import controllers.transaction.OpenTransactionManager;
 import controllers.transaction.OpenTransactionObserver;
 import services.Item;

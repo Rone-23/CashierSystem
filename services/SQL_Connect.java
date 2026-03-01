@@ -1,5 +1,6 @@
 package services;
 
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class SQL_Connect {
         }
     }
 
-    public void removeFromStock(double quantityToSubtract, String name) {
+    public void removeFromStock(double quantityToSubtract, String name) throws SQLException{
         String sql = "UPDATE Article SET stock = stock - ? WHERE article_id = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -40,24 +41,36 @@ public class SQL_Connect {
             pstmt.setString(2, name);
             pstmt.executeUpdate();
 
-        } catch (SQLException e) {
-            System.out.println("Error updating stock: " + e.getMessage());
         }
     }
 
     public Item[] getAllItems() throws SQLException {
-        String sql = "select name, price from article";
+        String sql = """
+                SELECT a.name, a.price,
+                    EXISTS (
+                        SELECT 1
+                        FROM favorite_article f
+                        JOIN cashier c on f.cashier_id = c.cashier_id
+                        WHERE f.article_id = a.article_id
+                        AND f.cashier_id = 1
+                    ) as is_favorite
+                FROM article a
+                INNER JOIN subtype s ON a.subtype_id = s.subtype_id
+                INNER JOIN type t ON s.parent_type_id = t.type_id;
+                """;
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             ResultSet rs = pstmt.executeQuery();
 
             List<Item> items = new ArrayList<>();
             while (rs.next()) {
-                items.add(new ItemCountable(
+                Item item = new ItemCountable(
                         rs.getString("name"),
                         rs.getInt("price"),
                         0
-                ));
+                );
+                item.setIsFavorite(rs.getInt("is_favorite") > 0);
+                items.add(item);
             }
 
             return items.toArray(new Item[0]);
@@ -65,10 +78,20 @@ public class SQL_Connect {
     }
 
     public Item[] getItems(String type) throws SQLException {
-        String sql = "select name, price from article " +
-                "join subtype on article.subtype_id= subtype.subtype_id " +
-                "join type on subtype.subtype_id = type.type_id " +
-                "where type.type_name= ?";
+        String sql = """
+                SELECT a.name, a.price,
+                    EXISTS (
+                        SELECT 1
+                        FROM favorite_article f
+                        JOIN cashier c on f.cashier_id = c.cashier_id
+                        WHERE f.article_id = a.article_id
+                        AND f.cashier_id = 1
+                    ) as is_favorite
+                FROM article a
+                INNER JOIN subtype s ON a.subtype_id = s.subtype_id
+                INNER JOIN type t ON s.parent_type_id = t.type_id
+                WHERE t.type_name = ?;
+                """;
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1,type);
@@ -76,11 +99,13 @@ public class SQL_Connect {
 
             List<Item> items = new ArrayList<>();
             while (rs.next()) {
-                items.add(new ItemCountable(
+                Item item = new ItemCountable(
                         rs.getString("name"),
                         rs.getInt("price"),
                         0
-                ));
+                );
+                item.setIsFavorite(rs.getInt("is_favorite") > 0);
+                items.add(item);
             }
 
             return items.toArray(new Item[0]);
@@ -88,10 +113,20 @@ public class SQL_Connect {
     }
 
     public Item[] getItems(String type, String subtype) throws SQLException {
-        String sql = "select name, price from article " +
-                "join subtype on article.subtype_id= subtype.subtype_id  " +
-                "join type on subtype.subtype_id = type.type_id " +
-                "where type.type_name = ? and subtype.subtype_name = ?";
+        String sql = """
+                SELECT a.name, a.price,
+                    EXISTS (
+                        SELECT 1
+                        FROM favorite_article f
+                        JOIN cashier c on f.cashier_id = c.cashier_id
+                        WHERE f.article_id = a.article_id
+                        AND f.cashier_id = 1
+                    ) as is_favorite
+                FROM article a
+                INNER JOIN subtype s ON a.subtype_id = s.subtype_id
+                INNER JOIN type t ON s.parent_type_id = t.type_id
+                WHERE t.type_name = ? AND s.subtype_name = ?;
+                """;
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1,type);
@@ -100,11 +135,13 @@ public class SQL_Connect {
 
             List<Item> items = new ArrayList<>();
             while (rs.next()) {
-                items.add(new ItemCountable(
+                Item item = new ItemCountable(
                         rs.getString("name"),
                         rs.getInt("price"),
                         0
-                ));
+                );
+                item.setIsFavorite(rs.getInt("is_favorite") > 0);
+                items.add(item);
             }
 
             return items.toArray(new Item[0]);
@@ -117,7 +154,7 @@ public class SQL_Connect {
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             ResultSet rs = pstmt.executeQuery();
             pstmt.setString(1, type);
-            pstmt.executeUpdate();
+            pstmt.executeQuery();
 
             List<String> subtypeNames = new ArrayList<>();
             while (rs.next()) {
@@ -125,14 +162,11 @@ public class SQL_Connect {
             }
 
             return subtypeNames.toArray(new String[0]);
-        } catch (SQLException e) {
-            System.out.println("Error updating stock: " + e.getMessage());
         }
-        return null;
     }
 
 
-    public int getRows(String tableName){
+    public int getRows(String tableName) throws SQLException{
         String sql = "select count(*) from " + tableName;
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql) ){
@@ -142,13 +176,10 @@ public class SQL_Connect {
             }
 
         }
-        catch (SQLException e){
-            System.out.println("Error getting number of rows : " + e.getMessage());
-        }
-        return 0;
+        throw new SQLException("Amount of rows couldn't be retrieved from database. ");
     }
 
-    public int createTransaction(int cashierID ,int customerID){
+    public int createTransaction(int cashierID ,int customerID) throws SQLException {
         String sqlInsert =  "insert into \"transaction\" (cashier_id, created_at, customer_id)" +
                 "values (?,current_timestamp, ?)";
 
@@ -169,10 +200,11 @@ public class SQL_Connect {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }return  0;
+        }
+        throw new SQLException("No last transaction number could be found. ");
     }
 
-    public int getLastTransactionNumber(){
+    public int getLastTransactionNumber() throws SQLException{
         String sql = "select count(*) from \"transaction\" " +
                 "where date(created_at) = date('now');";
 
@@ -183,16 +215,15 @@ public class SQL_Connect {
             }
 
         }
-        catch (SQLException e){
-            System.out.println("Error getting number of rows : " + e.getMessage());
-        }
-        return 0;
+        throw new SQLException("No last transaction number could be found. ");
     }
 
     public Item[] getAllArticlesFromPastTransaction(int transactionID) throws SQLException{
-        String sql = "select name, amount, price_at_sale from in_transaction " +
-                "join article on in_transaction.article_id = article.article_id " +
-                "where transaction_id = ?";
+        String sql = """
+                select name, amount, price_at_sale from in_transaction
+                join article on in_transaction.article_id = article.article_id
+                where transaction_id = ?
+                """;
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1,transactionID);
@@ -310,7 +341,7 @@ public class SQL_Connect {
                 ResultSet rs = inTransactionAmount.executeQuery();
                 if(rs.next()){
                     if(rs.getInt("amount")<=0){
-                        throw new SQLException("This transaction does not contain this item.");
+                        throw new SQLException("This transaction does not contain this item. ");
                     }
                 }
             }
@@ -364,7 +395,7 @@ public class SQL_Connect {
         }
     }
 
-    public int getArticleID(String articleName){
+    public int getArticleID(String articleName) throws SQLException {
         String sql =  "SELECT article_id FROM Article WHERE name = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -373,9 +404,49 @@ public class SQL_Connect {
             if (rs.next()){
                 return rs.getInt("article_id");
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
-        return 0;
+        throw new SQLException("Item not found, no id could be returned. ");
+    }
+
+    public Item[] getFavoriteArticles(int cashierID) throws SQLException{
+        try(PreparedStatement getFavoriteArticles = conn.prepareStatement(
+                "SELECT article.name, article.price from favorite_article join article on favorite_article.article_id = article.article_id where cashier_id = ?"
+        )){
+            getFavoriteArticles.setInt(1,cashierID);
+            ResultSet rs =  getFavoriteArticles.executeQuery();
+            if(rs.next()){
+                List<Item> items = new ArrayList<>();
+                while (rs.next()) {
+                    items.add(new ItemCountable(
+                            rs.getString("name"),
+                            rs.getInt("price"),
+                            0
+                    ));
+                }
+
+                return items.toArray(new Item[0]);
+            }
+            throw new SQLException("No favorite articles for this cashierId. ");
+        }
+    }
+
+    public void connectFavoriteArticle(int cashierID, int articleID) throws SQLException{
+        try(PreparedStatement connectFavoriteArticle = conn.prepareStatement(
+                "INSERT INTO \"favorite_article\" VALUES(?,?)"
+        )){
+            connectFavoriteArticle.setInt(1, cashierID);
+            connectFavoriteArticle.setInt(2,articleID);
+            connectFavoriteArticle.executeUpdate();
+        }
+    }
+
+    public void disconnectFavoriteArticle(int cashierID, int articleID) throws SQLException{
+        try(PreparedStatement connectFavoriteArticle = conn.prepareStatement(
+                "DELETE FROM \"favorite_article\" WHERE cashier_id = ? AND article_id = ?;"
+        )){
+            connectFavoriteArticle.setInt(1, cashierID);
+            connectFavoriteArticle.setInt(2,articleID);
+            connectFavoriteArticle.executeUpdate();
+        }
     }
 }

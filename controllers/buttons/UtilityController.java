@@ -1,7 +1,7 @@
 package controllers.buttons;
 
 import assets.ButtonSet;
-import controllers.display.ContentController;
+import services.ContentController;
 import controllers.display.DisplayDispatcher;
 import controllers.panels.ViewManager;
 import controllers.transaction.OpenTransactionManager;

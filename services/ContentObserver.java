@@ -1,6 +1,4 @@
-package controllers.display;
-
-import services.Item;
+package services;
 
 public interface ContentObserver {
     default void notifyContentUpdate(String content){}

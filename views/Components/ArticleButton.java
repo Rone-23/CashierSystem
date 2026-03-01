@@ -6,10 +6,14 @@ import utility.ColorManipulation;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ArticleButton extends JToggleButton implements ContainsItem {
     private Color color;
@@ -19,6 +23,8 @@ public class ArticleButton extends JToggleButton implements ContainsItem {
 
     private boolean isStarred = false;
     private Rectangle2D starBounds;
+
+    private final List<ActionListener> starActionListeners = new ArrayList<>();
 
     public ArticleButton(Color color, Item item) {
         this.item = item;
@@ -35,6 +41,18 @@ public class ArticleButton extends JToggleButton implements ContainsItem {
         setMargin(new Insets(75, 50, 75, 50));
     }
 
+    public void addStarActionListener(ActionListener l) {
+        if (l != null) {
+            starActionListeners.add(l);
+        }
+    }
+
+    private void fireStarActionPerformed() {
+        ActionEvent event = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "starToggled");
+        for (ActionListener listener : starActionListeners) {
+            listener.actionPerformed(event);
+        }
+    }
 
     @Override
     protected void processMouseEvent(MouseEvent e) {
@@ -42,6 +60,7 @@ public class ArticleButton extends JToggleButton implements ContainsItem {
             if (e.getID() == MouseEvent.MOUSE_PRESSED) {
                 isStarred = !isStarred;
                 repaint();
+                fireStarActionPerformed();
             }
             e.consume();
             return;
@@ -57,7 +76,6 @@ public class ArticleButton extends JToggleButton implements ContainsItem {
         int arc = getWidth() / 9;
         int inset = getWidth() / 18;
 
-        // Background
         if (isSelected()) {
             g2.setPaint(ColorManipulation.darken(color, 0.88f));
         } else {
