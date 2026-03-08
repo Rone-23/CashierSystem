@@ -91,7 +91,7 @@ public class ArticleButton extends JToggleButton implements ContainsItem {
         int width = getWidth() - inset * 2 - insetSide * 2;
         int height = getHeight() - inset * 2 - insetBottom - insetTop;
 
-        g2.setPaint(ColorManipulation.lighten(color, 10f));
+        g2.setPaint(ColorManipulation.lighten(color, 0.7f));
         Shape inner = new RoundRectangle2D.Double(inset + insetSide, inset + insetTop, width, height - insetTop, arc, arc);
         g2.fill(inner);
 

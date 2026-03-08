@@ -30,7 +30,7 @@ public class DuringIdle extends JPanel implements ButtonFoundable {
 
         gbc.weightx = 0.2;
         gbc.gridx = 1;
-        buttonCluster = new ButtonCluster(ButtonSet.IDLE_UTILITY_NAMES.getStringLabels());
+        buttonCluster = new ButtonCluster(ButtonSet.IDLE_UTILITY_NAMES.getLabels());
         add(buttonCluster, gbc);
 
         GridBagConstraints gbcStatus = GridBagConstraintsBuilder.buildGridBagConstraints(1, 1);

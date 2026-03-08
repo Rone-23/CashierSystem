@@ -20,10 +20,10 @@ public class DuringArticles extends JPanel implements ButtonFoundable {
     private final Keyboard keyboard = new Keyboard();
     private final DisplayArticles displayArticles = new DisplayArticles();
     private final ArticleFilterButtonCluster articleFilterButtonCluster = new ArticleFilterButtonCluster();
-    private final JButton plusButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.ADD.toString(), Colors.DEFAULT_BLUE.getColor());
-    private final JButton minusButton = ButtonBuilder.buildChonkyButton("Ubrať", Colors.DEFAULT_BLUE.getColor());
-    private final JButton searchButton = ButtonBuilder.buildChonkyButton("Vyhladať", Colors.DEFAULT_BLUE.getColor());
-    private final JButton cancelButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.EXIT.toString(), Colors.DEFAULT_BLUE.getColor());
+    private final JButton plusButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.ADD.toString(), ButtonSet.ButtonLabel.ADD.getColor());
+    private final JButton minusButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.REMOVE.toString(), ButtonSet.ButtonLabel.REMOVE.getColor());
+    private final JButton searchButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.SEARCH.toString(), ButtonSet.ButtonLabel.SEARCH.getColor());
+    private final JButton cancelButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.EXIT.toString(), ButtonSet.ButtonLabel.EXIT.getColor());
     private final JPanel clusterBottom = createBottomCluster();
     private final StatusBar statusBar = new StatusBar();
 

@@ -1,6 +1,6 @@
 package views.Components;
 
-import assets.Colors;
+import assets.ButtonSet;
 import assets.Constants;
 import utility.ButtonBuilder;
 import utility.GridBagConstraintsBuilder;
@@ -11,63 +11,46 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ButtonCluster extends JPanel{
-    String[] buttonNames;
-//    private static final Map<String, JButton> buttonsMemory = new HashMap<>();
-    private final Map<String, JButton> buttons = new HashMap<>()
-//    {
-//        @Override
-//        public JButton put(String key, JButton value){
-//            if (buttonsMemory.containsKey(key)) {
-//                return super.put(key, buttonsMemory.get(key));
-//            } else {
-//                buttonsMemory.put(key, value);
-//                return super.put(key, value);
-//            }
-//        }
-//    }
-    ;
+    private final Map<String, JButton> buttons = new HashMap<>();
 
-    public ButtonCluster(String[] buttonNames){
-        this.buttonNames =  buttonNames;
+    public ButtonCluster(ButtonSet.ButtonLabel[] buttonLabels){
         setOpaque(false);
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
 
         //Making and Adding buttons
-        for( String name : buttonNames){
-            JButton button = ButtonBuilder.buildChonkyButton(name,  Colors.DEFAULT_BLUE.getColor());
-            buttons.put(name.toLowerCase(), button);
+        for( ButtonSet.ButtonLabel label : buttonLabels){
+            JButton button = ButtonBuilder.buildChonkyButton(label.toString(), label.getColor());
+            buttons.put(label.toString().toLowerCase(), button);
             add(button,gbc);
             gbc.gridy++;
         }
     }
 
-    public ButtonCluster(String[] buttonNames, Constants constant){
+    public ButtonCluster(ButtonSet.ButtonLabel[] buttonLabels, Constants constant){
         switch (constant){
             case HORIZONTAL -> {
-                this.buttonNames =  buttonNames;
                 setOpaque(false);
                 setLayout(new GridBagLayout());
                 GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
 
                 //Making and Adding buttons
-                for( String name : buttonNames){
-                    JButton button = ButtonBuilder.buildChonkyButton(name,  Colors.DEFAULT_BLUE.getColor());
-                    buttons.put(name.toLowerCase(), button);
+                for( ButtonSet.ButtonLabel label : buttonLabels){
+                    JButton button = ButtonBuilder.buildChonkyButton(label.toString(), label.getColor());
+                    buttons.put(label.toString().toLowerCase(), button);
                     add(button,gbc);
                     gbc.gridx++;
                 }
             }
             case VERTICAL -> {
-                 this.buttonNames =  buttonNames;
                  setOpaque(false);
                  setLayout(new GridBagLayout());
                  GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
 
                  //Making and Adding buttons
-                 for( String name : buttonNames){
-                     JButton button = ButtonBuilder.buildChonkyButton(name,  Colors.DEFAULT_BLUE.getColor());
-                     buttons.put(name.toLowerCase(), button);
+                 for( ButtonSet.ButtonLabel label : buttonLabels){
+                     JButton button = ButtonBuilder.buildChonkyButton(label.toString(), label.getColor());
+                     buttons.put(label.toString().toLowerCase(), button);
                      add(button,gbc);
                      gbc.gridy++;
                  }

@@ -39,13 +39,16 @@ public class OpenTransactionManager implements OpenTransactionObserver{
     }
 
     public void addPayment(ActionEvent actionEvent){
-        System.out.printf("Action event when addPayment: %s \n",actionEvent.getActionCommand());
         getOpenTransaction().pay(actionEvent);
     }
 
     public void addItem(Item item){
         getOpenTransaction().addItem(item);
         System.out.printf("Name %s Amount %d Price %d\n",item.getName(), item.getAmount(), item.getPrice());
+    }
+
+    public void removeItem(Item item){
+        getOpenTransaction().removeItem(item);
     }
 
     @Override

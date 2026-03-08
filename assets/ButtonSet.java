@@ -4,11 +4,6 @@ import java.awt.*;
 
 public enum ButtonSet {
 
-    // --- Define the Button Sets (Configurations) ---
-
-    /**
-     * UTILITY_NAMES : Names of buttons on the control panel
-     */
     UTILITY_NAMES(new ButtonLabel[]{
             ButtonLabel.ARTICLES,
             ButtonLabel.LAST_ARTICLE,
@@ -19,9 +14,6 @@ public enum ButtonSet {
             ButtonLabel.VOUCHER
     }),
 
-    /**
-     * CASH_NAMES : Examples of available paper currency
-     */
     CASH_NAMES(new ButtonLabel[]{
             ButtonLabel.FIVE,
             ButtonLabel.TEN,
@@ -37,9 +29,6 @@ public enum ButtonSet {
             ButtonLabel.EXIT
     }),
 
-    /**
-     * IDLE_UTILITY_NAMES : Names of buttons on the control panel
-     */
     IDLE_UTILITY_NAMES(new ButtonLabel[]{
             ButtonLabel.BEGIN,
             ButtonLabel.CREATE_CARD,
@@ -49,7 +38,6 @@ public enum ButtonSet {
             ButtonLabel.PAUSE,
             ButtonLabel.PADAVAN,
     });
-    // --- Internal Properties and Constructor ---
 
     private final ButtonLabel[] labels;
 
@@ -87,13 +75,13 @@ public enum ButtonSet {
      */
     public enum ButtonLabel {
         // UTILITY_BUTTON Labels
-        ARTICLES("Artikle", Colors.DEFAULT_BLUE),
-        LAST_ARTICLE("Posledna polozka", Colors.DEFAULT_BLUE),
-        STORNO("Storno", Colors.DEFAULT_BLUE),
-        CASH("Hotovost", Colors.DEFAULT_BLUE),
-        CARD("Karta", Colors.DEFAULT_BLUE),
-        FOOD_TICKETS("Stravenky", Colors.DEFAULT_BLUE),
-        VOUCHER("Poukážky", Colors.DEFAULT_BLUE),
+        ARTICLES("Artikle", Colors.MILD_YELLOW),
+        LAST_ARTICLE("Posledna polozka", Colors.MILD_YELLOW),
+        STORNO("Storno", Colors.DANGER_RED),
+        CASH("Hotovost", Colors.SUCCESS_GREEN),
+        CARD("Karta", Colors.SUCCESS_GREEN),
+        FOOD_TICKETS("Stravenky", Colors.SUCCESS_GREEN),
+        VOUCHER("Poukážky", Colors.SUCCESS_GREEN),
 
         //CASH_BUTTON Labels
         FIVE("5€", Colors.DEFAULT_BLUE),
@@ -117,9 +105,10 @@ public enum ButtonSet {
 
 
         // Shared Labels
-        EXIT("Naspäť", Colors.DEFAULT_BLUE),
-        ADD("Pridat", Colors.DEFAULT_BLUE),
-        REMOVE("Ubrať", Colors.DEFAULT_BLUE);
+        EXIT("Naspäť", Colors.DANGER_RED),
+        ADD("Pridat", Colors.MILD_YELLOW),
+        REMOVE("Ubrať", Colors.MILD_YELLOW),
+        SEARCH("Vyhladať", Colors.DEFAULT_BLUE);
 
         private final String displayValue;
         private final Colors color;

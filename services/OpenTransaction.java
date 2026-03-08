@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 public class OpenTransaction implements ContentObserver {
-    private static int transactionID;
+    private final int transactionID;
     private final LocalDateTime  transactionDateTime;
     private final static List<OpenTransactionObserver> observerList = new ArrayList<>();
     private final Map<String,Item> itemsInTransaction= new HashMap<>();
@@ -36,6 +36,17 @@ public class OpenTransaction implements ContentObserver {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        for(OpenTransactionObserver observer : observerList){
+            observer.onCreate(this);
+        }
+    }
+
+    public OpenTransaction(int transactionID, String date){
+        this.transactionDateTime = LocalDateTime.parse(date);
+        this.transactionDateTime.format(dateTimeFormatter);
+        this.transactionID = transactionID;
+
 
         for(OpenTransactionObserver observer : observerList){
             observer.onCreate(this);
@@ -95,7 +106,6 @@ public class OpenTransaction implements ContentObserver {
             }catch (SQLException e){
                 NotificationController.notifyObservers(e.toString(),5000);
             }
-
         }
     }
 
