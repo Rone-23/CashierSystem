@@ -30,7 +30,7 @@ public class DuringRegister extends JPanel implements ButtonFoundable {
     final JPanel rightPanel = new JPanel();
     JPanel displayPanel = new JPanel();
     CardLayout cardLayoutDisplay = new CardLayout();
-    private final StatusBar statusBar = new StatusBar();
+    private final StatusBar     statusBar = new StatusBar();
 
     public DuringRegister() {
         setLayout(new GridBagLayout());
@@ -143,9 +143,13 @@ public class DuringRegister extends JPanel implements ButtonFoundable {
         rightPanel.setLayout(cardLayout);
         rightPanel.setBackground(Colors.BACKGROUND_GRAY.getColor());
 
+        JPanel commonButtonClusterPanel = new JPanel(new BorderLayout());
+        commonButtonClusterPanel.setOpaque(false);
+        commonButtonClusterPanel.add(commonButtonCluster, BorderLayout.NORTH);
+
         rightPanel.add(utilityButtonCluster, "UTILITY_BUTTON_CLUSTER");
         rightPanel.add(cashButtonCluster, "CASH_BUTTON_CLUSTER");
-        rightPanel.add(commonButtonCluster, "COMMON_BUTTON_CLUSTER");
+        rightPanel.add(commonButtonClusterPanel, "COMMON_BUTTON_CLUSTER");
 
         return rightPanel;
     }

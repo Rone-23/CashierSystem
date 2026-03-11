@@ -6,6 +6,7 @@ import java.awt.*;
 import views.panels.DuringIdle;
 import views.panels.DuringRegister;
 import views.panels.DuringArticles;
+import views.panels.DuringReturnTransaction;
 
 public class ViewManager {
     private static ViewManager instance;
@@ -17,6 +18,7 @@ public class ViewManager {
     private final DuringIdle duringIdle;
     private final DuringRegister duringRegister;
     private final DuringArticles duringArticles;
+    private final DuringReturnTransaction duringReturn;
 
     private ViewManager() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -32,10 +34,12 @@ public class ViewManager {
         duringIdle = new DuringIdle();
         duringRegister = new DuringRegister();
         duringArticles = new DuringArticles();
+        duringReturn = new DuringReturnTransaction();
 
         cardPanel.add(duringIdle, "IDLE");
         cardPanel.add(duringRegister, "REGISTER");
         cardPanel.add(duringArticles, "ARTICLES");
+        cardPanel.add(duringReturn, "RETURN-TRANSACTION");
 
         mainFrame.add(cardPanel);
         mainFrame.setLocationRelativeTo(null);
@@ -61,6 +65,10 @@ public class ViewManager {
         cardLayout.show(cardPanel, "IDLE");
     }
 
+    public void showReturnTransaction() {
+        cardLayout.show(cardPanel, "RETURN-TRANSACTION");
+    }
+
     public JFrame getMainFrame() {
         return mainFrame;
     }
@@ -75,6 +83,10 @@ public class ViewManager {
 
     public DuringRegister getDuringRegister() {
         return duringRegister;
+    }
+
+    public DuringReturnTransaction getDuringReturn() {
+        return duringReturn;
     }
 
 }
