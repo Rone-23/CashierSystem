@@ -13,8 +13,6 @@ public class DisplayController implements OpenTransactionObserver, ContentObserv
     public DisplayController(Display display){
         this.display = display;
     }
-
-
     //Observer
 
     @Override

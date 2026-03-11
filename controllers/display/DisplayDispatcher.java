@@ -30,6 +30,7 @@ public class DisplayDispatcher{
             addActiveDisplay("REGISTER-AMOUNT");
             addActiveDisplay("ARTICLES-SPLIT");
             removeActiveDisplay("REGISTER-TOTAL");
+            removeActiveDisplay("CODE-DISPLAY");
         } catch (Exception _) {
         }
     }
@@ -38,7 +39,18 @@ public class DisplayDispatcher{
         try {
             removeActiveDisplay("REGISTER-AMOUNT");
             removeActiveDisplay("ARTICLES-SPLIT");
+            removeActiveDisplay("CODE-DISPLAY");
             addActiveDisplay("REGISTER-TOTAL");
+        } catch (Exception _) {
+        }
+    }
+
+    public static void activeDisplayForCode(){
+        try {
+            removeActiveDisplay("REGISTER-AMOUNT");
+            removeActiveDisplay("ARTICLES-SPLIT");
+            removeActiveDisplay("REGISTER-TOTAL");
+            addActiveDisplay("CODE-DISPLAY");
         } catch (Exception _) {
         }
     }

@@ -15,7 +15,7 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable{
 
     private final Dimension dimension = new Dimension(500, 114);
 
-    private final Display inputDisplay = new Display(Constants.TOTAL);
+    private final Display inputDisplay = new Display(Constants.WEIGHT);
     private final Keyboard keyboard = new Keyboard();
     private ButtonCluster actionButtons;
 

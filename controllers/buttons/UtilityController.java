@@ -17,9 +17,14 @@ public class UtilityController {
         #Controlling all the buttons that are on the right side in DuringIdle
          */
         ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.BEGIN.toString()).addActionListener(_ -> ViewManager.getInstance().showArticles());
-        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.RETURN.toString()).addActionListener(e -> ViewManager.getInstance().showReturnTransaction(e));
-        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.COPY_RECEIPT.toString()).addActionListener(e -> ViewManager.getInstance().showReturnTransaction(e));
-
+        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.RETURN.toString()).addActionListener(e -> {
+            ViewManager.getInstance().showReturnTransaction(e);
+            DisplayDispatcher.activeDisplayForCode();
+        });
+        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.COPY_RECEIPT.toString()).addActionListener(e -> {
+            ViewManager.getInstance().showReturnTransaction(e);
+            DisplayDispatcher.activeDisplayForCode();
+        });
         /*
         #Controlling all the buttons that are on the right side in DuringRegister
          */
@@ -106,7 +111,10 @@ public class UtilityController {
           /*
         #Controlling buttons on bottom side of DuringArticles
          */
-        ViewManager.getInstance().getDuringReturn().getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(_ -> ViewManager.getInstance().showIdle());
+        ViewManager.getInstance().getDuringReturn().getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(_ -> {
+            ViewManager.getInstance().showIdle();
+            DisplayDispatcher.activeDisplayForAmount();
+        });
     }
 
 }
