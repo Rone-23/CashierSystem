@@ -2,6 +2,7 @@ package controllers.panels;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 import views.panels.DuringIdle;
 import views.panels.DuringRegister;
@@ -36,6 +37,8 @@ public class ViewManager {
         duringArticles = new DuringArticles();
         duringReturn = new DuringReturnTransaction();
 
+        duringReturn.setName("asdasd");
+
         cardPanel.add(duringIdle, "IDLE");
         cardPanel.add(duringRegister, "REGISTER");
         cardPanel.add(duringArticles, "ARTICLES");
@@ -65,7 +68,7 @@ public class ViewManager {
         cardLayout.show(cardPanel, "IDLE");
     }
 
-    public void showReturnTransaction() {
+    public void showReturnTransaction(ActionEvent e) {
         cardLayout.show(cardPanel, "RETURN-TRANSACTION");
     }
 

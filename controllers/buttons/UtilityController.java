@@ -17,7 +17,8 @@ public class UtilityController {
         #Controlling all the buttons that are on the right side in DuringIdle
          */
         ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.BEGIN.toString()).addActionListener(_ -> ViewManager.getInstance().showArticles());
-        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.RETURN.toString()).addActionListener(_ -> ViewManager.getInstance().showReturnTransaction());
+        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.RETURN.toString()).addActionListener(e -> ViewManager.getInstance().showReturnTransaction(e));
+        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.COPY_RECEIPT.toString()).addActionListener(e -> ViewManager.getInstance().showReturnTransaction(e));
 
         /*
         #Controlling all the buttons that are on the right side in DuringRegister
@@ -101,6 +102,11 @@ public class UtilityController {
         ViewManager.getInstance().getDuringArticles().getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(_ -> ViewManager.getInstance().showRegister());
         ViewManager.getInstance().getDuringArticles().getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(addItemAction);
         ViewManager.getInstance().getDuringArticles().getButton(ButtonSet.ButtonLabel.REMOVE.toString()).addActionListener(new RemoveItemAction());
+
+          /*
+        #Controlling buttons on bottom side of DuringArticles
+         */
+        ViewManager.getInstance().getDuringReturn().getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(_ -> ViewManager.getInstance().showIdle());
     }
 
 }
