@@ -2,8 +2,9 @@ package controllers;
 
 import controllers.buttons.KeyboardController;
 import controllers.buttons.UtilityController;
+import controllers.panels.DuringCodeEnterController;
 import controllers.panels.DuringReturnTransactionController;
-import services.ContentController;
+import controllers.transaction.ContentController;
 import controllers.display.DisplayDispatcher;
 import controllers.display.DisplayItemController;
 import controllers.panels.DuringArticlesController;
@@ -18,6 +19,7 @@ public class MainController {
         OpenTransaction.addObserver(contentController);
         new DuringRegisterController();
         new DuringArticlesController();
+        new DuringCodeEnterController();
         new DuringReturnTransactionController();
 
         DisplayItemController displayItemController = new DisplayItemController();

@@ -111,13 +111,16 @@ CREATE TABLE  IF  NOT EXISTS "favorite_article" (
     FOREIGN KEY ("cashier_id") REFERENCES "cashier"("cashier_id"),
     FOREIGN KEY ("article_id") REFERENCES "article"("article_id")
 );
+CREATE TABLE IF NOT EXISTS "returned_items" (
+    "transaction_id" INTEGER NOT NULL,
+    "article_id" INTEGER NOT NULL,
+    "amount" INTEGER NOT NULL,
+    PRIMARY KEY ("transaction_id", "article_id"),
+    FOREIGN KEY ("transaction_id") REFERENCES "transaction"("transaction_id"),
+    FOREIGN KEY ("article_id") REFERENCES "article"("article_id")
+);
 
-ALTER TABLE "transaction" ADD COLUMN "cash" int, ADD COLUMN "card" int, ADD COLUMN "voucher" int, ADD COLUMN "food_ticket" int;
-
-
-
-
-COMMIT;]]></console>
+ALTER TABLE "transaction" ADD COLUMN "cash" int, ADD COLUMN "card" int, ADD COLUMN "voucher" int, ADD COLUMN "food_ticket" int;]]></console>
       <console name="Import" type="STANDARD" schema="main" session="Main"><![CDATA[-- 1. INSERT TYPES
 INSERT INTO "type" VALUES (1,'OVOCIE');
 INSERT INTO "type" VALUES (2,'ZELENINA');
@@ -195,12 +198,17 @@ join "transaction" on in_transaction.transaction_id = "transaction".transaction_
 join article on in_transaction.article_id = article.article_id where date(created_at) = date('now');
 
 
+select "transaction".transaction_id as ID, article.name as Artikel, in_transaction.amount as Pocet, "transaction".created_at as Vytvorene
+from in_transaction
+join "transaction" on in_transaction.transaction_id = "transaction".transaction_id
+join article on in_transaction.article_id = article.article_id order by Vytvorene limit 100;
+
 --retrieve last transaction parameters
 select "transaction".transaction_id as ID, article.name as Artikel, in_transaction.amount as Pocet, "transaction".created_at as Vytoverene
 from in_transaction
 join "transaction" on in_transaction.transaction_id = "transaction".transaction_id
 join article on in_transaction.article_id = article.article_id where date(created_at) = date('now')
-order by "transaction".transaction_id desc limit  1;
+order by "transaction".transaction_id desc limit 1;
 
 SELECT * from "transaction" order by transaction_id desc limit  1;
 
@@ -339,7 +347,23 @@ SELECT
     ) as is_favorite
 FROM article a
 INNER JOIN subtype s ON a.subtype_id = s.subtype_id
-INNER JOIN type t ON s.parent_type_id = t.type_id;]]></console>
+INNER JOIN type t ON s.parent_type_id = t.type_id;
+z
+select name, amount, price_at_sale from in_transaction
+                join article on in_transaction.article_id = article.article_id
+                where transaction_id = 409;
+
+select created_at from "transaction" where transaction_id = 409;
+
+--Remove all unused transaction
+DELETE FROM "transaction" WHERE transaction_id NOT IN (SELECT transaction_id FROM "in_transaction");
+
+SELECT r.amount as Returned, i.amount as "In transaction", r.amount+i.amount FROM "Transaction" as t
+join "returned_items" as r on t."transaction_id" = r."transaction_id"
+join "in_transaction" as i on t."transaction_id" = i."transaction_id" where t."transaction_id" = 417;
+
+SELECT name, i.amount from "in_transaction" as i
+natural join "transaction" natural join "article" where "transaction_id" = 433;]]></console>
     </connection>
     <connection id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5">
       <console name="Commit of articles" type="STANDARD" schema="main" session="Main"><![CDATA[INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('ROZOK OS SENSK', 0.29, 500.00,'PECIVO','BEZNE-PECIVO');
@@ -1222,7 +1246,9 @@ SELECT * FROM TRANSACTIONS;]]></console>
     </general-settings>
   </component>
   <component name="DBNavigator.Project.StatementExecutionManager">
-    <execution-variables />
+    <execution-variables>
+      <file file-url="db://ab16c47c-8eaf-4ed2-9b5c-14849f45418b/consoles/New  Database" />
+    </execution-variables>
     <execution-variable-types />
   </component>
 </project>

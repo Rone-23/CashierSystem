@@ -12,7 +12,6 @@ public class DuringRegisterController {
         DuringRegister duringRegister = ViewManager.getInstance().getDuringRegister();
 
         DisplayController displayControllerTotal = new DisplayController(duringRegister.getDisplayTotal());
-//        DisplayDispatcher.addDisplay("REGISTER-TOTAL", displayControllerTotal);
         OpenTransaction.addObserver(displayControllerTotal);
 
         DisplayController displayControllerTopAmount = new DisplayController(duringRegister.getDisplayTopAmount());

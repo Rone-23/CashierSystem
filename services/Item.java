@@ -38,7 +38,7 @@ public abstract class Item {
     public boolean getIsFavorite(){return isFavorite;}
     public double getTotalAmount(){return totalAmount; }
     public static void setTotalAmountZero(){totalAmount = 0;}
-    String getInfo(){return String.format("Name: %s Price: %s Amount: %s",this.name, this.price, this.amount);}
+    public String toString(){return String.format("Name: %s Price: %s Amount: %s",this.name, this.price, this.amount);}
 
     @Override
     public boolean equals(Object obj) {

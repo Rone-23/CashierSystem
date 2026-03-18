@@ -7,7 +7,7 @@ import java.util.List;
 
 public class SQL_Connect {
     private Connection conn;
-    static SQL_Connect instance;
+    private static SQL_Connect instance;
 
     private SQL_Connect() {
         connect();
@@ -233,13 +233,191 @@ public class SQL_Connect {
             while (rs.next()) {
                 items.add(new ItemCountable(
                         rs.getString("name"),
-                        rs.getInt("price"),
+                        rs.getInt("price_at_sale"),
                         rs.getInt("amount")
                 ));
             }
 
             return items.toArray(new Item[0]);
         }
+    }
+
+    /**
+     * Calculates the "Original Purchase Amount" by summing current transaction quantity
+     * and already returned quantity. This is the absolute maximum allowed for this item.
+     */
+    public int getMaxAllowedAmount(int transactionId, int articleId) throws SQLException {
+        int inTrans = 0;
+        int inReturns = 0;
+
+        String sql = "SELECT " +
+                "(SELECT amount FROM in_transaction WHERE transaction_id = ? AND article_id = ?) as trans_qty, " +
+                "(SELECT amount FROM returned_items WHERE transaction_id = ? AND article_id = ?) as return_qty";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, transactionId);
+            pstmt.setInt(2, articleId);
+            pstmt.setInt(3, transactionId);
+            pstmt.setInt(4, articleId);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                inTrans = rs.getInt("trans_qty");
+                inReturns = rs.getInt("return_qty");
+            }
+        }
+        return inTrans + inReturns;
+    }
+
+    /**
+     * Moves items from the transaction to returns.
+     * Constraint: Cannot return more than what is currently in the transaction.
+     */
+    public void returnItem(int transactionId, int articleId, int amountToReturn) throws SQLException {
+        if (amountToReturn <= 0) return;
+
+        try {
+            conn.setAutoCommit(false);
+
+            // Verify current amount in transaction
+            int currentInTrans = 0;
+            try (PreparedStatement pstmt = conn.prepareStatement("SELECT amount FROM in_transaction WHERE transaction_id = ? AND article_id = ?")) {
+                pstmt.setInt(1, transactionId);
+                pstmt.setInt(2, articleId);
+                ResultSet rs = pstmt.executeQuery();
+                if (rs.next()) currentInTrans = rs.getInt("amount");
+            }
+
+            if (amountToReturn > currentInTrans) {
+                throw new SQLException("Cannot return " + amountToReturn + " items. Only " + currentInTrans + " are in the active transaction.");
+            }
+
+            // 1. Decrease Transaction
+            if (currentInTrans == amountToReturn) {
+                try (PreparedStatement pstmt = conn.prepareStatement("DELETE FROM in_transaction WHERE transaction_id = ? AND article_id = ?")) {
+                    pstmt.setInt(1, transactionId);
+                    pstmt.setInt(2, articleId);
+                    pstmt.executeUpdate();
+                }
+            } else {
+                try (PreparedStatement pstmt = conn.prepareStatement("UPDATE in_transaction SET amount = amount - ? WHERE transaction_id = ? AND article_id = ?")) {
+                    pstmt.setInt(1, amountToReturn);
+                    pstmt.setInt(2, transactionId);
+                    pstmt.setInt(3, articleId);
+                    pstmt.executeUpdate();
+                }
+            }
+
+            // 2. Increase Returns
+            String upsertReturn = "INSERT INTO returned_items (transaction_id, article_id, amount) VALUES (?, ?, ?) " +
+                    "ON CONFLICT(transaction_id, article_id) DO UPDATE SET amount = amount + EXCLUDED.amount";
+            try (PreparedStatement pstmt = conn.prepareStatement(upsertReturn)) {
+                pstmt.setInt(1, transactionId);
+                pstmt.setInt(2, articleId);
+                pstmt.setInt(3, amountToReturn);
+                pstmt.executeUpdate();
+            }
+
+            // 3. Update Stock (Items coming back to store)
+            updateArticleStock(articleId, amountToReturn);
+
+            conn.commit();
+        } catch (SQLException e) {
+            conn.rollback();
+            throw e;
+        } finally {
+            conn.setAutoCommit(true);
+        }
+    }
+
+    /**
+     * Moves items from returns back to transaction.
+     * Constraint: The final 'in_transaction' amount cannot exceed (Current Trans + Current Returns).
+     */
+    public void addBackToTransaction(int transactionId, int articleId, int amountToAddBack) throws SQLException {
+        if (amountToAddBack <= 0) return;
+
+        try {
+            conn.setAutoCommit(false);
+
+            // 1. Calculate the Hard Max (Trans + Returns)
+            int maxPossible = getMaxAllowedAmount(transactionId, articleId);
+
+            // 2. Check current returns to see if we have enough to move back
+            int currentReturns = 0;
+            try (PreparedStatement pstmt = conn.prepareStatement("SELECT amount FROM returned_items WHERE transaction_id = ? AND article_id = ?")) {
+                pstmt.setInt(1, transactionId);
+                pstmt.setInt(2, articleId);
+                ResultSet rs = pstmt.executeQuery();
+                if (rs.next()) currentReturns = rs.getInt("amount");
+            }
+
+            if (amountToAddBack > currentReturns) {
+                throw new SQLException("Cannot add back " + amountToAddBack + ". Only " + currentReturns + " are in the returns list.");
+            }
+
+            // 3. Decrease Returns
+            if (currentReturns == amountToAddBack) {
+                try (PreparedStatement pstmt = conn.prepareStatement("DELETE FROM returned_items WHERE transaction_id = ? AND article_id = ?")) {
+                    pstmt.setInt(1, transactionId);
+                    pstmt.setInt(2, articleId);
+                    pstmt.executeUpdate();
+                }
+            } else {
+                try (PreparedStatement pstmt = conn.prepareStatement("UPDATE returned_items SET amount = amount - ? WHERE transaction_id = ? AND article_id = ?")) {
+                    pstmt.setInt(1, amountToAddBack);
+                    pstmt.setInt(2, transactionId);
+                    pstmt.setInt(3, articleId);
+                    pstmt.executeUpdate();
+                }
+            }
+
+            // 4. Increase Transaction
+            String upsertTrans = "INSERT INTO in_transaction (transaction_id, article_id, amount, price_at_sale) " +
+                    "VALUES (?, ?, ?, (SELECT price FROM article WHERE article_id = ?)) " +
+                    "ON CONFLICT(transaction_id, article_id) DO UPDATE SET amount = amount + EXCLUDED.amount";
+            try (PreparedStatement pstmt = conn.prepareStatement(upsertTrans)) {
+                pstmt.setInt(1, transactionId);
+                pstmt.setInt(2, articleId);
+                pstmt.setInt(3, amountToAddBack);
+                pstmt.setInt(4, articleId);
+                pstmt.executeUpdate();
+            }
+
+            // 5. Update Stock (Items leaving store again)
+            updateArticleStock(articleId, -amountToAddBack);
+
+            conn.commit();
+        } catch (SQLException e) {
+            conn.rollback();
+            throw e;
+        } finally {
+            conn.setAutoCommit(true);
+        }
+    }
+
+    private void updateArticleStock(int articleId, int change) throws SQLException {
+        try (PreparedStatement pstmt = conn.prepareStatement("UPDATE article SET stock = stock + ? WHERE article_id = ?")) {
+            pstmt.setInt(1, change);
+            pstmt.setInt(2, articleId);
+            pstmt.executeUpdate();
+        }
+    }
+
+    public String getDateOfTransaction(int transactionID) throws SQLException{
+        String sql = """
+                select created_at from 'transaction' where transaction_id = ?
+                """;
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1,transactionID);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()){
+                return rs.getString(1);
+            }
+        }
+        throw new SQLException("No transaction found for this TransactionID.");
     }
 
     public int addToTransaction(

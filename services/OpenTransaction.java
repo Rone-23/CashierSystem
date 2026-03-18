@@ -1,6 +1,7 @@
 package services;
 
 import controllers.notifications.NotificationController;
+import controllers.transaction.ContentObserver;
 import controllers.transaction.OpenTransactionObserver;
 
 import java.awt.event.ActionEvent;
@@ -17,12 +18,13 @@ public class OpenTransaction implements ContentObserver {
     private final LocalDateTime  transactionDateTime;
     private final static List<OpenTransactionObserver> observerList = new ArrayList<>();
     private final Map<String,Item> itemsInTransaction= new HashMap<>();
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private int content = 1;
     private int payedCard = 0;
     private int payedCash = 0;
     private int payedFoodTicket = 0;
     private int payedVoucher = 0;
+    private final boolean isReturn;
     //**EPSILON is there because of using Double**//
     private final Double EPSILON = 0.0000001;
     //**day is stored using sql.getLastTimeStamp() and split it into day ("dd-MM-yyyy HH:mm:ss")**//
@@ -36,18 +38,16 @@ public class OpenTransaction implements ContentObserver {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
+        isReturn=false;
         for(OpenTransactionObserver observer : observerList){
             observer.onCreate(this);
         }
     }
 
     public OpenTransaction(int transactionID, String date){
-        this.transactionDateTime = LocalDateTime.parse(date);
-        this.transactionDateTime.format(dateTimeFormatter);
+        this.transactionDateTime = LocalDateTime.parse(date,dateTimeFormatter);
         this.transactionID = transactionID;
-
-
+        isReturn=true;
         for(OpenTransactionObserver observer : observerList){
             observer.onCreate(this);
         }
@@ -58,7 +58,20 @@ public class OpenTransaction implements ContentObserver {
 
         if (!itemsInTransaction.containsKey(item.getName())){
             try {
-                SQL_Connect.getInstance().addToTransaction(transactionID,SQL_Connect.instance.getArticleID(item.getName()), item.getAmount(),item.getPrice());
+                if(isReturn){
+                    SQL_Connect.getInstance().addBackToTransaction(
+                            transactionID,
+                            SQL_Connect.getInstance().getArticleID(item.getName()),
+                            content
+                    );
+                }else {
+                    SQL_Connect.getInstance().addToTransaction(
+                            transactionID,
+                            SQL_Connect.getInstance().getArticleID(item.getName()),
+                            item.getAmount(),
+                            item.getPrice()
+                    );
+                }
             } catch (SQLException e) {
                 NotificationController.notifyObservers(e.toString(),5000);
                 return;
@@ -69,7 +82,19 @@ public class OpenTransaction implements ContentObserver {
             ItemCountable itemCountable = (ItemCountable) itemsInTransaction.get(item.getName());
             item=itemCountable;
             try {
-                SQL_Connect.getInstance().addToTransaction(transactionID,SQL_Connect.instance.getArticleID(item.getName()), item.getAmount(),item.getPrice());
+                if(isReturn){
+                    SQL_Connect.getInstance().addBackToTransaction(
+                            transactionID,
+                            SQL_Connect.getInstance().getArticleID(item.getName()),
+                            content
+                    );
+                }else {
+                    SQL_Connect.getInstance().addToTransaction(
+                            transactionID,
+                            SQL_Connect.getInstance().getArticleID(item.getName()),
+                            item.getAmount(),
+                            item.getPrice());
+                }
             } catch (SQLException e) {
                 NotificationController.notifyObservers(e.toString(),5000);
                 return;
@@ -87,7 +112,19 @@ public class OpenTransaction implements ContentObserver {
 
         if(itemsInTransaction.containsKey(item.getName())){
             try {
-                SQL_Connect.getInstance().removeFromTransaction(transactionID, SQL_Connect.instance.getArticleID(item.getName()), content);
+                if(isReturn){
+                    SQL_Connect.getInstance().returnItem(
+                            transactionID,
+                            SQL_Connect.getInstance().getArticleID(item.getName()),
+                            content
+                    );
+                } else {
+                    SQL_Connect.getInstance().removeFromTransaction(
+                            transactionID,
+                            SQL_Connect.getInstance().getArticleID(item.getName()),
+                            content
+                    );
+                }
 
                 if (item.getAmount() - content <= 0) {
                     itemsInTransaction.remove(item.getName());
@@ -105,6 +142,15 @@ public class OpenTransaction implements ContentObserver {
                 }
             }catch (SQLException e){
                 NotificationController.notifyObservers(e.toString(),5000);
+            }
+        }
+    }
+
+    public void loadItemsIntoTransaction(Item[] items){
+        for(Item item : items){
+            itemsInTransaction.put(item.getName(),item);
+            for(OpenTransactionObserver observer : observerList){
+                observer.onItemAdd(item);
             }
         }
     }

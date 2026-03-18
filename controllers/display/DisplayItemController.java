@@ -18,22 +18,27 @@ public class DisplayItemController implements OpenTransactionObserver {
     public void onItemAdd(Item item) {
         JToggleButton jToggleButtonArticles = ViewManager.getInstance().getDuringArticles().getDisplayScrollableItems().addItem(item);
         JToggleButton jToggleButtonRegister = ViewManager.getInstance().getDuringRegister().getDisplayScrollableItems().addItem(item);
-        if(jToggleButtonArticles != null && jToggleButtonRegister != null) {
+        JToggleButton jToggleButtonReturn = ViewManager.getInstance().getDuringReturn().getDisplayScrollableItems().addItem(item);
+        if(jToggleButtonArticles != null && jToggleButtonRegister != null && jToggleButtonReturn != null) {
             jToggleButtonArticles.addActionListener(articleSelectAction);
             jToggleButtonRegister.addActionListener(articleSelectAction);
+            jToggleButtonReturn.addActionListener(articleSelectAction);
         }
+
     }
 
     @Override
     public void onItemRemove(Item item) {
         ViewManager.getInstance().getDuringArticles().getDisplayScrollableItems().removeItem(item);
         ViewManager.getInstance().getDuringRegister().getDisplayScrollableItems().removeItem(item);
+        ViewManager.getInstance().getDuringReturn().getDisplayScrollableItems().removeItem(item);
     }
 
     @Override
     public void onDestroy() {
         ViewManager.getInstance().getDuringArticles().getDisplayScrollableItems().clear();
         ViewManager.getInstance().getDuringRegister().getDisplayScrollableItems().clear();
+        ViewManager.getInstance().getDuringReturn().getDisplayScrollableItems().clear();
 
     }
 
@@ -41,5 +46,6 @@ public class DisplayItemController implements OpenTransactionObserver {
     public void onAddedPayment(int toPayLeft, String typeOfPayment, int addedAmount) {
         ViewManager.getInstance().getDuringArticles().getDisplayScrollableItems().addPayment(typeOfPayment, addedAmount);
         ViewManager.getInstance().getDuringRegister().getDisplayScrollableItems().addPayment(typeOfPayment, addedAmount);
+        ViewManager.getInstance().getDuringReturn().getDisplayScrollableItems().addPayment(typeOfPayment, addedAmount);
     }
 }

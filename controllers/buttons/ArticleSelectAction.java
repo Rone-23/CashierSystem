@@ -1,7 +1,7 @@
 package controllers.buttons;
 
-import services.ContentController;
-import services.ContentObserver;
+import controllers.transaction.ContentController;
+import controllers.transaction.ContentObserver;
 import services.Item;
 import views.Components.ContainsItem;
 

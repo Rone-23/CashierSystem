@@ -37,6 +37,12 @@ public enum ButtonSet {
             ButtonLabel.VOUCHER,
             ButtonLabel.PAUSE,
             ButtonLabel.PADAVAN,
+    }),
+    RETURN_TRANSACTION_UTILITY_NAMES(new ButtonLabel[]{
+            ButtonLabel.ADD,
+            ButtonLabel.REMOVE,
+            ButtonLabel.CARD,
+            ButtonLabel.CASH,
     });
 
     private final ButtonLabel[] labels;

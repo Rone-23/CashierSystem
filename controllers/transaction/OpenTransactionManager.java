@@ -1,6 +1,5 @@
 package controllers.transaction;
 
-import services.ContentController;
 import controllers.panels.ViewManager;
 import services.Item;
 import services.OpenTransaction;
@@ -10,8 +9,9 @@ import java.awt.event.ActionEvent;
 public class OpenTransactionManager implements OpenTransactionObserver{
     private static OpenTransactionManager instance;
     private OpenTransaction openTransaction;
+
     private OpenTransactionManager(){
-        openTransaction = createOpenTransaction();
+//        openTransaction = createOpenTransaction();
         OpenTransaction.addObserver(this);
     }
 
@@ -51,12 +51,25 @@ public class OpenTransactionManager implements OpenTransactionObserver{
         getOpenTransaction().removeItem(item);
     }
 
+    public void loadHistoricalTransaction(int transactionID, String date, Item[] items) {
+        if (this.openTransaction != null) {
+            ContentController.removeObserver(this.openTransaction);
+        }
+
+        this.openTransaction = new OpenTransaction(transactionID, date);
+
+        ContentController.addObserver(openTransaction);
+
+        if (items != null) {
+            this.openTransaction.loadItemsIntoTransaction(items);
+        }
+    }
+
     @Override
     public void paymentDone() {
         MakeTransaction makeTransaction = new MakeTransaction();
         makeTransaction.makeTransaction(openTransaction);
         ViewManager.getInstance().showIdle();
-
     }
 
     @Override

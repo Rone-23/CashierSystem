@@ -4,10 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-import views.panels.DuringIdle;
-import views.panels.DuringRegister;
-import views.panels.DuringArticles;
-import views.panels.DuringReturnTransaction;
+import views.panels.*;
 
 public class ViewManager {
     private static ViewManager instance;
@@ -19,6 +16,7 @@ public class ViewManager {
     private final DuringIdle duringIdle;
     private final DuringRegister duringRegister;
     private final DuringArticles duringArticles;
+    private final DuringCodeEnter duringCode;
     private final DuringReturnTransaction duringReturn;
 
     private ViewManager() {
@@ -35,13 +33,13 @@ public class ViewManager {
         duringIdle = new DuringIdle();
         duringRegister = new DuringRegister();
         duringArticles = new DuringArticles();
+        duringCode = new DuringCodeEnter();
         duringReturn = new DuringReturnTransaction();
-
-        duringReturn.setName("asdasd");
 
         cardPanel.add(duringIdle, "IDLE");
         cardPanel.add(duringRegister, "REGISTER");
         cardPanel.add(duringArticles, "ARTICLES");
+        cardPanel.add(duringCode, "CODE-ENTER");
         cardPanel.add(duringReturn, "RETURN-TRANSACTION");
 
         mainFrame.add(cardPanel);
@@ -68,7 +66,11 @@ public class ViewManager {
         cardLayout.show(cardPanel, "IDLE");
     }
 
-    public void showReturnTransaction(ActionEvent e) {
+    public void showCodeEnter(ActionEvent e) {
+        cardLayout.show(cardPanel, "CODE-ENTER");
+    }
+
+    public void showReturnTransaction() {
         cardLayout.show(cardPanel, "RETURN-TRANSACTION");
     }
 
@@ -86,6 +88,10 @@ public class ViewManager {
 
     public DuringRegister getDuringRegister() {
         return duringRegister;
+    }
+
+    public DuringCodeEnter getDuringCodeEnter() {
+        return duringCode;
     }
 
     public DuringReturnTransaction getDuringReturn() {

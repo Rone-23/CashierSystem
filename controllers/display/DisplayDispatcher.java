@@ -1,7 +1,7 @@
 package controllers.display;
 
 
-import services.ContentController;
+import controllers.transaction.ContentController;
 
 import java.util.HashMap;
 import java.util.Map;

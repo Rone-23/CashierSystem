@@ -1,7 +1,8 @@
 package controllers.buttons;
 
 import assets.ButtonSet;
-import services.ContentController;
+import controllers.notifications.NotificationController;
+import controllers.transaction.ContentController;
 import controllers.display.DisplayDispatcher;
 import controllers.panels.ViewManager;
 import controllers.transaction.OpenTransactionManager;
@@ -12,19 +13,23 @@ import javax.swing.*;
 
 public class UtilityController {
     AddItemAction addItemAction = new AddItemAction();
+    RemoveItemAction removeItemAction = new RemoveItemAction();
+    ReturnTransactionAction returnTransactionAction = new ReturnTransactionAction();
     public UtilityController() {
         /*
         #Controlling all the buttons that are on the right side in DuringIdle
          */
         ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.BEGIN.toString()).addActionListener(_ -> ViewManager.getInstance().showArticles());
         ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.RETURN.toString()).addActionListener(e -> {
-            ViewManager.getInstance().showReturnTransaction(e);
+            ViewManager.getInstance().showCodeEnter(e);
             DisplayDispatcher.activeDisplayForCode();
         });
         ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.COPY_RECEIPT.toString()).addActionListener(e -> {
-            ViewManager.getInstance().showReturnTransaction(e);
+            ViewManager.getInstance().showCodeEnter(e);
             DisplayDispatcher.activeDisplayForCode();
         });
+
+
         /*
         #Controlling all the buttons that are on the right side in DuringRegister
          */
@@ -50,7 +55,6 @@ public class UtilityController {
                 ContentController.clearContent();
             });
         }
-
 
         duringRegister.getButton(ButtonSet.ButtonLabel.CASH.toString()).addActionListener(e -> {
             duringRegister.switchState(e);
@@ -106,15 +110,31 @@ public class UtilityController {
          */
         ViewManager.getInstance().getDuringArticles().getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(_ -> ViewManager.getInstance().showRegister());
         ViewManager.getInstance().getDuringArticles().getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(addItemAction);
-        ViewManager.getInstance().getDuringArticles().getButton(ButtonSet.ButtonLabel.REMOVE.toString()).addActionListener(new RemoveItemAction());
+        ViewManager.getInstance().getDuringArticles().getButton(ButtonSet.ButtonLabel.REMOVE.toString()).addActionListener(removeItemAction);
 
-          /*
+
+        /*
         #Controlling buttons on bottom side of DuringArticles
          */
-        ViewManager.getInstance().getDuringReturn().getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(_ -> {
+        ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(_ -> {
             ViewManager.getInstance().showIdle();
             DisplayDispatcher.activeDisplayForAmount();
         });
+        ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(e -> {
+            try {
+                returnTransactionAction.actionPerformed(e);
+                ViewManager.getInstance().showReturnTransaction();
+                DisplayDispatcher.activeDisplayForAmount();
+            }catch (Exception exception){
+                NotificationController.notifyObservers(exception.toString(),5000);
+            }
+        });
+
+        /*
+        #Controlling buttons on bottom side of DuringArticles
+         */
+        ViewManager.getInstance().getDuringReturn().getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(addItemAction);
+        ViewManager.getInstance().getDuringReturn().getButton(ButtonSet.ButtonLabel.REMOVE.toString()).addActionListener(removeItemAction);
     }
 
 }
