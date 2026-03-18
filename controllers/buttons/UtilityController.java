@@ -7,6 +7,7 @@ import controllers.display.DisplayDispatcher;
 import controllers.panels.ViewManager;
 import controllers.transaction.OpenTransactionManager;
 import views.panels.DuringRegister;
+import views.panels.DuringReturnTransaction;
 
 import javax.swing.*;
 
@@ -114,7 +115,7 @@ public class UtilityController {
 
 
         /*
-        #Controlling buttons on bottom side of DuringArticles
+        #Controlling buttons on bottom side of DuringCodeEnter
          */
         ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(_ -> {
             ViewManager.getInstance().showIdle();
@@ -131,10 +132,14 @@ public class UtilityController {
         });
 
         /*
-        #Controlling buttons on bottom side of DuringArticles
+        #Controlling buttons on bottom side of DuringReturn
          */
-        ViewManager.getInstance().getDuringReturn().getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(addItemAction);
-        ViewManager.getInstance().getDuringReturn().getButton(ButtonSet.ButtonLabel.REMOVE.toString()).addActionListener(removeItemAction);
+        DuringReturnTransaction duringReturnTransaction = ViewManager.getInstance().getDuringReturn();
+        duringReturnTransaction.getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(addItemAction);
+        duringReturnTransaction.getButton(ButtonSet.ButtonLabel.REMOVE.toString()).addActionListener(removeItemAction);
+        duringReturnTransaction.getButton(ButtonSet.ButtonLabel.CASH.toString()).addActionListener(duringReturnTransaction::switchState);
+        duringReturnTransaction.getButton(ButtonSet.ButtonLabel.CARD.toString()).addActionListener(duringReturnTransaction::switchState);
+        duringReturnTransaction.getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(duringReturnTransaction::switchState);
     }
 
 }

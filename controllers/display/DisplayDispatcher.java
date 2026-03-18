@@ -29,7 +29,9 @@ public class DisplayDispatcher{
         try {
             addActiveDisplay("REGISTER-AMOUNT");
             addActiveDisplay("ARTICLES-SPLIT");
+            addActiveDisplay("RETURN-REGISTER-AMOUNT");
             removeActiveDisplay("REGISTER-TOTAL");
+            removeActiveDisplay("RETURN-REGISTER-TOTAL");
             removeActiveDisplay("CODE-DISPLAY");
         } catch (Exception _) {
         }
@@ -39,7 +41,9 @@ public class DisplayDispatcher{
         try {
             removeActiveDisplay("REGISTER-AMOUNT");
             removeActiveDisplay("ARTICLES-SPLIT");
+            removeActiveDisplay("RETURN-REGISTER-AMOUNT");
             removeActiveDisplay("CODE-DISPLAY");
+            addActiveDisplay("RETURN-REGISTER-TOTAL");
             addActiveDisplay("REGISTER-TOTAL");
         } catch (Exception _) {
         }
@@ -50,6 +54,8 @@ public class DisplayDispatcher{
             removeActiveDisplay("REGISTER-AMOUNT");
             removeActiveDisplay("ARTICLES-SPLIT");
             removeActiveDisplay("REGISTER-TOTAL");
+            removeActiveDisplay("RETURN-REGISTER-AMOUNT");
+            removeActiveDisplay("RETURN-REGISTER-TOTAL");
             addActiveDisplay("CODE-DISPLAY");
         } catch (Exception _) {
         }

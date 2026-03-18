@@ -3,6 +3,7 @@ package controllers.panels;
 import controllers.buttons.KeyboardController;
 import controllers.display.DisplayController;
 import controllers.display.DisplayDispatcher;
+import controllers.display.DisplayReturnController;
 import services.OpenTransaction;
 import views.panels.DuringReturnTransaction;
 
@@ -17,7 +18,8 @@ public class DuringReturnTransactionController {
         DisplayController displayControllerTopAmount = new DisplayController(duringReturnTransaction.getDisplayTopAmount());
         DisplayDispatcher.addDisplay("RETURN-REGISTER-AMOUNT", displayControllerTopAmount);
 
-        DisplayController displayControllerTopTotal = new DisplayController(duringReturnTransaction.getDisplayTopTotal());
+        DisplayController displayControllerTopTotal = new DisplayReturnController(duringReturnTransaction.getDisplayTopTotal());
+        OpenTransaction.addObserver(displayControllerTopTotal);
         DisplayDispatcher.addDisplay("RETURN-REGISTER-TOTAL", displayControllerTopTotal);
 
         new KeyboardController(duringReturnTransaction);

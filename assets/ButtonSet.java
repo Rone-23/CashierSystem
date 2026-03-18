@@ -41,8 +41,8 @@ public enum ButtonSet {
     RETURN_TRANSACTION_UTILITY_NAMES(new ButtonLabel[]{
             ButtonLabel.ADD,
             ButtonLabel.REMOVE,
-            ButtonLabel.CARD,
             ButtonLabel.CASH,
+            ButtonLabel.CARD,
     });
 
     private final ButtonLabel[] labels;

@@ -24,7 +24,6 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable {
     private final Display displayTopTotal = new Display(Constants.TOTAL);
     private final Keyboard keyboard = new Keyboard();
     private final ButtonCluster utilityButtonCluster = new ButtonCluster(ButtonSet.RETURN_TRANSACTION_UTILITY_NAMES.getLabels(), Constants.VERTICAL);
-    private final ButtonCluster cashButtonCluster = new ButtonCluster(ButtonSet.CASH_NAMES.getLabels(), Constants.VERTICAL);
     private final ButtonCluster commonButtonCluster = new ButtonCluster(ButtonSet.COMMON_NAMES.getLabels(), Constants.VERTICAL);
     private final CardLayout cardLayout = new CardLayout();
     final JPanel rightPanel = new JPanel();
@@ -148,7 +147,6 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable {
         commonButtonClusterPanel.add(commonButtonCluster, BorderLayout.NORTH);
 
         rightPanel.add(utilityButtonCluster, "UTILITY_BUTTON_CLUSTER");
-        rightPanel.add(cashButtonCluster, "CASH_BUTTON_CLUSTER");
         rightPanel.add(commonButtonClusterPanel, "COMMON_BUTTON_CLUSTER");
 
         return rightPanel;
@@ -162,11 +160,6 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable {
             }
         }
         for (Component c : utilityButtonCluster.getComponents()) {
-            if (c instanceof JButton && c.getName() != null && c.getName().equals(key.toLowerCase())) {
-                return (JButton) c;
-            }
-        }
-        for (Component c : cashButtonCluster.getComponents()) {
             if (c instanceof JButton && c.getName() != null && c.getName().equals(key.toLowerCase())) {
                 return (JButton) c;
             }
@@ -193,11 +186,6 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable {
                 jButtons.add((JButton) c);
             }
         }
-        for (Component c : cashButtonCluster.getComponents()) {
-            if (c instanceof JButton && c.getName() != null && c.getName().equals(key.toLowerCase())) {
-                jButtons.add((JButton) c);
-            }
-        }
         for (Component c : commonButtonCluster.getComponents()) {
             if (c instanceof JButton && c.getName() != null && c.getName().equals(key.toLowerCase())) {
                 jButtons.add((JButton) c);
@@ -216,21 +204,24 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable {
     }
 
     public void switchState(ActionEvent actionEvent) {
+        System.out.printf(actionEvent.toString());
         switch (actionEvent.getActionCommand()) {
-            case "Naspäť" -> {
-                cardLayout.show(rightPanel, "UTILITY_BUTTON_CLUSTER");
-                cardLayoutDisplay.show(displayPanel, "AMOUNT");
-            }
             case "Hotovost" -> {
-                cardLayout.show(rightPanel, "CASH_BUTTON_CLUSTER");
-                cardLayoutDisplay.show(displayPanel, "TOTAL");
-            }
-            case "Karta", "Stravenky", "Poukážky" -> {
                 cardLayout.show(rightPanel, "COMMON_BUTTON_CLUSTER");
                 cardLayoutDisplay.show(displayPanel, "TOTAL");
             }
+            case "Karta" -> {
+                cardLayout.show(rightPanel, "COMMON_BUTTON_CLUSTER");
+                cardLayoutDisplay.show(displayPanel, "TOTAL");
+            }
+            case "Naspäť" -> {
+                cardLayout.show(rightPanel,"UTILITY_BUTTON_CLUSTER");
+                cardLayoutDisplay.show(displayPanel, "AMOUNT");
+            }
         }
     }
+
+
 
     public DisplayItems getDisplayScrollableItems() { return displayItems; }
     public Display getDisplayTotal() { return displayTotal; }

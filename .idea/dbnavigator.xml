@@ -360,12 +360,13 @@ DELETE FROM "transaction" WHERE transaction_id NOT IN (SELECT transaction_id FRO
 
 SELECT r.amount as Returned, i.amount as "In transaction", r.amount+i.amount FROM "Transaction" as t
 join "returned_items" as r on t."transaction_id" = r."transaction_id"
-join "in_transaction" as i on t."transaction_id" = i."transaction_id" where t."transaction_id" = 417;
+join "in_transaction" as i on t."transaction_id" = i."transaction_id" where t."transaction_id" = 449;
 
 SELECT name, i.amount from "in_transaction" as i
-natural join "transaction" natural join "article" where "transaction_id" = 433;
+natural join "transaction" natural join "article" where "transaction_id" = 449;
 
-SELECT amount FROM returned_items WHERE article_id = 20 and transaction_id = 441;]]></console>
+SELECT name, i.amount from "returned_items" as i
+natural join "transaction" natural join "article" where "transaction_id" = 449;]]></console>
     </connection>
     <connection id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5">
       <console name="Commit of articles" type="STANDARD" schema="main" session="Main"><![CDATA[INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('ROZOK OS SENSK', 0.29, 500.00,'PECIVO','BEZNE-PECIVO');

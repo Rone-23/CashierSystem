@@ -25,6 +25,7 @@ public class OpenTransaction implements ContentObserver {
     private int payedFoodTicket = 0;
     private int payedVoucher = 0;
     private boolean isReturn;
+    private int total;
     //**EPSILON is there because of using Double**//
     private final Double EPSILON = 0.0000001;
     //**day is stored using sql.getLastTimeStamp() and split it into day ("dd-MM-yyyy HH:mm:ss")**//
@@ -153,6 +154,7 @@ public class OpenTransaction implements ContentObserver {
                 observer.onItemAdd(item);
             }
         }
+        total = getTotal();
     }
 
     public Map<String,Item> getItemsInTransaction(){return itemsInTransaction; }
@@ -168,6 +170,10 @@ public class OpenTransaction implements ContentObserver {
             sum += item.getPrice()*item.getAmount();
         }
         return sum;
+    }
+
+    public int getTotalWhenReturn(){
+        return total;
     }
 
     public int getMissing(){
