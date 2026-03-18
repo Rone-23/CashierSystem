@@ -10,4 +10,5 @@ public interface OpenTransactionObserver {
     default void onDestroy() {}
     default void onAddedPayment(int toPayLeft,String typeOfPayment, int addedAmount) {}
     default void paymentDone(){}
+    default void onReturnTransaction(Boolean status){}
 }

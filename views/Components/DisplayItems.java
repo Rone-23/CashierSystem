@@ -45,7 +45,7 @@ public class DisplayItems extends JScrollPane {
 
     public ListItemButton addItem(Item item){
         if(compoundItems(item) == 0){
-            ListItemButton listItemButton =new ListItemButton(Colors.BACKGROUND_WHITE.getColor(),item);
+            ListItemButton listItemButton = new ListItemButton(Colors.BACKGROUND_WHITE.getColor(),item);
             mainItemPanel.add(listItemButton,gbc);
             gbc.gridy++;
             moveSpacer(gbc.gridy);
@@ -55,6 +55,31 @@ public class DisplayItems extends JScrollPane {
         }
         setBackgroundVariation();
         mainItemPanel.revalidate();
+        return null;
+    }
+
+    public ListItemButton addItem(Item item, int content){
+        if(compoundItems(item) == 0){
+            ListItemButton listItemButton = new ListItemButton(Colors.BACKGROUND_WHITE.getColor(),item);
+            mainItemPanel.add(listItemButton,gbc);
+            gbc.gridy++;
+            moveSpacer(gbc.gridy);
+            setBackgroundVariation();
+            mainItemPanel.revalidate();
+            return listItemButton;
+        }
+        getListItemButton(item).setReturnAmount(content);
+        setBackgroundVariation();
+        mainItemPanel.revalidate();
+        return null;
+    }
+
+    private ListItemButton getListItemButton(Item item){
+        for(Component c : mainItemPanel.getComponents()){
+            if(c instanceof ListItemButton && c.getName().equals(item.getName())){
+                return (ListItemButton) c;
+            }
+        }
         return null;
     }
 
@@ -187,6 +212,4 @@ public class DisplayItems extends JScrollPane {
         mainItemPanel.add(spacer,gbcSpacer);
 
     }
-
-
 }

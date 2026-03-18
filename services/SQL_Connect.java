@@ -553,6 +553,21 @@ public class SQL_Connect {
         return 0;
     }
 
+    public int getReturnedAmount(int article_id, int transaction_id) throws SQLException{
+        String sql =  "SELECT amount FROM returned_items WHERE article_id = ? and transaction_id = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, article_id);
+            pstmt.setInt(2, transaction_id);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()){
+                return rs.getInt(1);
+            }
+        }
+        return 0;
+        //        throw new SQLException("Item not found, no id could be returned. ");
+    }
+
     public void registerPayment(int amount, String paymentOption) throws SQLException {
         try(PreparedStatement addPaymentToTransaction = conn.prepareStatement(
                 "UPDATE \"transaction\" SET " + paymentOption + " = " + paymentOption + " + ? where transaction_id = ?"

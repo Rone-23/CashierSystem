@@ -24,7 +24,7 @@ public class OpenTransaction implements ContentObserver {
     private int payedCash = 0;
     private int payedFoodTicket = 0;
     private int payedVoucher = 0;
-    private final boolean isReturn;
+    private boolean isReturn;
     //**EPSILON is there because of using Double**//
     private final Double EPSILON = 0.0000001;
     //**day is stored using sql.getLastTimeStamp() and split it into day ("dd-MM-yyyy HH:mm:ss")**//
@@ -38,7 +38,7 @@ public class OpenTransaction implements ContentObserver {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        isReturn=false;
+        isReturn(false);
         for(OpenTransactionObserver observer : observerList){
             observer.onCreate(this);
         }
@@ -47,7 +47,7 @@ public class OpenTransaction implements ContentObserver {
     public OpenTransaction(int transactionID, String date){
         this.transactionDateTime = LocalDateTime.parse(date,dateTimeFormatter);
         this.transactionID = transactionID;
-        isReturn=true;
+        isReturn(true);
         for(OpenTransactionObserver observer : observerList){
             observer.onCreate(this);
         }
@@ -212,6 +212,13 @@ public class OpenTransaction implements ContentObserver {
             }
         }
         System.out.printf("Missing cash in transaction is: %d\n", getTotal() - payedCard - payedCash - payedFoodTicket - payedVoucher);
+    }
+
+    private void isReturn(Boolean status){
+        for(OpenTransactionObserver observer : observerList){
+            observer.onReturnTransaction(status);
+        }
+        isReturn = status;
     }
 
 
