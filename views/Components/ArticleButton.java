@@ -150,6 +150,11 @@ public class ArticleButton extends JToggleButton implements ContainsItem {
         g2.draw(star);
     }
 
+    public void resetItemAmount(){
+        item.setAmount(0);
+        repaint();
+    }
+
     public boolean isStarred() { return isStarred; }
     public void setStarred(boolean starred) { this.isStarred = starred; repaint(); }
 

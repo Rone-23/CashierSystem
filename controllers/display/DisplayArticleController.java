@@ -7,7 +7,6 @@ import controllers.panels.ViewManager;
 import controllers.buttons.FilterObserver;
 import controllers.transaction.OpenTransactionObserver;
 import services.Item;
-import services.OpenTransaction;
 import services.SQL_Connect;
 import views.Components.ArticleButton;
 import views.Components.DisplayArticles;
@@ -118,12 +117,6 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
     }
 
     //Observer
-
-    @Override
-    public void onCreate(OpenTransaction openTransaction) {
-        articleSelectAction.deselectArticle();
-    }
-
     @Override
     public void updateMainFilter(String filterKeyword) {
         filterKeywordMain = filterKeyword;
@@ -143,5 +136,13 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
         ArticleButton b = (ArticleButton) buttons.get(item.getName().toLowerCase());
         b.setItemAmount(item.getAmount());
         b.repaint();
+    }
+
+    @Override
+    public void onDestroy() {
+        articleSelectAction.deselectArticle();
+        for(ArticleButton b : buttons.values().toArray(new ArticleButton[0])){
+            b.resetItemAmount();
+        }
     }
 }
