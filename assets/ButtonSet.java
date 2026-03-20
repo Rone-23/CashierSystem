@@ -43,7 +43,12 @@ public enum ButtonSet {
             ButtonLabel.REMOVE,
             ButtonLabel.CASH,
             ButtonLabel.CARD,
-    });
+    }),
+    RETURN_TRANSACTION_RETURN_MONEY(new ButtonLabel[]{
+            ButtonLabel.CASH_BACK,
+            ButtonLabel.EXIT
+    }),
+    ;
 
     private final ButtonLabel[] labels;
 
@@ -113,6 +118,7 @@ public enum ButtonSet {
         // Shared Labels
         EXIT("Naspäť", Colors.DANGER_RED),
         ADD("Pridat", Colors.MILD_YELLOW),
+        CASH_BACK("Vráťiť schodok", Colors.MILD_YELLOW),
         REMOVE("Ubrať", Colors.MILD_YELLOW),
         SEARCH("Vyhladať", Colors.DEFAULT_BLUE);
 

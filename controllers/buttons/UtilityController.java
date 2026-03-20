@@ -2,6 +2,7 @@ package controllers.buttons;
 
 import assets.ButtonSet;
 import controllers.notifications.NotificationController;
+import controllers.transaction.CashBackAction;
 import controllers.transaction.ContentController;
 import controllers.display.DisplayDispatcher;
 import controllers.panels.ViewManager;
@@ -139,6 +140,7 @@ public class UtilityController {
         duringReturnTransaction.getButton(ButtonSet.ButtonLabel.REMOVE.toString()).addActionListener(removeItemAction);
         duringReturnTransaction.getButton(ButtonSet.ButtonLabel.CASH.toString()).addActionListener(duringReturnTransaction::switchState);
         duringReturnTransaction.getButton(ButtonSet.ButtonLabel.CARD.toString()).addActionListener(duringReturnTransaction::switchState);
+        duringReturnTransaction.getButton(ButtonSet.ButtonLabel.CASH_BACK.toString()).addActionListener(new CashBackAction());
         duringReturnTransaction.getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(duringReturnTransaction::switchState);
     }
 

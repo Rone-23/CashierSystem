@@ -363,10 +363,10 @@ join "returned_items" as r on t."transaction_id" = r."transaction_id"
 join "in_transaction" as i on t."transaction_id" = i."transaction_id" where t."transaction_id" = 449;
 
 SELECT name, i.amount from "in_transaction" as i
-natural join "transaction" natural join "article" where "transaction_id" = 449;
+natural join "transaction" natural join "article" where "transaction_id" = 463;
 
 SELECT name, i.amount from "returned_items" as i
-natural join "transaction" natural join "article" where "transaction_id" = 449;]]></console>
+natural join "transaction" natural join "article" where "transaction_id" = 463;]]></console>
     </connection>
     <connection id="fe811646-5cc6-4f22-a8dc-1e5e47a2fef5">
       <console name="Commit of articles" type="STANDARD" schema="main" session="Main"><![CDATA[INSERT INTO Articles (name,price,stock,type,subtype) VALUES ('ROZOK OS SENSK', 0.29, 500.00,'PECIVO','BEZNE-PECIVO');
@@ -526,9 +526,7 @@ SELECT * FROM TRANSACTIONS;]]></console>
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files>
-      <object connection-id="ab16c47c-8eaf-4ed2-9b5c-14849f45418b" object-ref="consoles/New  Database" />
-    </open-files>
+    <open-files />
   </component>
   <component name="DBNavigator.Project.DatabasePrerequisiteManager">
     <prerequisites />
