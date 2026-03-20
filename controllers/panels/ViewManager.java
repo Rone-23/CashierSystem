@@ -98,4 +98,9 @@ public class ViewManager {
         return duringReturn;
     }
 
+    public void returnToDefault(){
+        duringRegister.returnToDefault();
+        duringReturn.returnToDefault();
+    }
+
 }

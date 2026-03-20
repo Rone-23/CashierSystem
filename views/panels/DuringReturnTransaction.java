@@ -204,7 +204,6 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable {
     }
 
     public void switchState(ActionEvent actionEvent) {
-        System.out.printf(actionEvent.toString());
         switch (actionEvent.getActionCommand()) {
             case "Hotovost" -> {
                 cardLayout.show(rightPanel, "COMMON_BUTTON_CLUSTER");
@@ -221,7 +220,10 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable {
         }
     }
 
-
+    public void returnToDefault(){
+        cardLayout.show(rightPanel,"UTILITY_BUTTON_CLUSTER");
+        cardLayoutDisplay.show(displayPanel, "AMOUNT");
+    }
 
     public DisplayItems getDisplayScrollableItems() { return displayItems; }
     public Display getDisplayTotal() { return displayTotal; }

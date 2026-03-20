@@ -19,7 +19,9 @@ public class RemoveItemAction extends AbstractAction implements ContentObserver,
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        OpenTransactionManager.getInstance().removeItem(item);
+        if(item!=null){
+            OpenTransactionManager.getInstance().removeItem(item);
+        }
     }
 
     //Observer

@@ -30,7 +30,7 @@ public class DuringRegister extends JPanel implements ButtonFoundable {
     final JPanel rightPanel = new JPanel();
     JPanel displayPanel = new JPanel();
     CardLayout cardLayoutDisplay = new CardLayout();
-    private final StatusBar     statusBar = new StatusBar();
+    private final StatusBar statusBar = new StatusBar();
 
     public DuringRegister() {
         setLayout(new GridBagLayout());
@@ -230,6 +230,11 @@ public class DuringRegister extends JPanel implements ButtonFoundable {
                 cardLayoutDisplay.show(displayPanel, "TOTAL");
             }
         }
+    }
+
+    public void returnToDefault(){
+        cardLayout.show(rightPanel, "UTILITY_BUTTON_CLUSTER");
+        cardLayoutDisplay.show(displayPanel, "AMOUNT");
     }
 
     public DisplayItems getDisplayScrollableItems() { return displayItems; }

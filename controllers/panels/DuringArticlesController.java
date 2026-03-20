@@ -26,8 +26,5 @@ public class DuringArticlesController {
         FilterController.addObserver(displayArticleController);
 
         new FilterController(duringArticles.getArticleFilterButtonCluster());
-
-
-
     }
 }

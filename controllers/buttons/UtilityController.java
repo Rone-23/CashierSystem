@@ -110,9 +110,9 @@ public class UtilityController {
         /*
         #Controlling buttons on bottom side of DuringArticles
          */
-        ViewManager.getInstance().getDuringArticles().getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(_ -> ViewManager.getInstance().showRegister());
         ViewManager.getInstance().getDuringArticles().getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(addItemAction);
         ViewManager.getInstance().getDuringArticles().getButton(ButtonSet.ButtonLabel.REMOVE.toString()).addActionListener(removeItemAction);
+        ViewManager.getInstance().getDuringArticles().getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(_ -> ViewManager.getInstance().showRegister());
 
 
         /*

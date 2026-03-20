@@ -11,7 +11,6 @@ public class OpenTransactionManager implements OpenTransactionObserver{
     private OpenTransaction openTransaction;
 
     private OpenTransactionManager(){
-//        openTransaction = createOpenTransaction();
         OpenTransaction.addObserver(this);
     }
 
@@ -75,5 +74,6 @@ public class OpenTransactionManager implements OpenTransactionObserver{
     @Override
     public void onDestroy() {
         openTransaction = null;
+        ViewManager.getInstance().returnToDefault();
     }
 }
