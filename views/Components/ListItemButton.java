@@ -105,12 +105,12 @@ public class ListItemButton extends JToggleButton implements ContainsItem {
 
     @Override
     public int getItemPrice() {
-        return 0;
+        return item.getPrice();
     }
 
     @Override
     public int getItemAmount() {
-        return 0;
+        return item.getAmount();
     }
 
     @Override

@@ -1,7 +1,6 @@
 package controllers.buttons;
 
 import assets.ButtonSet;
-import controllers.notifications.NotificationController;
 import controllers.transaction.CashBackAction;
 import controllers.transaction.ContentController;
 import controllers.display.DisplayDispatcher;
@@ -22,12 +21,12 @@ public class UtilityController {
         #Controlling all the buttons that are on the right side in DuringIdle
          */
         ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.BEGIN.toString()).addActionListener(_ -> ViewManager.getInstance().showArticles());
-        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.RETURN.toString()).addActionListener(e -> {
-            ViewManager.getInstance().showCodeEnter(e);
+        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.RETURN.toString()).addActionListener(_ -> {
+            ViewManager.getInstance().showCodeEnter();
             DisplayDispatcher.activeDisplayForCode();
         });
-        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.COPY_RECEIPT.toString()).addActionListener(e -> {
-            ViewManager.getInstance().showCodeEnter(e);
+        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.COPY_RECEIPT.toString()).addActionListener(_ -> {
+            ViewManager.getInstance().showCodeEnter();
             DisplayDispatcher.activeDisplayForCode();
         });
 
@@ -123,13 +122,9 @@ public class UtilityController {
             DisplayDispatcher.activeDisplayForAmount();
         });
         ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(e -> {
-            try {
-                returnTransactionAction.actionPerformed(e);
-                ViewManager.getInstance().showReturnTransaction();
-                DisplayDispatcher.activeDisplayForAmount();
-            }catch (Exception exception){
-                NotificationController.notifyObservers(exception.toString(),5000);
-            }
+            returnTransactionAction.actionPerformed(e);
+            ViewManager.getInstance().showReturnTransaction();
+            DisplayDispatcher.activeDisplayForAmount();
         });
 
         /*

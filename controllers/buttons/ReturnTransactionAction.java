@@ -26,6 +26,7 @@ public class ReturnTransactionAction extends AbstractAction implements ContentOb
             );
         } catch (SQLException ex) {
             NotificationController.notifyObservers(ex.toString(),5000);
+//            ContentController.clearContent();
         }
     }
 

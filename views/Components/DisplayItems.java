@@ -68,7 +68,11 @@ public class DisplayItems extends JScrollPane {
             mainItemPanel.revalidate();
             return listItemButton;
         }
-        getListItemButton(item).setReturnAmount(content);
+        try{
+            getListItemButton(item).setReturnAmount(content);
+        }catch (Exception _){
+
+        }
         setBackgroundVariation();
         mainItemPanel.revalidate();
         return null;

@@ -1,19 +1,15 @@
 package controllers.display;
 
 import controllers.buttons.ArticleSelectAction;
-import controllers.notifications.NotificationController;
 import controllers.panels.ViewManager;
+import controllers.transaction.OpenTransactionManager;
 import controllers.transaction.OpenTransactionObserver;
 import services.Item;
-import services.OpenTransaction;
-import services.SQL_Connect;
 
 import javax.swing.*;
-import java.sql.SQLException;
 
 public class DisplayItemController implements OpenTransactionObserver {
     private ArticleSelectAction articleSelectAction;
-    private int openTransactionId;
 
     public DisplayItemController(){
         articleSelectAction = new ArticleSelectAction();
@@ -24,18 +20,19 @@ public class DisplayItemController implements OpenTransactionObserver {
         JToggleButton jToggleButtonArticles;
         JToggleButton jToggleButtonRegister;
         JToggleButton jToggleButtonReturn;
-            jToggleButtonArticles = ViewManager.getInstance().getDuringArticles().getDisplayScrollableItems().addItem(item);
-            jToggleButtonRegister = ViewManager.getInstance().getDuringRegister().getDisplayScrollableItems().addItem(item);
+        jToggleButtonArticles = ViewManager.getInstance().getDuringArticles().getDisplayScrollableItems().addItem(item);
+        jToggleButtonRegister = ViewManager.getInstance().getDuringRegister().getDisplayScrollableItems().addItem(item);
         try {
+            int returnedAmount = OpenTransactionManager.getInstance().getOpenTransaction().getReturnedItems().get(item.getName()).getAmount();
             jToggleButtonReturn = ViewManager.getInstance().getDuringReturn().getDisplayScrollableItems().addItem(
                     item,
-                    SQL_Connect.getInstance().getReturnedAmount(SQL_Connect.getInstance().getArticleID(item.getName()), openTransactionId)
-                    );
-            if(jToggleButtonReturn != null){
-                jToggleButtonReturn.addActionListener(articleSelectAction);
-            }
-        } catch (SQLException e) {
-            NotificationController.notifyObservers(e.toString(),5000);
+                    returnedAmount
+            );
+        } catch (Exception e) {
+            jToggleButtonReturn = ViewManager.getInstance().getDuringReturn().getDisplayScrollableItems().addItem(item);
+        }
+        if(jToggleButtonReturn != null){
+            jToggleButtonReturn.addActionListener(articleSelectAction);
         }
         if(jToggleButtonArticles != null && jToggleButtonRegister != null) {
             jToggleButtonArticles.addActionListener(articleSelectAction);
@@ -63,10 +60,5 @@ public class DisplayItemController implements OpenTransactionObserver {
         ViewManager.getInstance().getDuringArticles().getDisplayScrollableItems().addPayment(typeOfPayment, addedAmount);
         ViewManager.getInstance().getDuringRegister().getDisplayScrollableItems().addPayment(typeOfPayment, addedAmount);
         ViewManager.getInstance().getDuringReturn().getDisplayScrollableItems().addPayment(typeOfPayment, addedAmount);
-    }
-
-    @Override
-    public void onCreate(OpenTransaction openTransaction) {
-        openTransactionId = openTransaction.getTransactionID();
     }
 }

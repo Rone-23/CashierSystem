@@ -2,7 +2,6 @@ package controllers.panels;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 
 import views.panels.*;
 
@@ -24,8 +23,6 @@ public class ViewManager {
         mainFrame = new JFrame("Cashier System");
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setSize(screenSize.width, screenSize.height);
-        //For development purposes
-//        mainFrame.setUndecorated(true);
 
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
@@ -66,7 +63,7 @@ public class ViewManager {
         cardLayout.show(cardPanel, "IDLE");
     }
 
-    public void showCodeEnter(ActionEvent e) {
+    public void showCodeEnter() {
         cardLayout.show(cardPanel, "CODE-ENTER");
     }
 
