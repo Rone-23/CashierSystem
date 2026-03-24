@@ -504,6 +504,21 @@ public class SQL_Connect {
         throw new SQLException("Amount of rows couldn't be retrieved from database. ");
     }
 
+    public int getStock(int articleID) throws SQLException{
+        try (PreparedStatement stockStmt = conn.prepareStatement(
+                "SELECT stock FROM article WHERE article_id = ?"
+        )) {
+            stockStmt.setInt(1, articleID);
+            ResultSet rs = stockStmt.executeQuery();
+
+            if (!rs.next()) {
+                throw new SQLException("Article not found");
+            }else{
+                return rs.getInt(1);
+            }
+        }
+    }
+
     /*
     FAVORITE ARTICLES
      */

@@ -57,41 +57,36 @@ public class OpenTransaction implements ContentObserver {
     }
 
     public void addItem(Item item){
+        /*
+         * Pridavam item
+         * item is null -> return DONE
+         * isReturn -> false DONE
+         * content>stock ->Error
+         * pridat item do ItemsInTransaction -> neexistuje v ItemsInTransaction -> new Item DONE
+         *                                   -> existuje v ItemsInTransaction -> itemsInTransaction.get(item).addAmount DONE
+         * isReturn -> true DONE
+         * pridat item do ItemsInTransaction -> neni v returnedItems -> Error DONE
+         *                                   -> je v returnedItems -> returnedItems.get(item).addAmount(-content) DONE
+         *                                                         -> itemsInTransaction.get(item).addAmount(content) DONE
+         */
+
         if(item == null){
             return;
         }
 
-        try {
-            int stock = SQL_Connect.getInstance().getStock(SQL_Connect.getInstance().getArticleID(item.getName()));
-            int stockInTransaction = itemsInTransaction.containsKey(item.getName()) ? itemsInTransaction.get(item.getName()).getAmount() : 0 ;
-            if(stock - content - stockInTransaction < 0){
-                NotificationController.notifyObservers("Nedostatok tovaru v sklade, aktualny pocet je"+stock,5000);
-                return;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
         if(!isReturn){
             if(!itemsInTransaction.containsKey(item.getName())){
-                ItemCountable itemInTransaction = new ItemCountable(
+                itemsInTransaction.put(
+                    item.getName(),
+                    new ItemCountable(
                         item.getName(),
                         item.getPrice(),
                         content
+                    )
                 );
-                itemsInTransaction.put(
-                        item.getName(),
-                        itemInTransaction
-                );
-                for (OpenTransactionObserver observer : observerList) {
-                    observer.onItemAdd(itemInTransaction);
-                }
             }else {
                 ItemCountable itemInTransaction = (ItemCountable) itemsInTransaction.get(item.getName());
                 itemInTransaction.addAmount(content);
-                for (OpenTransactionObserver observer : observerList) {
-                    observer.onItemAdd(itemInTransaction);
-                }
             }
         }else{
             if(returnedItems.containsKey(item.getName())){
@@ -100,9 +95,6 @@ public class OpenTransaction implements ContentObserver {
                 if(returnedItem.getAmount() - content >= 0){
                     returnedItem.addAmount(-content);
                     itemInTransaction.addAmount(content);
-                    for (OpenTransactionObserver observer : observerList) {
-                        observer.onItemAdd(itemInTransaction);
-                    }
                 }else{
                     NotificationController.notifyObservers("Nemozes nablokovat viac tovaru ako bolo povodne.",5000);
                 }
@@ -112,6 +104,21 @@ public class OpenTransaction implements ContentObserver {
     }
 
     public void removeItem(Item item){
+        /*
+         *Odoberam item
+         * is item null -> return
+         * isReturn -> false
+         * ubrat item z ItemsInTransaction -> existuje v ItemsInTransaction -> itemsInTransaction.get(item).addAmount(-content)
+         *                                 -> neexistuje v ItemsInTransaction -> Error
+         * isReturn -> true
+         * ubrat item z ItemsInTransaction -> existuje v ReturnedItems -> returnedItems.get(item).addAmount(content)
+         *                                                             -> itemsInTransaction.get(item).addAmount(-content)
+         *                                 -> neexistuje v ReturnedItems -> new Item
+         *                                                               -> itemsInTransaction.get(item).addAmount(-content)
+         *
+         */
+
+
         if(item==null){return;}
 
         if(!isReturn){
@@ -119,13 +126,10 @@ public class OpenTransaction implements ContentObserver {
                 ItemCountable itemInTransaction = (ItemCountable) itemsInTransaction.get(item.getName());
                 if(itemInTransaction.getAmount()-content > 0){
                     itemInTransaction.addAmount(-content);
-                    for (OpenTransactionObserver observer : observerList) {
-                        observer.onItemAdd(itemInTransaction);
-                    }
                 } else if (itemInTransaction.getAmount()-content ==0) {
                     itemsInTransaction.remove(item.getName());
                     for (OpenTransactionObserver observer : observerList) {
-                        observer.onItemRemove(itemInTransaction);
+                        observer.onItemRemove(item);
                     }
                 }else{
                     NotificationController.notifyObservers("Nemozte vratit viac tovaru ako je v transakcii",5000);
@@ -135,33 +139,7 @@ public class OpenTransaction implements ContentObserver {
             }
         }else{
             if(returnedItems.containsKey(item.getName())){
-                ItemCountable returnedItem = (ItemCountable) returnedItems.get(item.getName());
-                ItemCountable itemInTransaction = (ItemCountable) itemsInTransaction.get(item.getName());
 
-                if(itemInTransaction.getAmount()-content >= 0){
-                    returnedItem.addAmount(content);
-                    itemInTransaction.addAmount(-content);
-                    for (OpenTransactionObserver observer : observerList) {
-                        observer.onItemAdd(itemInTransaction);
-                    }
-                }else {
-                    NotificationController.notifyObservers("Nemozte vratit tovar ktorý nie je v transakcii",5000);
-                }
-            }else {
-                ItemCountable itemInTransaction = (ItemCountable) itemsInTransaction.get(item.getName());
-                if(itemInTransaction.getAmount()-content >= 0){
-                    returnedItems.put(
-                            item.getName(),
-                            new ItemCountable(
-                                    item.getName(),
-                                    item.getPrice(),
-                                    content
-                            ));
-                    itemInTransaction.addAmount(-content);
-                    for (OpenTransactionObserver observer : observerList) {
-                        observer.onItemAdd(itemInTransaction);
-                    }
-                }
             }
         }
     }
