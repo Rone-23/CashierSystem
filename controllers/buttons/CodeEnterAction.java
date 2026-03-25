@@ -1,5 +1,6 @@
 package controllers.buttons;
 
+import assets.ButtonSet;
 import controllers.display.DisplayDispatcher;
 import controllers.notifications.NotificationController;
 import controllers.panels.ViewManager;
@@ -12,9 +13,9 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.sql.SQLException;
 
-public class ReturnTransactionAction extends AbstractAction implements ContentObserver {
+public class CodeEnterAction extends AbstractAction implements ContentObserver {
     private int insertedTransactionID;
-    public ReturnTransactionAction(){
+    public CodeEnterAction(){
         ContentController.addObserver(this);
     }
 
@@ -26,8 +27,12 @@ public class ReturnTransactionAction extends AbstractAction implements ContentOb
                     SQL_Connect.getInstance().getDateOfTransaction(insertedTransactionID),
                     SQL_Connect.getInstance().getAllArticlesFromPastTransaction(insertedTransactionID)
             );
-            ViewManager.getInstance().showReturnTransaction();
-            DisplayDispatcher.activeDisplayForAmount();
+            if(e.getActionCommand().equals(ButtonSet.ButtonLabel.RETURN.toString())){
+                ViewManager.getInstance().showReturnTransaction();
+                DisplayDispatcher.activeDisplayForAmount();
+            } else {
+                OpenTransactionManager.getInstance().addPayment(e);
+            }
         } catch (SQLException | IllegalStateException ex) {
             NotificationController.notifyObservers(ex.getMessage(),5000);
             ContentController.clearContent();

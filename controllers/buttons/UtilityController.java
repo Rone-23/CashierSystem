@@ -15,17 +15,19 @@ import javax.swing.*;
 public class UtilityController {
     AddItemAction addItemAction = new AddItemAction();
     RemoveItemAction removeItemAction = new RemoveItemAction();
-    ReturnTransactionAction returnTransactionAction = new ReturnTransactionAction();
+    CodeEnterAction codeEnterAction = new CodeEnterAction();
     public UtilityController() {
         /*
         #Controlling all the buttons that are on the right side in DuringIdle
          */
         ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.BEGIN.toString()).addActionListener(_ -> ViewManager.getInstance().showArticles());
         ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.RETURN.toString()).addActionListener(_ -> {
+            ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).setActionCommand(ButtonSet.ButtonLabel.RETURN.toString());
             ViewManager.getInstance().showCodeEnter();
             DisplayDispatcher.activeDisplayForCode();
         });
         ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.COPY_RECEIPT.toString()).addActionListener(_ -> {
+            ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).setActionCommand(ButtonSet.ButtonLabel.COPY_RECEIPT.toString());
             ViewManager.getInstance().showCodeEnter();
             DisplayDispatcher.activeDisplayForCode();
         });
@@ -121,7 +123,7 @@ public class UtilityController {
             ViewManager.getInstance().showIdle();
             DisplayDispatcher.activeDisplayForAmount();
         });
-        ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(returnTransactionAction);
+        ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(codeEnterAction);
 
         /*
         #Controlling buttons on bottom side of DuringReturn
