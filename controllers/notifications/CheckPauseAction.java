@@ -7,6 +7,9 @@ import controllers.transaction.ContentObserver;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class CheckPauseAction extends AbstractAction implements ContentObserver {
 
@@ -17,6 +20,12 @@ public class CheckPauseAction extends AbstractAction implements ContentObserver 
         ContentController.addObserver(this);
         pauseCode = String.format("%04d", (int)(Math.random() * 10000));
         System.out.println("UNLOCK CODE: " + pauseCode);
+        String path = "./Receipts/SECRET_CODE.txt";
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
+            writer.write(String.format("Unlock code: %s",pauseCode));
+        } catch (IOException e) {
+            System.err.println("Error writing receipt file: " + e.getMessage());
+        }
         ViewManager.getInstance().showPause();
         DisplayDispatcher.activeDisplayForCode();
     }
