@@ -24,9 +24,13 @@ public class OpenTransactionManager implements OpenTransactionObserver{
     private OpenTransaction createOpenTransaction(){
         try {
             openTransaction = new OpenTransaction();
+            ViewManager.getInstance().getStatusBar().setTransactionId(String.valueOf(openTransaction.getTransactionID()));
+            ViewManager.getInstance().getStatusBar().setCashierId("1");
+            ViewManager.getInstance().getStatusBar().setStatus("Áno");
         } catch (NumberFormatException ignored) {
         }
         ContentController.addObserver(openTransaction);
+
         return openTransaction;
     }
 

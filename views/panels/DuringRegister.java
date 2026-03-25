@@ -30,7 +30,6 @@ public class DuringRegister extends JPanel implements ButtonFoundable {
     final JPanel rightPanel = new JPanel();
     JPanel displayPanel = new JPanel();
     CardLayout cardLayoutDisplay = new CardLayout();
-    private final StatusBar statusBar = new StatusBar();
 
     public DuringRegister() {
         setLayout(new GridBagLayout());
@@ -62,11 +61,6 @@ public class DuringRegister extends JPanel implements ButtonFoundable {
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         add(mainContent, gbc);
-
-        gbc.gridy = 1;
-        gbc.weighty = 0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        add(statusBar, gbc);
     }
 
     private JPanel createLeftPanel() {
@@ -153,6 +147,7 @@ public class DuringRegister extends JPanel implements ButtonFoundable {
 
         return rightPanel;
     }
+
 
     @Override
     public JButton getButton(String key) {

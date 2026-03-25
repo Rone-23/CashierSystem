@@ -4,7 +4,6 @@ import assets.ButtonSet;
 import assets.Colors;
 import utility.GridBagConstraintsBuilder;
 import views.Components.ButtonCluster;
-import views.Components.StatusBar;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +11,6 @@ import java.util.ArrayList;
 
 public class DuringIdle extends JPanel implements ButtonFoundable {
     private final ButtonCluster buttonCluster;
-    private final StatusBar statusBar = new StatusBar();
 
     public DuringIdle() {
         setLayout(new GridBagLayout());
@@ -32,15 +30,8 @@ public class DuringIdle extends JPanel implements ButtonFoundable {
         gbc.gridx = 1;
         buttonCluster = new ButtonCluster(ButtonSet.IDLE_UTILITY_NAMES.getLabels());
         add(buttonCluster, gbc);
-
-        GridBagConstraints gbcStatus = GridBagConstraintsBuilder.buildGridBagConstraints(1, 1);
-        gbcStatus.gridy = 1;
-        gbcStatus.gridx = 0;
-        gbcStatus.gridwidth = 2;
-        gbcStatus.weighty = 0;
-        gbcStatus.fill = GridBagConstraints.HORIZONTAL;
-        add(statusBar, gbcStatus);
     }
+
 
     @Override
     public JButton getButton(String key) {

@@ -43,8 +43,6 @@ public class DuringCodeEnter extends JPanel implements ButtonFoundable{
         centerPanel.add(rightPanel, gbcMain);
 
         add(centerPanel, BorderLayout.CENTER);
-        StatusBar statusBar = new StatusBar();
-        add(statusBar, BorderLayout.SOUTH);
     }
 
     private JPanel createLeftPanel(){

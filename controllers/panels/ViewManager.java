@@ -3,6 +3,7 @@ package controllers.panels;
 import javax.swing.*;
 import java.awt.*;
 
+import views.Components.StatusBar;
 import views.panels.*;
 
 public class ViewManager {
@@ -17,12 +18,17 @@ public class ViewManager {
     private final DuringArticles duringArticles;
     private final DuringCodeEnter duringCode;
     private final DuringReturnTransaction duringReturn;
+    private final StatusBar statusBar = new StatusBar();
+
+
 
     private ViewManager() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         mainFrame = new JFrame("Cashier System");
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setSize(screenSize.width, screenSize.height);
+        mainFrame.setLayout(new BorderLayout());
+
 
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
@@ -39,7 +45,8 @@ public class ViewManager {
         cardPanel.add(duringCode, "CODE-ENTER");
         cardPanel.add(duringReturn, "RETURN-TRANSACTION");
 
-        mainFrame.add(cardPanel);
+        mainFrame.add(statusBar,BorderLayout.SOUTH);
+        mainFrame.add(cardPanel,BorderLayout.CENTER);
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setVisible(true);
     }
@@ -94,6 +101,8 @@ public class ViewManager {
     public DuringReturnTransaction getDuringReturn() {
         return duringReturn;
     }
+
+    public StatusBar getStatusBar(){return statusBar;}
 
     public void returnToDefault(){
         duringRegister.returnToDefault();

@@ -25,7 +25,6 @@ public class DuringArticles extends JPanel implements ButtonFoundable {
     private final JButton searchButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.SEARCH.toString(), ButtonSet.ButtonLabel.SEARCH.getColor());
     private final JButton cancelButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.EXIT.toString(), ButtonSet.ButtonLabel.EXIT.getColor());
     private final JPanel clusterBottom = createBottomCluster();
-    private final StatusBar statusBar = new StatusBar();
 
     public DuringArticles() {
         GridBagConstraints gbcMain = GridBagConstraintsBuilder.buildGridBagConstraints(0, 0);
@@ -40,13 +39,6 @@ public class DuringArticles extends JPanel implements ButtonFoundable {
 
         gbcMain.gridx = 1;
         add(createRightPanel(), gbcMain);
-
-        gbcMain.gridy = 1;
-        gbcMain.gridx = 0;
-        gbcMain.gridwidth = 2;
-        gbcMain.weighty = 0;
-        gbcMain.fill = GridBagConstraints.HORIZONTAL;
-        add(statusBar, gbcMain);
     }
 
     private JPanel createLeftPanel() {
