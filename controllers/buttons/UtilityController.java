@@ -70,7 +70,7 @@ public class UtilityController {
 
         for(String buttonName : ButtonSet.CASH_NAMES.getStringLabels()){
             if(buttonName.contains("€")){
-                duringRegister.getButton(buttonName).setActionCommand(ButtonSet.ButtonLabel.ADD.toString());
+                duringRegister.getButton(buttonName).setActionCommand(ButtonSet.ButtonLabel.CASH.toString());
                 duringRegister.getButton(buttonName).addActionListener(e -> {
                     ContentController.clearContent();
                     ContentController.appendContent(String.format("%s00",buttonName.split("€")[0]));

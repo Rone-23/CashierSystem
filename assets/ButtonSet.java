@@ -31,10 +31,10 @@ public enum ButtonSet {
 
     IDLE_UTILITY_NAMES(new ButtonLabel[]{
             ButtonLabel.BEGIN,
-            ButtonLabel.CREATE_CARD,
-            ButtonLabel.COPY_RECEIPT,
             ButtonLabel.RETURN,
-            ButtonLabel.VOUCHER,
+            ButtonLabel.COPY_RECEIPT,
+            ButtonLabel.GENERATE_VOUCHER,
+            ButtonLabel.CREATE_CARD,
             ButtonLabel.PAUSE,
             ButtonLabel.PADAVAN,
     }),
@@ -86,13 +86,14 @@ public enum ButtonSet {
      */
     public enum ButtonLabel {
         // UTILITY_BUTTON Labels
-        ARTICLES("Artikle", Colors.MILD_YELLOW),
+        ARTICLES("Artikle", Colors.DEFAULT_BLUE),
         LAST_ARTICLE("Posledna polozka", Colors.MILD_YELLOW),
         STORNO("Storno", Colors.DANGER_RED),
         CASH("Hotovost", Colors.SUCCESS_GREEN),
         CARD("Karta", Colors.SUCCESS_GREEN),
-        FOOD_TICKETS("Stravenky", Colors.SUCCESS_GREEN),
-        VOUCHER("Poukážky", Colors.SUCCESS_GREEN),
+        FOOD_TICKETS("Stravenky", Colors.ALT_PAYMENT_TEAL),
+        VOUCHER("Poukážky", Colors.ALT_PAYMENT_TEAL),
+        GENERATE_VOUCHER("Vybaviť poukážky", Colors.CUSTOMER_ORANGE),
 
         //CASH_BUTTON Labels
         FIVE("5€", Colors.DEFAULT_BLUE),
@@ -103,11 +104,11 @@ public enum ButtonSet {
 
         //IDLE_UTILITY_BUTTONS
         BEGIN("Zacat (Artikle)", Colors.DEFAULT_BLUE),
-        CREATE_CARD("Vybavit kartu", Colors.DEFAULT_BLUE),
+        CREATE_CARD("Vybavit kartu", Colors.CUSTOMER_ORANGE),
         COPY_RECEIPT("Kopia blocku", Colors.DEFAULT_BLUE),
         RETURN("Vratka", Colors.DEFAULT_BLUE),
-        PAUSE("Pauza", Colors.DEFAULT_BLUE),
-        PADAVAN("Zaucenie", Colors.DEFAULT_BLUE),
+        PAUSE("Pauza", Colors.DANGER_RED),
+        PADAVAN("Zaucenie", Colors.PURPLE),
 
         //KEYBOARD
         DELETE("Delete", Colors.BUTTON_LIGHT_BLUE),
