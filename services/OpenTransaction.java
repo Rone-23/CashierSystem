@@ -56,113 +56,97 @@ public class OpenTransaction implements ContentObserver {
         }
     }
 
-    public void addItem(Item item){
-        if(item == null){
-            return;
-        }
+    public void addItem(Item item) {
+        if (item == null) return;
+
+        String name = item.getName();
 
         try {
-            int stock = SQL_Connect.getInstance().getStock(SQL_Connect.getInstance().getArticleID(item.getName()));
-            int stockInTransaction = itemsInTransaction.containsKey(item.getName()) ? itemsInTransaction.get(item.getName()).getAmount() : 0 ;
-            if(stock - content - stockInTransaction < 0){
-                NotificationController.notifyObservers("Nedostatok tovaru v sklade, aktualny pocet je"+stock,5000);
+            int stock = SQL_Connect.getInstance().getStock(SQL_Connect.getInstance().getArticleID(name));
+            int inTransaction = itemsInTransaction.containsKey(name) ? itemsInTransaction.get(name).getAmount() : 0;
+
+            if (stock - content - inTransaction < 0) {
+                NotificationController.notifyObservers("Nedostatok tovaru v sklade, aktualny pocet je " + stock, 5000);
                 return;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Database error during stock check", e);
         }
 
-        if(!isReturn){
-            if(!itemsInTransaction.containsKey(item.getName())){
-                ItemCountable itemInTransaction = new ItemCountable(
-                        item.getName(),
-                        item.getPrice(),
-                        content
-                );
-                itemsInTransaction.put(
-                        item.getName(),
-                        itemInTransaction
-                );
-                for (OpenTransactionObserver observer : observerList) {
-                    observer.onItemAdd(itemInTransaction);
-                }
-            }else {
-                ItemCountable itemInTransaction = (ItemCountable) itemsInTransaction.get(item.getName());
-                itemInTransaction.addAmount(content);
-                for (OpenTransactionObserver observer : observerList) {
-                    observer.onItemAdd(itemInTransaction);
-                }
+        ItemCountable itemToNotify = null;
+
+        if (!isReturn) {
+            itemToNotify = (ItemCountable) itemsInTransaction.computeIfAbsent(name, k ->
+                    new ItemCountable(name, item.getPrice(), 0)
+            );
+            itemToNotify.addAmount(content);
+
+        } else {
+            ItemCountable returnedItem = (ItemCountable) returnedItems.get(name);
+            ItemCountable itemInTransaction = (ItemCountable) itemsInTransaction.get(name);
+
+            if (returnedItem == null || returnedItem.getAmount() - content < 0) {
+                NotificationController.notifyObservers("Nemozes nablokovat viac tovaru ako bolo povodne.", 5000);
+                return;
             }
-        }else{
-            if(returnedItems.containsKey(item.getName())){
-                ItemCountable returnedItem = (ItemCountable) returnedItems.get(item.getName());
-                ItemCountable itemInTransaction = (ItemCountable) itemsInTransaction.get(item.getName());
-                if(returnedItem.getAmount() - content >= 0){
-                    returnedItem.addAmount(-content);
-                    itemInTransaction.addAmount(content);
-                    for (OpenTransactionObserver observer : observerList) {
-                        observer.onItemAdd(itemInTransaction);
-                    }
-                }else{
-                    NotificationController.notifyObservers("Nemozes nablokovat viac tovaru ako bolo povodne.",5000);
-                }
-            }
+
+            returnedItem.addAmount(-content);
+            itemInTransaction.addAmount(content);
+            itemToNotify = itemInTransaction;
         }
 
+        if (itemToNotify != null) {
+            for (OpenTransactionObserver observer : observerList) {
+                observer.onItemAdd(itemToNotify);
+            }
+        }
     }
 
-    public void removeItem(Item item){
-        if(item==null){return;}
+    public void removeItem(Item item) {
+        if (item == null) return;
 
-        if(!isReturn){
-            if(itemsInTransaction.containsKey(item.getName())){
-                ItemCountable itemInTransaction = (ItemCountable) itemsInTransaction.get(item.getName());
-                if(itemInTransaction.getAmount()-content > 0){
-                    itemInTransaction.addAmount(-content);
-                    for (OpenTransactionObserver observer : observerList) {
-                        observer.onItemAdd(itemInTransaction);
-                    }
-                } else if (itemInTransaction.getAmount()-content ==0) {
-                    itemsInTransaction.remove(item.getName());
-                    for (OpenTransactionObserver observer : observerList) {
-                        observer.onItemRemove(itemInTransaction);
-                    }
-                }else{
-                    NotificationController.notifyObservers("Nemozte vratit viac tovaru ako je v transakcii",5000);
-                }
-            }else{
-                NotificationController.notifyObservers("Nemozte vratit tovar ktorý nie je v transakcii",5000);
-            }
-        }else{
-            if(returnedItems.containsKey(item.getName())){
-                ItemCountable returnedItem = (ItemCountable) returnedItems.get(item.getName());
-                ItemCountable itemInTransaction = (ItemCountable) itemsInTransaction.get(item.getName());
+        String itemName = item.getName();
+        ItemCountable itemInTransaction = (ItemCountable) itemsInTransaction.get(itemName);
 
-                if(itemInTransaction.getAmount()-content >= 0){
-                    returnedItem.addAmount(content);
-                    itemInTransaction.addAmount(-content);
-                    for (OpenTransactionObserver observer : observerList) {
-                        observer.onItemAdd(itemInTransaction);
-                    }
-                }else {
-                    NotificationController.notifyObservers("Nemozte vratit tovar ktorý nie je v transakcii",5000);
+        if (itemInTransaction == null) {
+            NotificationController.notifyObservers("Nemozte vratit tovar ktorý nie je v transakcii", 5000);
+            return;
+        }
+
+        int remainingAmount = itemInTransaction.getAmount() - content;
+
+        if (remainingAmount < 0) {
+            String msg = isReturn ? "Nemozte vratit tovar ktorý nie je v transakcii" : "Nemozte vratit viac tovaru ako je v transakcii";
+            NotificationController.notifyObservers(msg, 5000);
+            return;
+        }
+
+
+        if (!isReturn) {
+            if (remainingAmount == 0) {
+                itemsInTransaction.remove(itemName);
+                for (OpenTransactionObserver observer : observerList) {
+                    observer.onItemRemove(itemInTransaction);
                 }
-            }else {
-                ItemCountable itemInTransaction = (ItemCountable) itemsInTransaction.get(item.getName());
-                if(itemInTransaction.getAmount()-content >= 0){
-                    returnedItems.put(
-                            item.getName(),
-                            new ItemCountable(
-                                    item.getName(),
-                                    item.getPrice(),
-                                    content
-                            ));
-                    itemInTransaction.addAmount(-content);
-                    for (OpenTransactionObserver observer : observerList) {
-                        observer.onItemAdd(itemInTransaction);
-                    }
-                }
+                return;
             }
+
+            itemInTransaction.addAmount(-content);
+
+        } else {
+            ItemCountable returnedItem = (ItemCountable) returnedItems.get(itemName);
+
+            if (returnedItem != null) {
+                returnedItem.addAmount(content);
+            } else {
+                returnedItems.put(itemName, new ItemCountable(itemName, item.getPrice(), content));
+            }
+
+            itemInTransaction.addAmount(-content);
+        }
+
+        for (OpenTransactionObserver observer : observerList) {
+            observer.onItemAdd(itemInTransaction);
         }
     }
 
@@ -229,8 +213,19 @@ public class OpenTransaction implements ContentObserver {
         }
     }
 
-    private void checkSum(String typeOfPayment){
+    private void checkSum(String typeOfPayment) {
         if(isReturn){
+            for(Item returnedItem: returnedItems.values().toArray(new Item[0])){
+                try{
+                    SQL_Connect.getInstance().returnItem(
+                            transactionID,
+                            SQL_Connect.getInstance().getArticleID(returnedItem.getName()),
+                            returnedItem.getAmount()
+                    );
+                }catch (SQLException e){
+                    NotificationController.notifyObservers(e.toString(), 5000);
+                }
+            }
             for(OpenTransactionObserver observer : observerList){
                 observer.paymentDone();
             }
@@ -241,6 +236,18 @@ public class OpenTransaction implements ContentObserver {
             observer.onAddedPayment(getMissing(), typeOfPayment, content);
         }
         if(getMissing()<=EPSILON){
+            for(Item item : itemsInTransaction.values().toArray(new Item[0])){
+                try{
+                    SQL_Connect.getInstance().addToTransaction(
+                            transactionID,
+                            SQL_Connect.getInstance().getArticleID(item.getName()),
+                            item.getAmount(),
+                            item.getPrice()
+                    );
+                }catch (SQLException e){
+                    NotificationController.notifyObservers(e.toString(), 5000);
+                }
+            }
             for(OpenTransactionObserver observer : observerList){
                 observer.paymentDone();
             }

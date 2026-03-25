@@ -1,6 +1,8 @@
 package controllers.buttons;
 
+import controllers.display.DisplayDispatcher;
 import controllers.notifications.NotificationController;
+import controllers.panels.ViewManager;
 import controllers.transaction.OpenTransactionManager;
 import controllers.transaction.ContentController;
 import controllers.transaction.ContentObserver;
@@ -24,9 +26,11 @@ public class ReturnTransactionAction extends AbstractAction implements ContentOb
                     SQL_Connect.getInstance().getDateOfTransaction(insertedTransactionID),
                     SQL_Connect.getInstance().getAllArticlesFromPastTransaction(insertedTransactionID)
             );
-        } catch (SQLException ex) {
-            NotificationController.notifyObservers(ex.toString(),5000);
-//            ContentController.clearContent();
+            ViewManager.getInstance().showReturnTransaction();
+            DisplayDispatcher.activeDisplayForAmount();
+        } catch (SQLException | IllegalStateException ex) {
+            NotificationController.notifyObservers(ex.getMessage(),5000);
+            ContentController.clearContent();
         }
     }
 

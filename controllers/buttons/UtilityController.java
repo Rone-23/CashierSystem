@@ -121,11 +121,7 @@ public class UtilityController {
             ViewManager.getInstance().showIdle();
             DisplayDispatcher.activeDisplayForAmount();
         });
-        ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(e -> {
-            returnTransactionAction.actionPerformed(e);
-            ViewManager.getInstance().showReturnTransaction();
-            DisplayDispatcher.activeDisplayForAmount();
-        });
+        ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(returnTransactionAction);
 
         /*
         #Controlling buttons on bottom side of DuringReturn

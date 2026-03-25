@@ -50,18 +50,20 @@ public class OpenTransactionManager implements OpenTransactionObserver{
         getOpenTransaction().removeItem(item);
     }
 
-    public void loadHistoricalTransaction(int transactionID, String date, Item[] items) {
+    public void loadHistoricalTransaction(int transactionID, String date, Item[] items){
         if (this.openTransaction != null) {
             ContentController.removeObserver(this.openTransaction);
+        }
+
+        if(items.length==0){
+            throw new IllegalStateException("Dopytovaná transakcia neobsahuje žiaden tovar určený na vrátenie.");
         }
 
         this.openTransaction = new OpenTransaction(transactionID, date);
 
         ContentController.addObserver(openTransaction);
 
-        if (items != null) {
-            this.openTransaction.loadItemsIntoTransaction(items);
-        }
+        this.openTransaction.loadItemsIntoTransaction(items);
     }
 
     @Override
