@@ -1,11 +1,13 @@
 package controllers.buttons;
 
 import assets.ButtonSet;
+import controllers.notifications.CheckPauseAction;
 import controllers.transaction.CashBackAction;
 import controllers.transaction.ContentController;
 import controllers.display.DisplayDispatcher;
 import controllers.panels.ViewManager;
 import controllers.transaction.OpenTransactionManager;
+import views.panels.DuringPause;
 import views.panels.DuringRegister;
 import views.panels.DuringReturnTransaction;
 
@@ -16,6 +18,7 @@ public class UtilityController {
     AddItemAction addItemAction = new AddItemAction();
     RemoveItemAction removeItemAction = new RemoveItemAction();
     CodeEnterAction codeEnterAction = new CodeEnterAction();
+    CheckPauseAction checkPauseAction;
     public UtilityController() {
         /*
         #Controlling all the buttons that are on the right side in DuringIdle
@@ -30,6 +33,12 @@ public class UtilityController {
             ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).setActionCommand(ButtonSet.ButtonLabel.COPY_RECEIPT.toString());
             ViewManager.getInstance().showCodeEnter();
             DisplayDispatcher.activeDisplayForCode();
+        });
+        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.PAUSE.toString()).addActionListener(_ -> {
+            DuringPause duringPause = ViewManager.getInstance().getDuringPause();
+            duringPause.getButton(ButtonSet.ButtonLabel.ADD.toString()).removeActionListener(checkPauseAction);
+            checkPauseAction = new CheckPauseAction();
+            duringPause.getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(checkPauseAction);
         });
 
 

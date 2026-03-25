@@ -18,10 +18,11 @@ public class StatusBar extends JPanel implements NotificationObserver {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy  |  HH:mm:ss");
     private Timer notificationTimer;
 
-    // State variables for the right-side info
     private String cashierId = "---";
     private String status = "---";
     private String transactionId = "---";
+
+    private Boolean isLocked=false;
 
     public StatusBar() {
         NotificationController.addObserver(this);
@@ -33,19 +34,16 @@ public class StatusBar extends JPanel implements NotificationObserver {
                 new EmptyBorder(10, 20, 10, 20)
         ));
 
-        // Left side: Date & Time
         dateTimeLabel.setFont(new Font("Roboto", Font.BOLD, 16));
         dateTimeLabel.setForeground(Colors.BLACK_TEXT.getColor());
         updateTime();
 
-        // Center: Notifications
         notificationLabel.setFont(new Font("Roboto", Font.BOLD, 14));
         notificationLabel.setForeground(new Color(211, 47, 47));
 
-        // Right side: System Info (Cashier, Status, Transaction)
         infoLabel.setFont(new Font("Roboto", Font.BOLD, 16));
         infoLabel.setForeground(Colors.BLACK_TEXT.getColor());
-        updateInfoLabel(); // Initialize text
+        updateInfoLabel();
 
         add(dateTimeLabel, BorderLayout.WEST);
         add(notificationLabel, BorderLayout.CENTER);
@@ -86,6 +84,18 @@ public class StatusBar extends JPanel implements NotificationObserver {
         updateInfoLabel();
     }
 
+    public void setLocked(Boolean status){
+        isLocked=status;
+        if(isLocked){
+                if (notificationTimer != null) notificationTimer.stop();
+                notificationLabel.setText("SYSTÉM JE POZASTAVENÝ, ZADAJTE 4 MIESTNY KÓD PRE ODBLOKOVANIE.");
+                notificationLabel.setForeground(Color.RED);
+            } else {
+                notificationLabel.setText("");
+                notificationLabel.setForeground(new Color(211, 47, 47));
+        }
+    }
+
     private void showNotification(String message, int durationMs) {
         if (notificationTimer != null && notificationTimer.isRunning()) {
             notificationTimer.stop();
@@ -94,7 +104,11 @@ public class StatusBar extends JPanel implements NotificationObserver {
         notificationLabel.setText(message.toUpperCase());
 
         notificationTimer = new Timer(durationMs, _ -> {
-            notificationLabel.setText("");
+            if(!isLocked){
+                notificationLabel.setText("");
+            }else {
+                notificationLabel.setText("SYSTÉM JE POZASTAVENÝ, ZADAJTE 4 MIESTNY KÓD PRE ODBLOKOVANIE.");
+            }
         });
         notificationTimer.setRepeats(false);
         notificationTimer.start();

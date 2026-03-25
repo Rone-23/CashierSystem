@@ -2,13 +2,10 @@ package controllers;
 
 import controllers.buttons.KeyboardController;
 import controllers.buttons.UtilityController;
-import controllers.panels.DuringCodeEnterController;
-import controllers.panels.DuringReturnTransactionController;
+import controllers.panels.*;
 import controllers.transaction.ContentController;
 import controllers.display.DisplayDispatcher;
 import controllers.display.DisplayItemController;
-import controllers.panels.DuringArticlesController;
-import controllers.panels.DuringRegisterController;
 import services.OpenTransaction;
 
 import java.sql.SQLException;
@@ -21,6 +18,7 @@ public class MainController {
         new DuringArticlesController();
         new DuringCodeEnterController();
         new DuringReturnTransactionController();
+        new DuringPauseController();
 
         DisplayItemController displayItemController = new DisplayItemController();
         OpenTransaction.addObserver(displayItemController);

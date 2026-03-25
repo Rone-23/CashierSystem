@@ -30,7 +30,7 @@ public class CodeEnterAction extends AbstractAction implements ContentObserver {
             if(e.getActionCommand().equals(ButtonSet.ButtonLabel.RETURN.toString())){
                 ViewManager.getInstance().showReturnTransaction();
                 DisplayDispatcher.activeDisplayForAmount();
-            } else {
+            } else{
                 OpenTransactionManager.getInstance().addPayment(e);
             }
         } catch (SQLException | IllegalStateException ex) {

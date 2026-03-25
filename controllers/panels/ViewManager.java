@@ -18,6 +18,7 @@ public class ViewManager {
     private final DuringArticles duringArticles;
     private final DuringCodeEnter duringCode;
     private final DuringReturnTransaction duringReturn;
+    private final DuringPause duringPause;
     private final StatusBar statusBar = new StatusBar();
 
 
@@ -38,12 +39,14 @@ public class ViewManager {
         duringArticles = new DuringArticles();
         duringCode = new DuringCodeEnter();
         duringReturn = new DuringReturnTransaction();
+        duringPause = new DuringPause();
 
         cardPanel.add(duringIdle, "IDLE");
         cardPanel.add(duringRegister, "REGISTER");
         cardPanel.add(duringArticles, "ARTICLES");
         cardPanel.add(duringCode, "CODE-ENTER");
         cardPanel.add(duringReturn, "RETURN-TRANSACTION");
+        cardPanel.add(duringPause, "DURING-PAUSE");
 
         mainFrame.add(statusBar,BorderLayout.SOUTH);
         mainFrame.add(cardPanel,BorderLayout.CENTER);
@@ -74,6 +77,11 @@ public class ViewManager {
         cardLayout.show(cardPanel, "CODE-ENTER");
     }
 
+    public void showPause() {
+        cardLayout.show(cardPanel, "DURING-PAUSE");
+        statusBar.setLocked(true);
+    }
+
     public void showReturnTransaction() {
         cardLayout.show(cardPanel, "RETURN-TRANSACTION");
     }
@@ -101,6 +109,8 @@ public class ViewManager {
     public DuringReturnTransaction getDuringReturn() {
         return duringReturn;
     }
+
+    public DuringPause getDuringPause(){return duringPause;}
 
     public StatusBar getStatusBar(){return statusBar;}
 
