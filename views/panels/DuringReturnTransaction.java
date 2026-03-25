@@ -21,7 +21,7 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable {
     private final DisplayItems displayItems = new DisplayItems();
     private final Display displayTotal = new Display(Constants.TOTAL);
     private final Display displayTopAmount = new Display(Constants.WEIGHT);
-    private final Display displayTopTotal = new Display(Constants.TOTAL);
+    private final Display displayTopTotal = new Display(Constants.TOTAL, "Ku výdavku");
     private final Keyboard keyboard = new Keyboard();
     private final ButtonCluster utilityButtonCluster = new ButtonCluster(ButtonSet.RETURN_TRANSACTION_UTILITY_NAMES.getLabels(), Constants.VERTICAL);
     private final ButtonCluster commonButtonCluster = new ButtonCluster(ButtonSet.RETURN_TRANSACTION_RETURN_MONEY.getLabels(), Constants.VERTICAL);

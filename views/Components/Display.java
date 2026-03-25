@@ -12,8 +12,19 @@ public class Display extends JTextArea {
     private final String[] text = {"0.00","1"};
     private final Constants displayType;
     private final Dimension dimension = new Dimension(400,100);
-    public Display() {
-        this.displayType = Constants.TOTAL;
+    private final String[] textToDisplay = new String[2];
+
+    public Display(Constants displayType) {
+        this.displayType = displayType;
+        switch (displayType){
+            case TOTAL -> textToDisplay[0] = "Cena";
+            case WEIGHT -> textToDisplay[0] = "Množstvo";
+            case SPLIT -> {
+                textToDisplay[0] = "Cena";
+                textToDisplay[1] = "Množstvo";
+            }
+            case CODE -> textToDisplay[0] = "Zadajte kód";
+        }
         setPreferredSize(dimension);
         setOpaque(false);
         setBorder(new EmptyBorder(10,10,10,10));
@@ -22,9 +33,9 @@ public class Display extends JTextArea {
         setEditable(false);
         setFocusable(false);
     }
-
-    public Display(Constants displayType) {
+    public Display(Constants displayType, String textToDisplay) {
         this.displayType = displayType;
+        this.textToDisplay[0] = textToDisplay;
         setPreferredSize(dimension);
         setOpaque(false);
         setBorder(new EmptyBorder(10,10,10,10));
@@ -67,7 +78,7 @@ public class Display extends JTextArea {
                 drawTextCoordinatesX = writableArea.getBounds().x;
                 drawTextCoordinatesY = writableArea.getBounds().y+fm.getHeight();
 
-                g2.drawString("Cena",drawTextCoordinatesX,drawTextCoordinatesY);
+                g2.drawString(textToDisplay[0],drawTextCoordinatesX,drawTextCoordinatesY);
 
                 strWidth = fm.stringWidth(getTextArray()[0] + " €");
                 drawTextCoordinatesX = (int) writableArea.getBounds().getWidth()+writableArea.getBounds().x-strWidth;
@@ -87,7 +98,7 @@ public class Display extends JTextArea {
                 drawTextCoordinatesX = writableArea.getBounds().x;
                 drawTextCoordinatesY = writableArea.getBounds().y+fm.getHeight();
 
-                g2.drawString("Množstvo",drawTextCoordinatesX,drawTextCoordinatesY);
+                g2.drawString(textToDisplay[0],drawTextCoordinatesX,drawTextCoordinatesY);
 
                 strWidth = fm.stringWidth(getTextArray()[0] +" ks");
                 drawTextCoordinatesX = (int) writableArea.getBounds().getWidth()+writableArea.getBounds().x-strWidth;
@@ -112,7 +123,7 @@ public class Display extends JTextArea {
                 drawTextCoordinatesX = writableAreaTop.getBounds().x;
                 drawTextCoordinatesY = (int) (writableAreaTop.getBounds().y+fm.getHeight()*0.7);
 
-                g2.drawString("Cena",drawTextCoordinatesX,drawTextCoordinatesY);
+                g2.drawString(textToDisplay[0],drawTextCoordinatesX,drawTextCoordinatesY);
 
                 strWidth = fm.stringWidth(getTextArray()[0] +" €");
                 drawTextCoordinatesX = (int) writableAreaTop.getBounds().getWidth()+writableAreaTop.getBounds().x-strWidth;
@@ -121,11 +132,30 @@ public class Display extends JTextArea {
                 drawTextCoordinatesX = writableAreaBottom.getBounds().x;
                 drawTextCoordinatesY = (int) (writableAreaBottom.getBounds().y+fm.getHeight()*0.7);
 
-                g2.drawString("Množstvo",drawTextCoordinatesX,drawTextCoordinatesY);
+                g2.drawString(textToDisplay[1],drawTextCoordinatesX,drawTextCoordinatesY);
 
                 strWidth = fm.stringWidth(getTextArray()[1] + " ks");
                 drawTextCoordinatesX =  (int) writableAreaBottom.getBounds().getWidth()+writableAreaBottom.getBounds().x-strWidth;
                 g2.drawString(getTextArray()[1]+ " ks",drawTextCoordinatesX,drawTextCoordinatesY);
+            }
+            case CODE -> {
+                g2.setFont(paintVariantTotal());
+                FontMetrics fm = g2.getFontMetrics();
+                Shape writableArea = new Rectangle(
+                        (int) (inset+ (double) getHeight() /2*0.6),
+                        (int) (inset+ (double) getHeight() /2-getHeight()*0.4),
+                        (int) (getWidth()-getHeight()*0.6-inset*2),
+                        (int) (getHeight()*0.8-inset*2)
+                );
+                drawTextCoordinatesX = writableArea.getBounds().x;
+                drawTextCoordinatesY = writableArea.getBounds().y+fm.getHeight();
+
+                g2.drawString(textToDisplay[0],drawTextCoordinatesX,drawTextCoordinatesY);
+
+                strWidth = fm.stringWidth(getTextArray()[0]);
+                drawTextCoordinatesX = (int) writableArea.getBounds().getWidth()+writableArea.getBounds().x-strWidth;
+                g2.drawString(getTextArray()[0],drawTextCoordinatesX,drawTextCoordinatesY);
+
             }
         }
 

@@ -5,6 +5,7 @@ public enum Constants {
     TOTAL(10),
     WEIGHT(11),
     SPLIT(12),
+    CODE(13),
 
     //ARROW TYPE
     LEFT(20),
