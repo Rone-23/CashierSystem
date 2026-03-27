@@ -43,6 +43,7 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
                 ArticleButton articleButton = (ArticleButton) buttons.get(article.getName().toLowerCase());
                 articleButton.addStarActionListener(favoriteArticleAction);
                 articleButton.setStarred(article.getIsFavorite());
+                articleButton.setItemImage("/Images/OIP.png");
             }catch (ClassCastException e){
                 NotificationController.notifyObservers(e.toString(),5000);
             }

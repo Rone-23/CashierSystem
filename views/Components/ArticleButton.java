@@ -24,6 +24,8 @@ public class ArticleButton extends JToggleButton implements ContainsItem {
     private boolean isStarred = false;
     private Rectangle2D starBounds;
 
+    private Image image;
+
     private final List<ActionListener> starActionListeners = new ArrayList<>();
 
     public ArticleButton(Color color, Item item) {
@@ -91,9 +93,20 @@ public class ArticleButton extends JToggleButton implements ContainsItem {
         int width = getWidth() - inset * 2 - insetSide * 2;
         int height = getHeight() - inset * 2 - insetBottom - insetTop;
 
-        g2.setPaint(ColorManipulation.lighten(color, 0.7f));
         Shape inner = new RoundRectangle2D.Double(inset + insetSide, inset + insetTop, width, height - insetTop, arc, arc);
+        g2.setPaint(ColorManipulation.lighten(color, 0.7f));
         g2.fill(inner);
+        if(image != null){
+            int imgW = image.getWidth(null);
+            int imgH = image.getHeight(null);
+            double scale = Math.min(inner.getBounds().getWidth() / imgW, inner.getBounds().getHeight() / imgH);
+            int finalW = (int) (imgW * scale * 0.8);
+            int finalH = (int) (imgH * scale * 0.8);
+            int x = ((width - finalW ) / 2)+inner.getBounds().x;
+            int y = (int) ((inner.getBounds().getHeight() - finalH) / 2)+inner.getBounds().y;
+
+            g2.drawImage(image, x, y, finalW, finalH, null);
+        }
 
         drawStar(g2, inset);
 
@@ -148,6 +161,20 @@ public class ArticleButton extends JToggleButton implements ContainsItem {
         g2.setPaint(isStarred ? new Color(180, 140, 0) : new Color(0, 0, 0, 120));
         g2.setStroke(new BasicStroke(1.2f));
         g2.draw(star);
+    }
+
+    public void setItemImage(String imagePath) {
+        try {
+            java.net.URL imgURL = getClass().getResource(imagePath);
+            if (imgURL != null) {
+                this.image = new ImageIcon(imgURL).getImage();
+            } else {
+                System.err.println("Could not find image file: " + imagePath);
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading image: " + e.getMessage());
+        }
+        repaint();
     }
 
     public void resetItemAmount(){
