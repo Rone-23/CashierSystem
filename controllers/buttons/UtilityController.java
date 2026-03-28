@@ -23,7 +23,10 @@ public class UtilityController {
         /*
         #Controlling all the buttons that are on the right side in DuringIdle
          */
-        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.BEGIN.toString()).addActionListener(_ -> ViewManager.getInstance().showArticles());
+        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.BEGIN.toString()).addActionListener(_ -> {
+            ViewManager.getInstance().showArticles();
+            OpenTransactionManager.getInstance().getOpenTransaction();
+        });
         ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.RETURN.toString()).addActionListener(_ -> {
             ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).setActionCommand(ButtonSet.ButtonLabel.RETURN.toString());
             ViewManager.getInstance().showCodeEnter();

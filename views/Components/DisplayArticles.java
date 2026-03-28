@@ -57,7 +57,7 @@ public class DisplayArticles extends JScrollPane {
 
     public void addArticle(Item item){
         gbc.weighty=0;
-        gbc.weightx=1;
+        gbc.weightx=0;
 
         gbc.gridy = (int) Math.floor( (double) componentCount /4);
         gbc.gridx = componentCount % 4;
@@ -80,6 +80,8 @@ public class DisplayArticles extends JScrollPane {
     public void clear(){
         mainArticlePanel.removeAll();
         componentCount=0;
+        gbc.gridy=0;
+        gbc.gridx=0;
     }
 
     public Map<String, JToggleButton> getButtons(){
@@ -87,7 +89,6 @@ public class DisplayArticles extends JScrollPane {
     }
 
     private void recalculate(){
-        //Dynamically adjust the size of the article button so that there are always 4X3.5 matrix
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -101,7 +102,6 @@ public class DisplayArticles extends JScrollPane {
     }
 
     private void rescaleButtons(){
-        //Called when you need to update the size of the buttons
         Component[] components = mainArticlePanel.getComponents();
         for(Component c : components){
             if(c instanceof JButton){
@@ -111,7 +111,6 @@ public class DisplayArticles extends JScrollPane {
     }
 
     private void touchControls(){
-        // add "touch scroll" behavior
         JViewport view = this.getViewport();
         final Point lastDrag = new Point();
         this.getViewport().addMouseMotionListener(new MouseMotionAdapter() {

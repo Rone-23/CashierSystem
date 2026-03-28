@@ -7,6 +7,7 @@ import controllers.panels.ViewManager;
 import controllers.buttons.FilterObserver;
 import controllers.transaction.OpenTransactionObserver;
 import services.Item;
+import services.OpenTransaction;
 import services.SQL_Connect;
 import views.Components.ArticleButton;
 import views.Components.DisplayArticles;
@@ -25,7 +26,6 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
     private final ArticleSelectAction articleSelectAction = new ArticleSelectAction();
     private final FavoriteArticleAction favoriteArticleAction = new FavoriteArticleAction();
     public DisplayArticleController(){
-        createArticles();
     }
 
     public void createArticles(){
@@ -69,6 +69,7 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
                         ArticleButton articleButton = (ArticleButton) buttons.get(article.getName().toLowerCase());
                         articleButton.addStarActionListener(favoriteArticleAction);
                         articleButton.setStarred(article.getIsFavorite());
+                        articleButton.setItemImage("/Images/OIP.png");
                     } catch (ClassCastException e) {
                         NotificationController.notifyObservers(e.toString(), 5000);
                     }
@@ -89,6 +90,7 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
                     ArticleButton articleButton = (ArticleButton) buttons.get(article.getName().toLowerCase());
                     articleButton.addStarActionListener(favoriteArticleAction);
                     articleButton.setStarred(article.getIsFavorite());
+                    articleButton.setItemImage("/Images/OIP.png");
                 } catch (ClassCastException e) {
                     NotificationController.notifyObservers(e.toString(), 5000);
                 }
@@ -111,6 +113,8 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
                 ArticleButton articleButton = (ArticleButton) buttons.get(article.getName().toLowerCase());
                 articleButton.addStarActionListener(favoriteArticleAction);
                 articleButton.setStarred(article.getIsFavorite());
+                articleButton.setItemImage("/Images/OIP.png");
+
             }catch (ClassCastException e){
                 NotificationController.notifyObservers(e.toString(),5000);
             }
@@ -122,7 +126,7 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
     public void updateMainFilter(String filterKeyword) {
         filterKeywordMain = filterKeyword;
         displayArticles.clear();
-        createArticles(filterKeywordMain);
+        createArticles();
     }
 
     @Override
@@ -130,6 +134,11 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
         filterKeywordSecondary = filterKeyword;
         displayArticles.clear();
         createArticles(filterKeywordMain,filterKeywordSecondary);
+    }
+
+    @Override
+    public void onCreate(OpenTransaction openTransaction) {
+        createArticles();
     }
 
     @Override
