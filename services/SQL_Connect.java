@@ -58,7 +58,7 @@ public class SQL_Connect {
                         JOIN cashier c on f.cashier_id = c.cashier_id
                         WHERE f.article_id = a.article_id
                         AND f.cashier_id = 1
-                    ) as is_favorite
+                    ) as is_favorite, t.type_name, s.subtype_name
                 FROM article a
                 INNER JOIN subtype s ON a.subtype_id = s.subtype_id
                 INNER JOIN type t ON s.parent_type_id = t.type_id;
@@ -75,6 +75,8 @@ public class SQL_Connect {
                         0
                 );
                 item.setIsFavorite(rs.getInt("is_favorite") > 0);
+                item.setCategory(rs.getString("type_name"));
+                item.setSubcategory(rs.getString("subtype_name"));
                 items.add(item);
             }
 
@@ -136,6 +138,40 @@ public class SQL_Connect {
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1,type);
             pstmt.setString(2,subtype);
+            ResultSet rs = pstmt.executeQuery();
+
+            List<Item> items = new ArrayList<>();
+            while (rs.next()) {
+                Item item = new ItemCountable(
+                        rs.getString("name"),
+                        rs.getInt("price"),
+                        0
+                );
+                item.setIsFavorite(rs.getInt("is_favorite") > 0);
+                items.add(item);
+            }
+
+            return items.toArray(new Item[0]);
+        }
+    }
+
+    public Item[] getItemsBySubCategory(String type) throws SQLException {
+        String sql = """
+                SELECT a.name, a.price,
+                    EXISTS (
+                        SELECT 1
+                        FROM favorite_article f
+                        JOIN cashier c on f.cashier_id = c.cashier_id
+                        WHERE f.article_id = a.article_id
+                        AND f.cashier_id = 1
+                    ) as is_favorite
+                FROM article a
+                INNER JOIN subtype s ON a.subtype_id = s.subtype_id
+                WHERE s.subtype_name = ?;
+                """;
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1,type);
             ResultSet rs = pstmt.executeQuery();
 
             List<Item> items = new ArrayList<>();

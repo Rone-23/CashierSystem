@@ -11,6 +11,9 @@ public abstract class Item {
     protected int price,amount;
     private static double totalAmount;
     private boolean isFavorite;
+
+    private String category;
+    private String subcategory;
     public Item(){
         //TODO: Remake so it shows how many items went through not how many types went through
         totalAmount++;
@@ -39,7 +42,18 @@ public abstract class Item {
     public double getTotalAmount(){return totalAmount; }
     public static void setTotalAmountZero(){totalAmount = 0;}
     public String toString(){return String.format("Name: %s Price: %s Amount: %s",this.name, this.price, this.amount);}
-
+    public String getSubcategory() {
+        return subcategory;
+    }
+    public String getCategory() {
+        return category;
+    }
+    public void setCategory(String category) {
+        this.category = category;
+    }
+    public void setSubcategory(String subcategory) {
+        this.subcategory = subcategory;
+    }
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

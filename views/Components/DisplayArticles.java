@@ -1,8 +1,6 @@
 package views.Components;
 
 import assets.Colors;
-import services.Item;
-import utility.ButtonBuilder;
 import utility.GridBagConstraintsBuilder;
 
 import javax.swing.*;
@@ -55,19 +53,19 @@ public class DisplayArticles extends JScrollPane {
 
     }
 
-    public void addArticle(Item item){
+    public void addArticle(ArticleButton articleButton){
         gbc.weighty=0;
         gbc.weightx=0;
 
         gbc.gridy = (int) Math.floor( (double) componentCount /4);
         gbc.gridx = componentCount % 4;
 
-        JToggleButton button = ButtonBuilder.buildArticleButton(Colors.ARTICLE_BUTTON.getColor(),item);
-        button.setPreferredSize(preferedDimension);
+//        JToggleButton button = ButtonBuilder.buildArticleButton(Colors.ARTICLE_BUTTON.getColor(),item);
+        articleButton.setPreferredSize(preferedDimension);
 
-        buttons.put(item.getName().toLowerCase(),button);
+        buttons.put(articleButton.getName().toLowerCase(),articleButton);
 
-        mainArticlePanel.add(button,gbc);
+        mainArticlePanel.add(articleButton,gbc);
         mainArticlePanel.revalidate();
 
         moveSpacer(gbc.gridx, gbc.gridy);

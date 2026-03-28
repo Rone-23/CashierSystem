@@ -7,7 +7,12 @@ import views.Components.ArticleButton;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class FavoriteArticleAction extends AbstractAction {
+public class FavoriteArticleAction extends AbstractAction{
+
+    private final Runnable onFavoriteIsChanged;
+    public FavoriteArticleAction(Runnable onFavoriteIsChanged){
+        this.onFavoriteIsChanged = onFavoriteIsChanged;
+    }
 
     @Override
     public void actionPerformed(ActionEvent e){
@@ -18,6 +23,9 @@ public class FavoriteArticleAction extends AbstractAction {
                 SQL_Connect.getInstance().connectFavoriteArticle(1, articleID);
             }else {
                 SQL_Connect.getInstance().disconnectFavoriteArticle(1, articleID);
+            }
+            if(onFavoriteIsChanged != null){
+                onFavoriteIsChanged.run();
             }
         } catch (Exception er) {
             NotificationController.notifyObservers(er.toString(),5000);

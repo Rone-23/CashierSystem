@@ -12,165 +12,142 @@ import services.SQL_Connect;
 import views.Components.ArticleButton;
 import views.Components.DisplayArticles;
 
-import javax.swing.*;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import java.util.Map;
 
 public class DisplayArticleController implements OpenTransactionObserver, FilterObserver {
+
     private final DisplayArticles displayArticles = ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles();
-    private Item[] articles;
-    private String filterKeywordMain;
-    private String filterKeywordSecondary;
 
-    private final Map<String, JToggleButton> buttons = ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles().getButtons();
+    private final Map<String, List<ArticleButton>> categoryIndex = new HashMap<>();
+    private final Map<String, List<ArticleButton>> subCategoryIndex = new HashMap<>();
+    private final List<ArticleButton> favoritesIndex = new ArrayList<>();
+    private final List<ArticleButton> allArticlesIndex = new ArrayList<>();
+
+    private final Map<String, ArticleButton> buttonMasterMap = new HashMap<>();
+
+    private String filterKeywordMain = "ALL";
+    private String filterKeywordSecondary = "ALL";
+
     private final ArticleSelectAction articleSelectAction = new ArticleSelectAction();
-    private final FavoriteArticleAction favoriteArticleAction = new FavoriteArticleAction();
-    public DisplayArticleController(){
+    private final FavoriteArticleAction favoriteArticleAction = new FavoriteArticleAction(this::toggleFavoriteInCache);
+
+    public DisplayArticleController() {
+        initializeCache();
+        refreshDisplay();
     }
 
-    public void createArticles(){
-        articleSelectAction.deselectArticle();
+    private void initializeCache() {
         try {
-            articles =  SQL_Connect.getInstance().getAllItems();
+            Item[] allItems = SQL_Connect.getInstance().getAllItems();
+
+            for (Item article : allItems) {
+                ArticleButton btn = new ArticleButton(assets.Colors.ARTICLE_BUTTON.getColor(), article);
+                btn.setName(article.getName().toLowerCase());
+
+                btn.addActionListener(articleSelectAction);
+                btn.addStarActionListener(favoriteArticleAction);
+                btn.setStarred(article.getIsFavorite());
+
+                String imagePath = SQL_Connect.getInstance().getPathToImage(SQL_Connect.getInstance().getArticleID(article.getName()));
+                if (imagePath != null) {
+                    btn.setItemImage(imagePath);
+                }
+
+                buttonMasterMap.put(article.getName().toLowerCase(), btn);
+                allArticlesIndex.add(btn);
+
+                if (article.getIsFavorite()) {
+                    favoritesIndex.add(btn);
+                }
+
+                String cat = article.getCategory();
+                if (cat != null) {
+                    categoryIndex.computeIfAbsent(cat, k -> new ArrayList<>()).add(btn);
+                }
+
+                String subCat = article.getSubcategory();
+                if (subCat != null) {
+                    subCategoryIndex.computeIfAbsent(subCat, k -> new ArrayList<>()).add(btn);
+                }
+            }
         } catch (SQLException e) {
-            articles = new Item[0];
-        }
-
-        for(Item article : articles){
-            ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles().addArticle(article);
-            buttons.get(article.getName().toLowerCase()).addActionListener(articleSelectAction);
-            try{
-                ArticleButton articleButton = (ArticleButton) buttons.get(article.getName().toLowerCase());
-                articleButton.addStarActionListener(favoriteArticleAction);
-                articleButton.setStarred(article.getIsFavorite());
-                articleButton.setItemImage(
-                        SQL_Connect.getInstance().getPathToImage(SQL_Connect.getInstance().getArticleID(article.getName()))
-                );
-            }catch (ClassCastException e){
-                NotificationController.notifyObservers(e.toString(),5000);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            NotificationController.notifyObservers("Cache Error: " + e.getMessage(), 5000);
         }
     }
 
-    public void createArticles(String type){
-        if(type.equals("OBLUBENE")){
-            articleSelectAction.deselectArticle();
-            try {
-                articles = SQL_Connect.getInstance().getAllItems();
-            } catch (SQLException e) {
-                articles = new Item[0];
-            }
-
-            for (Item article : articles) {
-                String imagePath=null;
-                try {
-                    imagePath = SQL_Connect.getInstance().getPathToImage(SQL_Connect.getInstance().getArticleID(article.getName()));
-                }catch (SQLException e){
-                    NotificationController.notifyObservers(e.getMessage(),5000);
-                }
-                if(article.getIsFavorite()){
-                    ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles().addArticle(article);
-                }
-                if(article.getIsFavorite()) {
-                    buttons.get(article.getName().toLowerCase()).addActionListener(articleSelectAction);
-                    try {
-                        ArticleButton articleButton = (ArticleButton) buttons.get(article.getName().toLowerCase());
-                        articleButton.addStarActionListener(favoriteArticleAction);
-                        articleButton.setStarred(article.getIsFavorite());
-                        if(imagePath != null){
-                            articleButton.setItemImage(imagePath);
-                        }
-                    } catch (ClassCastException e) {
-                        NotificationController.notifyObservers(e.toString(), 5000);
-                    }
-                }
-            }
-        }else {
-            articleSelectAction.deselectArticle();
-            try {
-                articles = SQL_Connect.getInstance().getItems(type);
-            } catch (SQLException e) {
-                articles = new Item[0];
-            }
-
-            for (Item article : articles) {
-                ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles().addArticle(article);
-                buttons.get(article.getName().toLowerCase()).addActionListener(articleSelectAction);
-                try {
-                    ArticleButton articleButton = (ArticleButton) buttons.get(article.getName().toLowerCase());
-                    articleButton.addStarActionListener(favoriteArticleAction);
-                    articleButton.setStarred(article.getIsFavorite());
-                    articleButton.setItemImage(
-                        SQL_Connect.getInstance().getPathToImage(SQL_Connect.getInstance().getArticleID(article.getName()))
-                );
-                } catch (ClassCastException | SQLException e) {
-                    NotificationController.notifyObservers(e.toString(), 5000);
-                }
-            }
-        }
-    }
-
-    public void createArticles(String type, String subtype){
+    private void refreshDisplay() {
+        displayArticles.clear();
         articleSelectAction.deselectArticle();
-        try {
-            articles =  SQL_Connect.getInstance().getItems(type, subtype);
-        } catch (SQLException e) {
-            articles = new Item[0];
+
+        List<ArticleButton> buttonsToShow;
+
+        if ("OBLUBENE".equals(filterKeywordMain)) {
+            buttonsToShow = favoritesIndex;
+        } else if ("ALL".equals(filterKeywordMain)) {
+            buttonsToShow = allArticlesIndex;
+        } else if (!"ALL".equals(filterKeywordSecondary)) {
+            buttonsToShow = subCategoryIndex.getOrDefault(filterKeywordSecondary, new ArrayList<>());
+        } else {
+            buttonsToShow = categoryIndex.getOrDefault(filterKeywordMain, new ArrayList<>());
         }
 
-        for(Item article : articles){
-            ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles().addArticle(article);
-            buttons.get(article.getName().toLowerCase()).addActionListener(articleSelectAction);
-            try{
-                ArticleButton articleButton = (ArticleButton) buttons.get(article.getName().toLowerCase());
-                articleButton.addStarActionListener(favoriteArticleAction);
-                articleButton.setStarred(article.getIsFavorite());
-                articleButton.setItemImage(
-                        SQL_Connect.getInstance().getPathToImage(SQL_Connect.getInstance().getArticleID(article.getName()))
-                );
-
-            }catch (ClassCastException e){
-                NotificationController.notifyObservers(e.toString(),5000);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+        for (ArticleButton btn : buttonsToShow) {
+            displayArticles.addArticle(btn);
         }
+
+        displayArticles.revalidate();
+        displayArticles.repaint();
     }
 
-    //Observer
+    // Observer
+
     @Override
     public void updateMainFilter(String filterKeyword) {
-        filterKeywordMain = filterKeyword;
-        displayArticles.clear();
-        createArticles(filterKeyword);
+        this.filterKeywordMain = filterKeyword;
+        this.filterKeywordSecondary = "ALL";
+        refreshDisplay();
     }
 
     @Override
     public void updateSecondaryFilter(String filterKeyword) {
-        filterKeywordSecondary = filterKeyword;
-        displayArticles.clear();
-        createArticles(filterKeywordMain,filterKeywordSecondary);
+        this.filterKeywordSecondary = filterKeyword;
+        refreshDisplay();
     }
 
     @Override
     public void onCreate(OpenTransaction openTransaction) {
-        createArticles();
+        refreshDisplay();
     }
 
     @Override
     public void onItemAdd(Item item) {
-        ArticleButton b = (ArticleButton) buttons.get(item.getName().toLowerCase());
-        b.setItemAmount(item.getAmount());
-        b.repaint();
+        ArticleButton b = buttonMasterMap.get(item.getName().toLowerCase());
+        if (b != null) {
+            b.setItemAmount(item.getAmount());
+            b.repaint();
+        }
     }
 
     @Override
     public void onDestroy() {
         articleSelectAction.deselectArticle();
-        for(ArticleButton b : buttons.values().toArray(new ArticleButton[0])){
+        for (ArticleButton b : buttonMasterMap.values()) {
             b.resetItemAmount();
+        }
+    }
+
+    public void toggleFavoriteInCache() {
+        for(ArticleButton btn : allArticlesIndex){
+            if (btn.isStarred()) {
+                if (!favoritesIndex.contains(btn)) favoritesIndex.add(btn);
+            } else {
+                favoritesIndex.remove(btn);
+            }
         }
     }
 }
