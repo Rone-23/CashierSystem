@@ -29,6 +29,9 @@ public class ViewManager {
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setSize(screenSize.width, screenSize.height);
         mainFrame.setLayout(new BorderLayout());
+        mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        mainFrame.setUndecorated(true);
+        mainFrame.setVisible(true);
 
 
         cardLayout = new CardLayout();
@@ -118,6 +121,10 @@ public class ViewManager {
     public void returnToDefault(){
         duringRegister.returnToDefault();
         duringReturn.returnToDefault();
+    }
+
+    public void repaint(){
+//        mainFrame.dispose();
     }
 
 }

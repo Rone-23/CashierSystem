@@ -57,4 +57,10 @@ public class DuringIdle extends JPanel implements ButtonFoundable {
         }
         throw new ArrayIndexOutOfBoundsException();
     }
+
+    @Override
+    public void repaint() {
+        super.repaint();
+
+    }
 }

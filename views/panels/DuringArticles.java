@@ -196,4 +196,6 @@ public class DuringArticles extends JPanel implements ButtonFoundable {
         }
         throw new ArrayIndexOutOfBoundsException();
     }
+
+
 }

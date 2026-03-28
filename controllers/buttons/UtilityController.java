@@ -1,6 +1,7 @@
 package controllers.buttons;
 
 import assets.ButtonSet;
+import assets.Colors;
 import controllers.notifications.CheckPauseAction;
 import controllers.transaction.CashBackAction;
 import controllers.transaction.ContentController;
@@ -42,6 +43,10 @@ public class UtilityController {
             duringPause.getButton(ButtonSet.ButtonLabel.ADD.toString()).removeActionListener(checkPauseAction);
             checkPauseAction = new CheckPauseAction();
             duringPause.getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(checkPauseAction);
+        });
+        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.PADAVAN.toString()).addActionListener(_ -> {
+            Colors.switchState();
+            ViewManager.getInstance().repaint();
         });
 
 

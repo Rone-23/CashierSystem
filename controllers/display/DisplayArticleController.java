@@ -9,6 +9,7 @@ import controllers.transaction.OpenTransactionObserver;
 import services.Item;
 import services.OpenTransaction;
 import services.SQL_Connect;
+import utility.ButtonBuilder;
 import views.Components.ArticleButton;
 import views.Components.DisplayArticles;
 
@@ -46,7 +47,7 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
             Item[] allItems = SQL_Connect.getInstance().getAllItems();
 
             for (Item article : allItems) {
-                ArticleButton btn = new ArticleButton(assets.Colors.ARTICLE_BUTTON.getColor(), article);
+                ArticleButton btn = (ArticleButton) ButtonBuilder.buildArticleButton(assets.Colors.ARTICLE_BUTTON.getColor(), article);
                 btn.setName(article.getName().toLowerCase());
 
                 btn.addActionListener(articleSelectAction);
