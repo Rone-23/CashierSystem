@@ -1,6 +1,7 @@
 package services;
 
 
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -473,6 +474,19 @@ public class SQL_Connect {
             }
         }
         throw new SQLException("Item not found, no id could be returned. ");
+    }
+
+    public String getPathToImage(int articleID) throws SQLException {
+        try (PreparedStatement pstmt = conn.prepareStatement("""
+                SELECT path_to_image FROM Article where article_id = ?
+                """)) {
+            pstmt.setInt(1, articleID);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()){
+                return rs.getString(1);
+            }
+        }
+        return null;
     }
 
     public String getDateOfTransaction(int transactionID) throws SQLException{

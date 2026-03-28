@@ -43,9 +43,13 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
                 ArticleButton articleButton = (ArticleButton) buttons.get(article.getName().toLowerCase());
                 articleButton.addStarActionListener(favoriteArticleAction);
                 articleButton.setStarred(article.getIsFavorite());
-                articleButton.setItemImage("/Images/OIP.png");
+                articleButton.setItemImage(
+                        SQL_Connect.getInstance().getPathToImage(SQL_Connect.getInstance().getArticleID(article.getName()))
+                );
             }catch (ClassCastException e){
                 NotificationController.notifyObservers(e.toString(),5000);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -60,6 +64,12 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
             }
 
             for (Item article : articles) {
+                String imagePath=null;
+                try {
+                    imagePath = SQL_Connect.getInstance().getPathToImage(SQL_Connect.getInstance().getArticleID(article.getName()));
+                }catch (SQLException e){
+                    NotificationController.notifyObservers(e.getMessage(),5000);
+                }
                 if(article.getIsFavorite()){
                     ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles().addArticle(article);
                 }
@@ -69,7 +79,9 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
                         ArticleButton articleButton = (ArticleButton) buttons.get(article.getName().toLowerCase());
                         articleButton.addStarActionListener(favoriteArticleAction);
                         articleButton.setStarred(article.getIsFavorite());
-                        articleButton.setItemImage("/Images/OIP.png");
+                        if(imagePath != null){
+                            articleButton.setItemImage(imagePath);
+                        }
                     } catch (ClassCastException e) {
                         NotificationController.notifyObservers(e.toString(), 5000);
                     }
@@ -90,8 +102,10 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
                     ArticleButton articleButton = (ArticleButton) buttons.get(article.getName().toLowerCase());
                     articleButton.addStarActionListener(favoriteArticleAction);
                     articleButton.setStarred(article.getIsFavorite());
-                    articleButton.setItemImage("/Images/OIP.png");
-                } catch (ClassCastException e) {
+                    articleButton.setItemImage(
+                        SQL_Connect.getInstance().getPathToImage(SQL_Connect.getInstance().getArticleID(article.getName()))
+                );
+                } catch (ClassCastException | SQLException e) {
                     NotificationController.notifyObservers(e.toString(), 5000);
                 }
             }
@@ -113,10 +127,14 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
                 ArticleButton articleButton = (ArticleButton) buttons.get(article.getName().toLowerCase());
                 articleButton.addStarActionListener(favoriteArticleAction);
                 articleButton.setStarred(article.getIsFavorite());
-                articleButton.setItemImage("/Images/OIP.png");
+                articleButton.setItemImage(
+                        SQL_Connect.getInstance().getPathToImage(SQL_Connect.getInstance().getArticleID(article.getName()))
+                );
 
             }catch (ClassCastException e){
                 NotificationController.notifyObservers(e.toString(),5000);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -126,7 +144,7 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
     public void updateMainFilter(String filterKeyword) {
         filterKeywordMain = filterKeyword;
         displayArticles.clear();
-        createArticles();
+        createArticles(filterKeyword);
     }
 
     @Override
