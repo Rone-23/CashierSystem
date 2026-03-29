@@ -1,8 +1,6 @@
 package views.panels;
 
-import assets.ButtonSet;
-import assets.Colors;
-import assets.Constants;
+import assets.*;
 import utility.GridBagConstraintsBuilder;
 import views.Components.*;
 
@@ -11,7 +9,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class DuringCodeEnter extends JPanel implements ButtonFoundable{
+public class DuringCodeEnter extends JPanel implements ButtonFoundable, ThemeObserver {
 
     private final Dimension dimension = new Dimension(500, 114);
 
@@ -20,7 +18,6 @@ public class DuringCodeEnter extends JPanel implements ButtonFoundable{
     private ButtonCluster actionButtons;
 
     public DuringCodeEnter() {
-        setBackground(Colors.BACKGROUND_GRAY.getColor());
         setLayout(new BorderLayout());
 
         JPanel centerPanel = new JPanel(new GridBagLayout());
@@ -43,6 +40,9 @@ public class DuringCodeEnter extends JPanel implements ButtonFoundable{
         centerPanel.add(rightPanel, gbcMain);
 
         add(centerPanel, BorderLayout.CENTER);
+
+        onThemeChange();
+        ThemeManager.getInstance().addObserver(this);
     }
 
     private JPanel createLeftPanel(){
@@ -137,5 +137,11 @@ public class DuringCodeEnter extends JPanel implements ButtonFoundable{
 
     public Display getInputDisplay() {
         return inputDisplay;
+    }
+
+    @Override
+    public void onThemeChange() {
+        setBackground(Colors.BACKGROUND_GRAY.getColor());
+        repaint();
     }
 }

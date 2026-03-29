@@ -8,8 +8,8 @@ import java.awt.*;
 public class ChonkyArrowButton extends ChonkyButton {
 
     Constants arrowDirection;
-    public ChonkyArrowButton(Color color, Constants arrowDirection) {
-        super(color);
+    public ChonkyArrowButton(Colors colorEnum, Constants arrowDirection) {
+        super(colorEnum);
         this.arrowDirection = arrowDirection;
         setMargin(new Insets(55,55,55,55));
         setPreferredSize(new Dimension(150,0));

@@ -1,6 +1,5 @@
 package assets;
 
-import java.awt.*;
 
 public enum ButtonSet {
 
@@ -109,6 +108,7 @@ public enum ButtonSet {
         RETURN("Vratka", Colors.DEFAULT_BLUE),
         PAUSE("Pauza", Colors.DANGER_RED),
         PADAVAN("Zaucenie", Colors.PURPLE),
+        THEME_BUTTON("Light", Colors.DEFAULT_BLUE),
 
         //KEYBOARD
         DELETE("Delete", Colors.BUTTON_LIGHT_BLUE),
@@ -121,7 +121,8 @@ public enum ButtonSet {
         ADD("Pridat", Colors.MILD_YELLOW),
         CASH_BACK("Vráťiť schodok", Colors.MILD_YELLOW),
         REMOVE("Ubrať", Colors.MILD_YELLOW),
-        SEARCH("Vyhladať", Colors.DEFAULT_BLUE);
+        SEARCH("Vyhladať", Colors.DEFAULT_BLUE),
+        ;
 
         private final String displayValue;
         private final Colors color;
@@ -140,8 +141,8 @@ public enum ButtonSet {
             return displayValue;
         }
 
-        public Color getColor(){
-            return color.getColor();
+        public Colors getColor(){
+            return color;
         }
     }
 }

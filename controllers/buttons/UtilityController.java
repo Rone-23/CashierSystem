@@ -1,7 +1,7 @@
 package controllers.buttons;
 
 import assets.ButtonSet;
-import assets.Colors;
+import assets.ThemeManager;
 import controllers.notifications.CheckPauseAction;
 import controllers.transaction.CashBackAction;
 import controllers.transaction.ContentController;
@@ -44,9 +44,14 @@ public class UtilityController {
             checkPauseAction = new CheckPauseAction();
             duringPause.getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(checkPauseAction);
         });
-        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.PADAVAN.toString()).addActionListener(_ -> {
-            Colors.switchState();
-            ViewManager.getInstance().repaint();
+        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.THEME_BUTTON.toString()).addActionListener(e -> {
+            JButton jButton = (JButton) e.getSource();
+            boolean isDarkMode = ThemeManager.getInstance().toggleTheme();
+            if(isDarkMode){
+                jButton.setText("Light");
+            }else{
+                jButton.setText("Dark");
+            }
         });
 
 

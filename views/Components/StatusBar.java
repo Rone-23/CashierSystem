@@ -1,6 +1,8 @@
 package views.Components;
 
 import assets.Colors;
+import assets.ThemeManager;
+import assets.ThemeObserver;
 import controllers.notifications.NotificationController;
 import controllers.notifications.NotificationObserver;
 
@@ -10,7 +12,7 @@ import java.awt.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class StatusBar extends JPanel implements NotificationObserver {
+public class StatusBar extends JPanel implements NotificationObserver, ThemeObserver {
     private final JLabel dateTimeLabel = new JLabel();
     private final JLabel notificationLabel = new JLabel("", SwingConstants.CENTER);
     private final JLabel infoLabel = new JLabel("", SwingConstants.RIGHT); // New label for the right side
@@ -35,14 +37,10 @@ public class StatusBar extends JPanel implements NotificationObserver {
         ));
 
         dateTimeLabel.setFont(new Font("Roboto", Font.BOLD, 16));
-        dateTimeLabel.setForeground(Colors.BLACK_TEXT.getColor());
-        updateTime();
-
         notificationLabel.setFont(new Font("Roboto", Font.BOLD, 14));
-        notificationLabel.setForeground(new Color(211, 47, 47));
-
         infoLabel.setFont(new Font("Roboto", Font.BOLD, 16));
-        infoLabel.setForeground(Colors.BLACK_TEXT.getColor());
+
+        updateTime();
         updateInfoLabel();
 
         add(dateTimeLabel, BorderLayout.WEST);
@@ -51,6 +49,9 @@ public class StatusBar extends JPanel implements NotificationObserver {
 
         Timer clockTimer = new Timer(1000, e -> updateTime());
         clockTimer.start();
+
+        onThemeChange();
+        ThemeManager.getInstance().addObserver(this);
     }
 
     private void updateTime() {
@@ -92,7 +93,7 @@ public class StatusBar extends JPanel implements NotificationObserver {
                 notificationLabel.setForeground(Color.RED);
             } else {
                 notificationLabel.setText("");
-                notificationLabel.setForeground(new Color(211, 47, 47));
+                notificationLabel.setForeground(Color.RED);
         }
     }
 
@@ -117,5 +118,22 @@ public class StatusBar extends JPanel implements NotificationObserver {
     @Override
     public void updateNotification(String notification, int timeMs) {
         showNotification(notification, timeMs);
+    }
+
+    @Override
+    public void onThemeChange() {
+        setBackground(Colors.BUTTON_BACKGROUND_WHITE_ELEVATED.getColor());
+
+        setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(2, 0, 0, 0, Colors.BUTTON_LIGHT_BLUE.getColor()),
+                new EmptyBorder(10, 20, 10, 20)
+        ));
+
+        Color standardText = Colors.BLACK_TEXT.getColor();
+        dateTimeLabel.setForeground(standardText);
+        infoLabel.setForeground(standardText);
+        notificationLabel.setForeground(Colors.DANGER_RED.getColor());
+
+        repaint();
     }
 }

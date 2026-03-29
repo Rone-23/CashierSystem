@@ -1,6 +1,8 @@
 package views.Components;
 
 import assets.Colors;
+import assets.ThemeManager;
+import assets.ThemeObserver;
 import utility.GridBagConstraintsBuilder;
 
 import javax.swing.*;
@@ -9,7 +11,7 @@ import java.awt.event.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DisplayArticles extends JScrollPane {
+public class DisplayArticles extends JScrollPane implements ThemeObserver {
     JPanel container = new JPanel(new GridBagLayout());
     JPanel mainArticlePanel = new JPanel(new GridBagLayout());
     Dimension preferedDimension;
@@ -21,12 +23,12 @@ public class DisplayArticles extends JScrollPane {
     private final Map<String, JToggleButton> buttons = new HashMap<>();
 
     public DisplayArticles(){
+        ThemeManager.getInstance().addObserver(this);
 
         getViewport().setOpaque(false);
         setBorder(null);
         setOpaque(false);
         setPreferredSize(new Dimension(0,0));
-        setOpaque(false);
         setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
         setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
         setViewportView(container);
@@ -41,8 +43,14 @@ public class DisplayArticles extends JScrollPane {
         mainArticlePanel.setOpaque(false);
         container.setBackground(Colors.BACKGROUND_GRAY.getColor());
 
+        onThemeChange();
         touchControls();
         recalculate();
+
+        gbc.weighty=0;
+        gbc.weightx=0;
+        gbcSpacer.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5, 5, 5, 5);
 
         gbcSpacer.weighty=0;
         container.add(mainArticlePanel,gbcSpacer);
@@ -54,32 +62,26 @@ public class DisplayArticles extends JScrollPane {
     }
 
     public void addArticle(ArticleButton articleButton){
-        gbc.weighty=0;
-        gbc.weightx=0;
 
-        gbc.gridy = (int) Math.floor( (double) componentCount /4);
         gbc.gridx = componentCount % 4;
+        gbc.gridy = componentCount / 4;
 
-//        JToggleButton button = ButtonBuilder.buildArticleButton(Colors.ARTICLE_BUTTON.getColor(),item);
         articleButton.setPreferredSize(preferedDimension);
 
         buttons.put(articleButton.getName().toLowerCase(),articleButton);
 
         mainArticlePanel.add(articleButton,gbc);
-        mainArticlePanel.revalidate();
-
-        moveSpacer(gbc.gridx, gbc.gridy);
-
         componentCount++;
 
-        repaint();
+        moveSpacer(gbc.gridx, gbc.gridy);
     }
 
-    public void clear(){
+    public void clear() {
         mainArticlePanel.removeAll();
-        componentCount=0;
-        gbc.gridy=0;
-        gbc.gridx=0;
+        buttons.clear();
+        componentCount = 0;
+        mainArticlePanel.revalidate();
+        mainArticlePanel.repaint();
     }
 
     public Map<String, JToggleButton> getButtons(){
@@ -132,9 +134,6 @@ public class DisplayArticles extends JScrollPane {
 
     private void moveSpacer(int currentGridX, int currentGridY){
 
-        gbcSpacer.weightx = 1;
-        gbcSpacer.weighty = 0;
-        gbcSpacer.fill = GridBagConstraints.HORIZONTAL;
 
         gbcSpacer.gridy = currentGridY;
 
@@ -147,5 +146,15 @@ public class DisplayArticles extends JScrollPane {
         }else {
             mainArticlePanel.remove(spacerHorizontal);
         }
+    }
+
+    @Override
+    public void onThemeChange() {
+        Color bg = Colors.BACKGROUND_WHITE.getColor();
+        setBackground(bg);
+        container.setBackground(bg);
+        mainArticlePanel.setBackground(bg);
+        getViewport().setBackground(bg);
+        this.repaint();
     }
 }

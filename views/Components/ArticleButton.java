@@ -1,6 +1,8 @@
 package views.Components;
 
 import assets.Colors;
+import assets.ThemeManager;
+import assets.ThemeObserver;
 import services.Item;
 import utility.ColorManipulation;
 
@@ -15,25 +17,23 @@ import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArticleButton extends JToggleButton implements ContainsItem {
-    private Color color;
-    private final Color colorActive;
-    private final Color colorDisabled;
+public class ArticleButton extends JToggleButton implements ContainsItem, ThemeObserver {
+    private final Colors colorEnum;
+    private Color colorActive;
+    private Color colorDisabled;
     private final Item item;
 
     private boolean isStarred = false;
     private Rectangle2D starBounds;
-
     private Image image;
 
     private final List<ActionListener> starActionListeners = new ArrayList<>();
 
-    public ArticleButton(Color color, Item item) {
+    public ArticleButton(Colors colorEnum, Item item) {
         this.item = item;
-        this.color = color;
-        this.colorActive = color;
-        this.colorDisabled = ColorManipulation.lighten(color, 28);
-
+        this.colorEnum = colorEnum;
+        onThemeChange();
+        ThemeManager.getInstance().addObserver(this);
         setContentAreaFilled(false);
         setOpaque(false);
         setFocusPainted(false);
@@ -73,15 +73,17 @@ public class ArticleButton extends JToggleButton implements ContainsItem {
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g.create();
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         int arc = getWidth() / 9;
         int inset = getWidth() / 18;
 
+        Color baseColor = isEnabled() ? colorActive : colorDisabled;
         if (isSelected()) {
-            g2.setPaint(ColorManipulation.darken(color, 0.88f));
+            g2.setPaint(ColorManipulation.darken(baseColor, 0.88f));
         } else {
-            g2.setPaint(color);
+            g2.setPaint(baseColor);
         }
 
         Shape main = new RoundRectangle2D.Double(inset, inset, getWidth() - inset * 2, getHeight() - inset * 2, arc, arc);
@@ -94,7 +96,7 @@ public class ArticleButton extends JToggleButton implements ContainsItem {
         int height = getHeight() - inset * 2 - insetBottom - insetTop;
 
         Shape inner = new RoundRectangle2D.Double(inset + insetSide, inset + insetTop, width, height - insetTop, arc, arc);
-        g2.setPaint(ColorManipulation.lighten(color, 1.2f));
+        g2.setPaint(ColorManipulation.lighten(baseColor, 1.2f));
         g2.fill(inner);
         if(image != null){
             int imgW = image.getWidth(null);
@@ -191,10 +193,18 @@ public class ArticleButton extends JToggleButton implements ContainsItem {
     @Override public int getItemAmount() { return item.getAmount(); }
     public void setItemAmount(int amount) { item.setAmount(amount); }
 
+//    @Override
+//    public void setEnabled(boolean b) {
+//        super.setEnabled(b);
+//        color = b ? colorActive : colorDisabled;
+//        repaint();
+//    }
+
     @Override
-    public void setEnabled(boolean b) {
-        super.setEnabled(b);
-        color = b ? colorActive : colorDisabled;
-        repaint();
+    public void onThemeChange() {
+        this.colorActive = this.colorEnum.getColor();
+        this.colorDisabled = ColorManipulation.darken(this.colorActive, 0.9f);
+        this.setForeground(Colors.BLACK_TEXT.getColor());
+        this.repaint();
     }
 }

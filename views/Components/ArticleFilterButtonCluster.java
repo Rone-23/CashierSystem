@@ -17,8 +17,8 @@ public class ArticleFilterButtonCluster extends JPanel {
     private final JPanel mainSecondaryPanel = new JPanel();
     private final GridBagConstraints gbcSecondaryFilterPanel = GridBagConstraintsBuilder.buildGridBagConstraints(1,1);
     private final GridBagConstraints gbcMainPanel = GridBagConstraintsBuilder.buildGridBagConstraints(1,1);
-    private final JButton leftButton = ButtonBuilder.buildChonkyArrowButton( Colors.BUTTON_LIGHT_BLUE.getColor(),Constants.LEFT);
-    private final JButton rightButton = ButtonBuilder.buildChonkyArrowButton( Colors.BUTTON_LIGHT_BLUE.getColor(),Constants.RIGHT);
+    private final JButton leftButton = ButtonBuilder.buildChonkyArrowButton( Colors.BUTTON_LIGHT_BLUE,Constants.LEFT);
+    private final JButton rightButton = ButtonBuilder.buildChonkyArrowButton( Colors.BUTTON_LIGHT_BLUE,Constants.RIGHT);
     private final Dimension buttonDimensions = new Dimension(183,136);
     private final List<JButton> mainFilterButtons = new ArrayList<>();
     private final List<String> secondaryFilterButtonsNames = new ArrayList<>();
@@ -43,7 +43,7 @@ public class ArticleFilterButtonCluster extends JPanel {
         final GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints();
 
         for(String name : buttonNamesMainFilter){
-            JButton button = ButtonBuilder.buildChonkyButton(name, Colors.BUTTON_LIGHT_BLUE.getColor());
+            JButton button = ButtonBuilder.buildChonkyButton(name, Colors.BUTTON_LIGHT_BLUE);
             button.setPreferredSize(buttonDimensions);
             main.add(button,gbc);
             mainFilterButtons.add(button);
@@ -62,7 +62,7 @@ public class ArticleFilterButtonCluster extends JPanel {
         if(buttonNamesSecondaryFilter.length==5){
 
             for(String name : buttonNamesSecondaryFilter){
-                JButton button = ButtonBuilder.buildChonkyButton(name, Colors.BUTTON_LIGHT_BLUE.getColor());
+                JButton button = ButtonBuilder.buildChonkyButton(name, Colors.BUTTON_LIGHT_BLUE);
                 button.setPreferredSize(buttonDimensions);
                 secondaryFilterButtons.add(button);
                 main.add(button,gbc);
@@ -73,7 +73,7 @@ public class ArticleFilterButtonCluster extends JPanel {
 
             int buttonCounter = 0;
             for(String name : buttonNamesSecondaryFilter){
-                JButton button = ButtonBuilder.buildChonkyButton(name, Colors.BUTTON_LIGHT_BLUE.getColor());
+                JButton button = ButtonBuilder.buildChonkyButton(name, Colors.BUTTON_LIGHT_BLUE);
                 button.setPreferredSize(buttonDimensions);
                 secondaryFilterButtons.add(button);
                 main.add(button,gbc);
@@ -81,7 +81,7 @@ public class ArticleFilterButtonCluster extends JPanel {
                 gbc.gridx++;
             }
             for (int i = 0; i < (5-buttonCounter); i++) {
-                JButton button = ButtonBuilder.buildChonkyButtonDisabled(Colors.BUTTON_LIGHT_BLUE.getColor());
+                JButton button = ButtonBuilder.buildChonkyButtonDisabled(Colors.BUTTON_LIGHT_BLUE);
                 secondaryFilterButtons.add(button);
                 button.setPreferredSize(buttonDimensions);
                 main.add(button,gbc);
@@ -99,7 +99,7 @@ public class ArticleFilterButtonCluster extends JPanel {
             gbc.weightx=1;
             gbc.gridx=2;
             for (lastUsedPosition = 0; lastUsedPosition < 3; lastUsedPosition++) {
-                JButton button = ButtonBuilder.buildChonkyButton(buttonNamesSecondaryFilter[lastUsedPosition], Colors.BUTTON_LIGHT_BLUE.getColor());
+                JButton button = ButtonBuilder.buildChonkyButton(buttonNamesSecondaryFilter[lastUsedPosition], Colors.BUTTON_LIGHT_BLUE);
                 button.setPreferredSize(buttonDimensions);
                 secondaryFilterButtons.add(button);
                 main.add(button,gbc);
@@ -118,14 +118,14 @@ public class ArticleFilterButtonCluster extends JPanel {
         gbc.gridx = 2;
         try {
             for (int newPosition=lastUsedPosition; newPosition < lastUsedPosition+3; newPosition++) {
-                JButton button = ButtonBuilder.buildChonkyButton(buttonNamesSecondaryFilter[newPosition], Colors.BUTTON_LIGHT_BLUE.getColor());
+                JButton button = ButtonBuilder.buildChonkyButton(buttonNamesSecondaryFilter[newPosition], Colors.BUTTON_LIGHT_BLUE);
                 main.remove(main.getComponent(2));
                 main.add(button,gbc);
                 gbc.gridx++;
             }
         } catch (IndexOutOfBoundsException e) {
             main.remove(main.getComponent(2));
-            main.add(ButtonBuilder.buildChonkyButtonDisabled(Colors.BUTTON_LIGHT_BLUE.getColor()),gbc);
+            main.add(ButtonBuilder.buildChonkyButtonDisabled(Colors.BUTTON_LIGHT_BLUE),gbc);
             rightButton.setEnabled(false);
         }
         lastUsedPosition+=3;
@@ -142,7 +142,7 @@ public class ArticleFilterButtonCluster extends JPanel {
             main.remove(main.getComponent(2));
             main.remove(main.getComponent(2));
             for (int newPosition=lastUsedPosition; newPosition > lastUsedPosition-3; newPosition--) {
-                JButton button = ButtonBuilder.buildChonkyButton(buttonNamesSecondaryFilter[newPosition-4], Colors.BUTTON_LIGHT_BLUE.getColor());
+                JButton button = ButtonBuilder.buildChonkyButton(buttonNamesSecondaryFilter[newPosition-4], Colors.BUTTON_LIGHT_BLUE);
                 main.add(button,gbc);
                 gbc.gridx--;
             }

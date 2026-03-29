@@ -1,35 +1,36 @@
 package views.panels;
 
-import assets.ButtonSet;
-import assets.Colors;
-import assets.Constants;
+import assets.*;
 import utility.ButtonBuilder;
 import utility.GridBagConstraintsBuilder;
+import utility.ThemeMatteBorder;
 import views.Components.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class DuringArticles extends JPanel implements ButtonFoundable {
+public class DuringArticles extends JPanel implements ButtonFoundable, ThemeObserver {
     private final DisplayItems displayItems = new DisplayItems();
     private final Display display = new Display(Constants.SPLIT);
     private final Keyboard keyboard = new Keyboard();
     private final DisplayArticles displayArticles = new DisplayArticles();
     private final ArticleFilterButtonCluster articleFilterButtonCluster = new ArticleFilterButtonCluster();
+
     private final JButton plusButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.ADD.toString(), ButtonSet.ButtonLabel.ADD.getColor());
     private final JButton minusButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.REMOVE.toString(), ButtonSet.ButtonLabel.REMOVE.getColor());
     private final JButton searchButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.SEARCH.toString(), ButtonSet.ButtonLabel.SEARCH.getColor());
     private final JButton cancelButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.EXIT.toString(), ButtonSet.ButtonLabel.EXIT.getColor());
+    private final JLabel subsectionLabel = new JLabel(" ", SwingConstants.CENTER);
+
     private final JPanel clusterBottom = createBottomCluster();
+
 
     public DuringArticles() {
         GridBagConstraints gbcMain = GridBagConstraintsBuilder.buildGridBagConstraints(0, 0);
         setLayout(new GridBagLayout());
-        setBackground(Colors.BACKGROUND_WHITE.getColor());
 
         gbcMain.gridy = 0;
         gbcMain.gridx = 0;
@@ -39,6 +40,9 @@ public class DuringArticles extends JPanel implements ButtonFoundable {
 
         gbcMain.gridx = 1;
         add(createRightPanel(), gbcMain);
+
+        onThemeChange();
+        ThemeManager.getInstance().addObserver(this);
     }
 
     private JPanel createLeftPanel() {
@@ -58,7 +62,7 @@ public class DuringArticles extends JPanel implements ButtonFoundable {
         gbcLeftPanel.gridy++;
         main.add(keyboard, gbcLeftPanel);
 
-        Border rightBorder = new MatteBorder(0, 0, 0, 3, Colors.BUTTON_LIGHT_BLUE.getColor());
+        Border rightBorder = new ThemeMatteBorder(0, 0, 0, 3, Colors.BUTTON_LIGHT_BLUE);
         main.setBorder(rightBorder);
 
         return main;
@@ -71,7 +75,7 @@ public class DuringArticles extends JPanel implements ButtonFoundable {
         GridBagConstraints gbcRightPanel = GridBagConstraintsBuilder.buildGridBagConstraints(1, 1);
 
         gbcRightPanel.weighty = 0;
-        Border bottomBorder = new MatteBorder(0, 0, 3, 0, Colors.BUTTON_LIGHT_BLUE.getColor());
+        Border bottomBorder = new ThemeMatteBorder(0, 0, 3, 0, Colors.BUTTON_LIGHT_BLUE);
         articleFilterButtonCluster.setBorder(bottomBorder);
         main.add(articleFilterButtonCluster, gbcRightPanel);
 
@@ -96,7 +100,7 @@ public class DuringArticles extends JPanel implements ButtonFoundable {
         subsection.setBorder(new EmptyBorder(5, 5, 5, 5));
         subsection.setOpaque(false);
 
-        Border topBorder = new MatteBorder(3, 0, 0, 0, Colors.BUTTON_LIGHT_BLUE.getColor());
+        Border topBorder = new ThemeMatteBorder(3, 0, 0, 0, Colors.BUTTON_LIGHT_BLUE);
         main.setBorder(topBorder);
         final Dimension buttonDimensions = new Dimension(183, 136);
         GridBagConstraints gbcBottomCluster = GridBagConstraintsBuilder.buildGridBagConstraints(1, 1);
@@ -107,7 +111,7 @@ public class DuringArticles extends JPanel implements ButtonFoundable {
         searchButton.setPreferredSize(buttonDimensions);
         cancelButton.setPreferredSize(buttonDimensions);
 
-        JLabel subsectionLabel = new JLabel("Množstvo tovaru", SwingConstants.CENTER);
+        subsectionLabel.setText("Množstvo tovaru");
         subsectionLabel.setForeground(Colors.BLACK_TEXT.getColor());
         subsectionLabel.setFont(new Font("Roboto", Font.BOLD, 21));
 
@@ -198,4 +202,14 @@ public class DuringArticles extends JPanel implements ButtonFoundable {
     }
 
 
+    @Override
+    public void onThemeChange() {
+        setBackground(Colors.BACKGROUND_WHITE.getColor());
+
+        if (subsectionLabel != null) {
+            subsectionLabel.setForeground(Colors.BLACK_TEXT.getColor());
+        }
+
+        repaint();
+    }
 }

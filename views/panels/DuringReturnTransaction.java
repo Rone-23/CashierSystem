@@ -1,20 +1,18 @@
 package views.panels;
 
-import assets.ButtonSet;
-import assets.Colors;
-import assets.Constants;
+import assets.*;
 import utility.GridBagConstraintsBuilder;
+import utility.ThemeMatteBorder;
 import views.Components.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
-public class DuringReturnTransaction extends JPanel implements ButtonFoundable {
+public class DuringReturnTransaction extends JPanel implements ButtonFoundable, ThemeObserver {
 
     private final Dimension dimension = new Dimension(500, 114);
 
@@ -26,13 +24,12 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable {
     private final ButtonCluster utilityButtonCluster = new ButtonCluster(ButtonSet.RETURN_TRANSACTION_UTILITY_NAMES.getLabels(), Constants.VERTICAL);
     private final ButtonCluster commonButtonCluster = new ButtonCluster(ButtonSet.RETURN_TRANSACTION_RETURN_MONEY.getLabels(), Constants.VERTICAL);
     private final CardLayout cardLayout = new CardLayout();
-    final JPanel rightPanel = new JPanel();
-    JPanel displayPanel = new JPanel();
-    CardLayout cardLayoutDisplay = new CardLayout();
+    private final JPanel rightPanel = new JPanel();
+    private final JPanel displayPanel = new JPanel();
+    private final CardLayout cardLayoutDisplay = new CardLayout();
 
     public DuringReturnTransaction() {
         setLayout(new GridBagLayout());
-        setBackground(Colors.BACKGROUND_WHITE.getColor());
 
         JPanel mainContent = new JPanel(new GridBagLayout());
         mainContent.setOpaque(false);
@@ -60,6 +57,9 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable {
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         add(mainContent, gbc);
+
+        onThemeChange();
+        ThemeManager.getInstance().addObserver(this);
     }
 
     private JPanel createLeftPanel() {
@@ -67,17 +67,17 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable {
         final JPanel leftPanel = new JPanel();
         leftPanel.setName("leftPanel");
 
-        Border rightBorder = new MatteBorder(
+        Border rightBorder = new ThemeMatteBorder(
                 0,
                 0,
                 0,
                 3,
-                Colors.BUTTON_LIGHT_BLUE.getColor()
+                Colors.BUTTON_LIGHT_BLUE
         );
         leftPanel.setBorder(rightBorder);
 
         leftPanel.setLayout(new GridBagLayout());
-        leftPanel.setBackground(Colors.BACKGROUND_WHITE.getColor());
+        leftPanel.setOpaque(false);
 
         leftPanel.add(displayItems, gbc);
 
@@ -97,7 +97,7 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable {
 
         middlePanel.setBorder(new EmptyBorder(20, 0, 20, 0));
         middlePanel.setLayout(new GridBagLayout());
-        middlePanel.setBackground(Colors.BACKGROUND_GRAY.getColor());
+        middlePanel.setOpaque(false);
 
         gbc.gridx = 0;
 
@@ -134,7 +134,7 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable {
     private JPanel createRightPanel() {
         rightPanel.setName("rightPanel");
         rightPanel.setLayout(cardLayout);
-        rightPanel.setBackground(Colors.BACKGROUND_GRAY.getColor());
+        rightPanel.setOpaque(false);
 
         JPanel commonButtonClusterPanel = new JPanel(new BorderLayout());
         commonButtonClusterPanel.setOpaque(false);
@@ -223,4 +223,10 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable {
     public Display getDisplayTotal() { return displayTotal; }
     public Display getDisplayTopAmount() { return displayTopAmount; }
     public Display getDisplayTopTotal() { return displayTopTotal; }
+
+    @Override
+    public void onThemeChange() {
+        setBackground(Colors.BACKGROUND_WHITE.getColor());
+        repaint();
+    }
 }
