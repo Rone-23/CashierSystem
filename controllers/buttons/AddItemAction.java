@@ -26,7 +26,6 @@ public class AddItemAction extends AbstractAction implements ContentObserver, Op
     public void actionPerformed(ActionEvent e) {
         if(item!=null){
             ItemCountable itemToAdd = (ItemCountable) item.clone();
-//            itemToAdd.addAmount(Integer.parseInt(content));
             OpenTransactionManager.getInstance().addItem(itemToAdd);
         }
     }
