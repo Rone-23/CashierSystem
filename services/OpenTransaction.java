@@ -1,5 +1,6 @@
 package services;
 
+import assets.Constants;
 import controllers.notifications.NotificationController;
 import controllers.transaction.ContentObserver;
 import controllers.transaction.OpenTransactionObserver;
@@ -15,6 +16,7 @@ import java.util.Map;
 
 public class OpenTransaction implements ContentObserver {
     private final int transactionID;
+    private int customerID = -1;
     private final LocalDateTime  transactionDateTime;
     private final static List<OpenTransactionObserver> observerList = new ArrayList<>();
     private final Map<String,Item> itemsInTransaction= new HashMap<>();
@@ -36,7 +38,7 @@ public class OpenTransaction implements ContentObserver {
         this.transactionDateTime.format(dateTimeFormatter);
 
         try {
-            transactionID = SQL_Connect.getInstance().createTransaction(1,1);
+            transactionID = SQL_Connect.getInstance().createTransaction(1);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -75,9 +77,11 @@ public class OpenTransaction implements ContentObserver {
 
         ItemCountable itemToNotify = null;
 
+
         if (!isReturn) {
+            int price = (item.getDiscountType() == Constants.GENERAL || (item.getDiscountType() == Constants.CUSTOMER && customerID > 0)) ? item.discountPrice : item.getPrice();
             itemToNotify = (ItemCountable) itemsInTransaction.computeIfAbsent(name, k ->
-                    new ItemCountable(name, item.getPrice(), 0)
+                    new ItemCountable(name, price, 0)
             );
             itemToNotify.addAmount(content);
 
@@ -105,6 +109,7 @@ public class OpenTransaction implements ContentObserver {
     public void removeItem(Item item) {
         if (item == null) return;
 
+
         String itemName = item.getName();
         ItemCountable itemInTransaction = (ItemCountable) itemsInTransaction.get(itemName);
 
@@ -120,7 +125,6 @@ public class OpenTransaction implements ContentObserver {
             NotificationController.notifyObservers(msg, 5000);
             return;
         }
-
 
         if (!isReturn) {
             if (remainingAmount == 0) {
@@ -139,7 +143,8 @@ public class OpenTransaction implements ContentObserver {
             if (returnedItem != null) {
                 returnedItem.addAmount(content);
             } else {
-                returnedItems.put(itemName, new ItemCountable(itemName, item.getPrice(), content));
+                int price = (item.getDiscountType() == Constants.GENERAL || (item.getDiscountType() == Constants.CUSTOMER && customerID > 0)) ? item.discountPrice : item.getPrice();
+                returnedItems.put(itemName, new ItemCountable(itemName, price, content));
             }
 
             itemInTransaction.addAmount(-content);
@@ -262,6 +267,23 @@ public class OpenTransaction implements ContentObserver {
         isReturn = status;
     }
 
+    public void setCustomerID(int customerID){
+        try{
+            SQL_Connect.getInstance().setCustomerId(transactionID, customerID);
+            this.customerID = customerID;
+            applyCustomerDiscounts();
+        }catch (SQLException e){
+            NotificationController.notifyObservers(e.getMessage(),5000);
+        }
+    }
+
+    public void applyCustomerDiscounts() {
+
+    }
+
+    public int getCustomerID(){
+        return customerID;
+    }
 
     //Observer
     public static void addObserver(OpenTransactionObserver openTransactionObserver){observerList.add(openTransactionObserver);}

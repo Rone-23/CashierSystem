@@ -44,7 +44,7 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
 
     private void initializeCache() {
         try {
-            Item[] allItems = SQL_Connect.getInstance().getAllItems();
+            Item[] allItems = SQL_Connect.getInstance().getAllItems(1);
 
             for (Item article : allItems) {
                 ArticleButton btn = (ArticleButton) ButtonBuilder.buildArticleButton(assets.Colors.ARTICLE_BUTTON, article);
@@ -122,6 +122,8 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
 
     @Override
     public void onCreate(OpenTransaction openTransaction) {
+        this.filterKeywordMain = "ALL";
+        this.filterKeywordSecondary = "ALL";
         refreshDisplay();
     }
 
@@ -130,6 +132,15 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
         ArticleButton b = buttonMasterMap.get(item.getName().toLowerCase());
         if (b != null) {
             b.setItemAmount(item.getAmount());
+            b.repaint();
+        }
+    }
+
+    @Override
+    public void onItemRemove(Item item){
+        ArticleButton b = buttonMasterMap.get(item.getName().toLowerCase());
+        if (b != null) {
+            b.setItemAmount(0);
             b.repaint();
         }
     }

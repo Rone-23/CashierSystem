@@ -1,5 +1,6 @@
 package controllers.transaction;
 
+import controllers.display.DisplayDispatcher;
 import controllers.panels.ViewManager;
 import services.Item;
 import services.OpenTransaction;
@@ -26,7 +27,7 @@ public class OpenTransactionManager implements OpenTransactionObserver{
             openTransaction = new OpenTransaction();
             ViewManager.getInstance().getStatusBar().setTransactionId(String.valueOf(openTransaction.getTransactionID()));
             ViewManager.getInstance().getStatusBar().setCashierId("1");
-            ViewManager.getInstance().getStatusBar().setStatus("Áno");
+            ViewManager.getInstance().getStatusBar().setStatus("Nie");
         } catch (NumberFormatException ignored) {
         }
         ContentController.addObserver(openTransaction);
@@ -75,11 +76,14 @@ public class OpenTransactionManager implements OpenTransactionObserver{
         MakeTransaction makeTransaction = new MakeTransaction();
         makeTransaction.makeTransaction(openTransaction);
         ViewManager.getInstance().showIdle();
+        ViewManager.getInstance().returnToDefault();
+        DisplayDispatcher.activeDisplayForAmount();
     }
 
     @Override
     public void onDestroy() {
         openTransaction = null;
-        ViewManager.getInstance().returnToDefault();
+        ViewManager.getInstance().getStatusBar().setStatus("---");
+        ViewManager.getInstance().getStatusBar().setTransactionId("---");
     }
 }

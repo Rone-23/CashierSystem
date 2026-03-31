@@ -132,7 +132,7 @@ public class StatusBar extends JPanel implements NotificationObserver, ThemeObse
         Color standardText = Colors.BLACK_TEXT.getColor();
         dateTimeLabel.setForeground(standardText);
         infoLabel.setForeground(standardText);
-        notificationLabel.setForeground(Colors.DANGER_RED.getColor());
+        notificationLabel.setForeground(Color.RED);
 
         repaint();
     }

@@ -204,11 +204,11 @@ join "transaction" on in_transaction.transaction_id = "transaction".transaction_
 join article on in_transaction.article_id = article.article_id order by Vytvorene limit 100;
 
 --retrieve last transaction parameters
-select "transaction".transaction_id as ID, article.name as Artikel, in_transaction.amount as Pocet, "transaction".created_at as Vytoverene
+select "transaction".transaction_id as ID, "transaction".customer_id as Customer, article.name as Artikel, in_transaction.amount as Pocet, "transaction".created_at as Vytoverene
 from in_transaction
 join "transaction" on in_transaction.transaction_id = "transaction".transaction_id
 join article on in_transaction.article_id = article.article_id where date(created_at) = date('now')
-order by "transaction".transaction_id desc limit 1;
+order by "transaction".transaction_id desc limit 10;
 
 SELECT * from "transaction" order by transaction_id desc limit  1;
 

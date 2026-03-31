@@ -2,6 +2,8 @@ package services;
 
 
 
+import assets.Constants;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,111 +51,132 @@ public class SQL_Connect {
         }
     }
 
-    public Item[] getAllItems() throws SQLException {
+    public Item[] getAllItems(int currentCashierId) throws SQLException {
+        List<Item> items = new ArrayList<>();
+
+        // This query joins all necessary tables and calculates the max active discounts for both tiers.
         String sql = """
-                SELECT a.name, a.price,
-                    EXISTS (
-                        SELECT 1
-                        FROM favorite_article f
-                        JOIN cashier c on f.cashier_id = c.cashier_id
-                        WHERE f.article_id = a.article_id
-                        AND f.cashier_id = 1
-                    ) as is_favorite, t.type_name, s.subtype_name
-                FROM article a
-                INNER JOIN subtype s ON a.subtype_id = s.subtype_id
-                INNER JOIN type t ON s.parent_type_id = t.type_id;
-                """;
+            SELECT 
+                a.name, 
+                a.price, 
+                t.type_name as category, 
+                s.subtype_name as subcategory,
+                CASE WHEN fa.article_id IS NOT NULL THEN 1 ELSE 0 END as is_favorite,
+                MAX(CASE WHEN d.requires_customer_card = 0 THEN d.discount_percent ELSE 0 END) as general_discount,
+                MAX(CASE WHEN d.requires_customer_card = 1 THEN d.discount_percent ELSE 0 END) as customer_discount
+            FROM article a
+            JOIN subtype s ON a.subtype_id = s.subtype_id
+            JOIN type t ON s.parent_type_id = t.type_id
+            LEFT JOIN favorite_article fa ON a.article_id = fa.article_id AND fa.cashier_id = ?
+            LEFT JOIN discount d ON a.article_id = d.article_id AND (d.valid_to IS NULL OR d.valid_to > CURRENT_TIMESTAMP)
+            GROUP BY a.article_id
+        """;
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, currentCashierId);
             ResultSet rs = pstmt.executeQuery();
 
-            List<Item> items = new ArrayList<>();
             while (rs.next()) {
-                Item item = new ItemCountable(
-                        rs.getString("name"),
-                        rs.getInt("price"),
-                        0
-                );
-                item.setIsFavorite(rs.getInt("is_favorite") > 0);
-                item.setCategory(rs.getString("type_name"));
-                item.setSubcategory(rs.getString("subtype_name"));
+                String name = rs.getString("name");
+                int basePrice = rs.getInt("price");
+
+                Item item = new ItemCountable(name, basePrice, 0);
+                item.setCategory(rs.getString("category"));
+                item.setSubcategory(rs.getString("subcategory"));
+                item.setIsFavorite(rs.getInt("is_favorite") == 1);
+
+                int genDiscount = rs.getInt("general_discount");
+                int custDiscount = rs.getInt("customer_discount");
+
+                if (custDiscount > 0 && custDiscount > genDiscount) {
+                    item.setDiscountType(Constants.CUSTOMER);
+                    item.setDiscountPrice(basePrice * (100 - custDiscount) / 100);
+                }
+                else if (genDiscount > 0) {
+                    item.setDiscountType(Constants.GENERAL);
+                    item.setDiscountPrice(basePrice * (100 - genDiscount) / 100);
+                }
+                else {
+                    item.setDiscountType(Constants.NONE);
+                    item.setDiscountPrice(basePrice);
+                }
+
                 items.add(item);
             }
-
-            return items.toArray(new Item[0]);
         }
+         return items.toArray(new Item[0]);
     }
-
-    public Item[] getItems(String type) throws SQLException {
-        String sql = """
-                SELECT a.name, a.price,
-                    EXISTS (
-                        SELECT 1
-                        FROM favorite_article f
-                        JOIN cashier c on f.cashier_id = c.cashier_id
-                        WHERE f.article_id = a.article_id
-                        AND f.cashier_id = 1
-                    ) as is_favorite
-                FROM article a
-                INNER JOIN subtype s ON a.subtype_id = s.subtype_id
-                INNER JOIN type t ON s.parent_type_id = t.type_id
-                WHERE t.type_name = ?;
-                """;
-
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1,type);
-            ResultSet rs = pstmt.executeQuery();
-
-            List<Item> items = new ArrayList<>();
-            while (rs.next()) {
-                Item item = new ItemCountable(
-                        rs.getString("name"),
-                        rs.getInt("price"),
-                        0
-                );
-                item.setIsFavorite(rs.getInt("is_favorite") > 0);
-                items.add(item);
-            }
-
-            return items.toArray(new Item[0]);
-        }
-    }
-
-    public Item[] getItems(String type, String subtype) throws SQLException {
-        String sql = """
-                SELECT a.name, a.price,
-                    EXISTS (
-                        SELECT 1
-                        FROM favorite_article f
-                        JOIN cashier c on f.cashier_id = c.cashier_id
-                        WHERE f.article_id = a.article_id
-                        AND f.cashier_id = 1
-                    ) as is_favorite
-                FROM article a
-                INNER JOIN subtype s ON a.subtype_id = s.subtype_id
-                INNER JOIN type t ON s.parent_type_id = t.type_id
-                WHERE t.type_name = ? AND s.subtype_name = ?;
-                """;
-
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1,type);
-            pstmt.setString(2,subtype);
-            ResultSet rs = pstmt.executeQuery();
-
-            List<Item> items = new ArrayList<>();
-            while (rs.next()) {
-                Item item = new ItemCountable(
-                        rs.getString("name"),
-                        rs.getInt("price"),
-                        0
-                );
-                item.setIsFavorite(rs.getInt("is_favorite") > 0);
-                items.add(item);
-            }
-
-            return items.toArray(new Item[0]);
-        }
-    }
+//
+//    public Item[] getItems(String type) throws SQLException {
+//        String sql = """
+//                SELECT a.name, a.price,
+//                    EXISTS (
+//                        SELECT 1
+//                        FROM favorite_article f
+//                        JOIN cashier c on f.cashier_id = c.cashier_id
+//                        WHERE f.article_id = a.article_id
+//                        AND f.cashier_id = 1
+//                    ) as is_favorite
+//                FROM article a
+//                INNER JOIN subtype s ON a.subtype_id = s.subtype_id
+//                INNER JOIN type t ON s.parent_type_id = t.type_id
+//                WHERE t.type_name = ?;
+//                """;
+//
+//        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//            pstmt.setString(1,type);
+//            ResultSet rs = pstmt.executeQuery();
+//
+//            List<Item> items = new ArrayList<>();
+//            while (rs.next()) {
+//                Item item = new ItemCountable(
+//                        rs.getString("name"),
+//                        rs.getInt("price"),
+//                        0
+//                );
+//                item.setIsFavorite(rs.getInt("is_favorite") > 0);
+//                items.add(item);
+//            }
+//
+//            return items.toArray(new Item[0]);
+//        }
+//    }
+//
+//    public Item[] getItems(String type, String subtype) throws SQLException {
+//        String sql = """
+//                SELECT a.name, a.price,
+//                    EXISTS (
+//                        SELECT 1
+//                        FROM favorite_article f
+//                        JOIN cashier c on f.cashier_id = c.cashier_id
+//                        WHERE f.article_id = a.article_id
+//                        AND f.cashier_id = 1
+//                    ) as is_favorite
+//                FROM article a
+//                INNER JOIN subtype s ON a.subtype_id = s.subtype_id
+//                INNER JOIN type t ON s.parent_type_id = t.type_id
+//                WHERE t.type_name = ? AND s.subtype_name = ?;
+//                """;
+//
+//        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//            pstmt.setString(1,type);
+//            pstmt.setString(2,subtype);
+//            ResultSet rs = pstmt.executeQuery();
+//
+//            List<Item> items = new ArrayList<>();
+//            while (rs.next()) {
+//                Item item = new ItemCountable(
+//                        rs.getString("name"),
+//                        rs.getInt("price"),
+//                        0
+//                );
+//                item.setIsFavorite(rs.getInt("is_favorite") > 0);
+//                items.add(item);
+//            }
+//
+//            return items.toArray(new Item[0]);
+//        }
+//    }
 
     public Item[] getItemsBySubCategory(String type) throws SQLException {
         String sql = """
@@ -210,13 +233,12 @@ public class SQL_Connect {
     TRANSACTION
      */
 
-    public int createTransaction(int cashierID ,int customerID) throws SQLException {
-        String sqlInsert =  "insert into \"transaction\" (cashier_id, created_at, customer_id)" +
-                "values (?,current_timestamp, ?)";
+    public int createTransaction(int cashierID) throws SQLException {
+        String sqlInsert =  "insert into \"transaction\" (cashier_id, created_at)" +
+                "values (?,current_timestamp)";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sqlInsert)) {
             pstmt.setInt(1, cashierID);
-            pstmt.setInt(2, customerID);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -233,6 +255,17 @@ public class SQL_Connect {
             throw new RuntimeException(e);
         }
         throw new SQLException("No last transaction number could be found. ");
+    }
+
+    public void setCustomerId(int transactionID,int cashierID) throws SQLException {
+
+        try (PreparedStatement pstmt = conn.prepareStatement("""
+                UPDATE 'Transaction' SET customer_id = ? WHERE transaction_id = ?
+                """)) {
+            pstmt.setInt(1, cashierID);
+            pstmt.setInt(2, transactionID);
+            pstmt.executeUpdate();
+        }
     }
 
     public int getLastTransactionNumber() throws SQLException{
@@ -614,4 +647,41 @@ public class SQL_Connect {
             connectFavoriteArticle.executeUpdate();
         }
     }
+
+    /*
+    CUSTOMER CARDS
+     */
+
+    public int getCustomerIdByCard(int cardNumber) throws SQLException {
+        String sql = "SELECT customer_id FROM customer WHERE customer_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, cardNumber);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("customer_id");
+            }
+        }
+        return -1;
+    }
+
+    public int createNewCustomerCard(int cardNumber, String customerName) throws SQLException {
+        if (getCustomerIdByCard(cardNumber) != -1) {
+            throw new SQLException("Karta s číslom " + cardNumber + " už existuje v systéme!");
+        }
+
+        String sql = "INSERT INTO customer (name, customer_id) VALUES (?, ?)";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setString(1, customerName);
+            pstmt.setInt(2, cardNumber);
+            pstmt.executeUpdate();
+
+            ResultSet rs = pstmt.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        throw new SQLException("Nepodarilo sa vytvoriť zákaznícku kartu.");
+    }
+
+
 }

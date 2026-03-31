@@ -121,10 +121,6 @@ public class ViewManager {
     public void returnToDefault(){
         duringRegister.returnToDefault();
         duringReturn.returnToDefault();
-    }
 
-    public void repaint(){
-//        mainFrame.dispose();
     }
-
 }

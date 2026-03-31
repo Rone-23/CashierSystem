@@ -17,6 +17,10 @@ public enum Constants {
     HORIZONTAL(0),
     VERTICAL(1),
 
+    CUSTOMER(6),
+    GENERAL(7),
+    NONE(7),
+
     ;
     private final double value;
     Constants(double constant){

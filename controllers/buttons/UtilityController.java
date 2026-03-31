@@ -8,6 +8,7 @@ import controllers.transaction.ContentController;
 import controllers.display.DisplayDispatcher;
 import controllers.panels.ViewManager;
 import controllers.transaction.OpenTransactionManager;
+import services.Customers.ValidateCustomerAction;
 import views.panels.DuringPause;
 import views.panels.DuringRegister;
 import views.panels.DuringReturnTransaction;
@@ -19,6 +20,7 @@ public class UtilityController {
     AddItemAction addItemAction = new AddItemAction();
     RemoveItemAction removeItemAction = new RemoveItemAction();
     CodeEnterAction codeEnterAction = new CodeEnterAction();
+    ValidateCustomerAction validateCustomerAction = new ValidateCustomerAction();
     CheckPauseAction checkPauseAction;
     public UtilityController() {
         /*
@@ -35,6 +37,11 @@ public class UtilityController {
         });
         ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.COPY_RECEIPT.toString()).addActionListener(_ -> {
             ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).setActionCommand(ButtonSet.ButtonLabel.COPY_RECEIPT.toString());
+            ViewManager.getInstance().showCodeEnter();
+            DisplayDispatcher.activeDisplayForCode();
+        });
+        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.CREATE_CARD.toString()).addActionListener(_ -> {
+            ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).setActionCommand(ButtonSet.ButtonLabel.CREATE_CARD.toString());
             ViewManager.getInstance().showCodeEnter();
             DisplayDispatcher.activeDisplayForCode();
         });
@@ -61,6 +68,7 @@ public class UtilityController {
         DuringRegister duringRegister = ViewManager.getInstance().getDuringRegister();
         duringRegister.getButton(ButtonSet.ButtonLabel.ARTICLES.toString()).addActionListener(_ -> ViewManager.getInstance().showArticles());
         duringRegister.getButton(ButtonSet.ButtonLabel.LAST_ARTICLE.toString()).addActionListener(addItemAction);
+        duringRegister.getButton(ButtonSet.ButtonLabel.STORNO.toString()).addActionListener(validateCustomerAction);
 
         /*
         ##Adding control for handling cash
@@ -143,6 +151,7 @@ public class UtilityController {
          */
         ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(_ -> {
             ViewManager.getInstance().showIdle();
+            ContentController.clearContent();
             DisplayDispatcher.activeDisplayForAmount();
         });
         ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(codeEnterAction);

@@ -9,7 +9,7 @@ import services.Item;
 import javax.swing.*;
 
 public class DisplayItemController implements OpenTransactionObserver {
-    private ArticleSelectAction articleSelectAction;
+    private final ArticleSelectAction articleSelectAction;
 
     public DisplayItemController(){
         articleSelectAction = new ArticleSelectAction();

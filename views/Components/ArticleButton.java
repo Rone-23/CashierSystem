@@ -1,6 +1,7 @@
 package views.Components;
 
 import assets.Colors;
+import assets.Constants;
 import assets.ThemeManager;
 import assets.ThemeObserver;
 import services.Item;
@@ -120,10 +121,37 @@ public class ArticleButton extends JToggleButton implements ContainsItem, ThemeO
         g2.drawString(item.getName(), textX, nameY);
 
         int priceY = nameY + fm.getHeight() + 4;
-        String priceText = String.format("%.2f€", item.getPrice() * 0.01);
+        if (item.getDiscountType() != null && item.getDiscountType() != Constants.NONE && item.getDiscountPrice() < item.getPrice()) {
+
+            String origPriceText = String.format("%.2f€", item.getPrice() * 0.01);
+            String discPriceText = String.format("%.2f€", item.getDiscountPrice() * 0.01);
+
+            g2.setPaint(new Color(130, 130, 130));
+            g2.drawString(origPriceText, textX, priceY);
+
+            int origWidth = fm.stringWidth(origPriceText);
+            int strikeY = priceY - (fm.getAscent() / 3);
+            g2.setStroke(new BasicStroke(1.5f));
+            g2.drawLine(textX - 1, strikeY, textX + origWidth + 1, strikeY);
+
+            if (item.getDiscountType() == Constants.CUSTOMER) {
+                g2.setPaint(new Color(210, 160, 0));
+            } else {
+                g2.setPaint(new Color(230, 110, 0));
+            }
+
+            int gap = 6;
+            g2.drawString(discPriceText, textX + origWidth + gap, priceY);
+
+        } else {
+            g2.setPaint(getForeground());
+            String priceText = String.format("%.2f€", item.getPrice() * 0.01);
+            g2.drawString(priceText, textX, priceY);
+        }
+
+        g2.setPaint(getForeground());
         String amountText = "x " + item.getAmount();
 
-        g2.drawString(priceText, textX, priceY);
 
         int amountWidth = fm.stringWidth(amountText);
         int amountX = (inset + insetSide + width) - amountWidth;
