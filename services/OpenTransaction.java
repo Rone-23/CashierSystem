@@ -4,6 +4,8 @@ import assets.Constants;
 import controllers.notifications.NotificationController;
 import controllers.transaction.ContentObserver;
 import controllers.transaction.OpenTransactionObserver;
+import services.Customers.CustomerCardObserver;
+import services.Customers.ValidateCustomerAction;
 
 import java.awt.event.ActionEvent;
 import java.sql.SQLException;
@@ -14,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class OpenTransaction implements ContentObserver {
+public class OpenTransaction implements ContentObserver, CustomerCardObserver {
     private final int transactionID;
     private int customerID = -1;
     private final LocalDateTime  transactionDateTime;
@@ -36,7 +38,7 @@ public class OpenTransaction implements ContentObserver {
     public OpenTransaction(){
         this.transactionDateTime = LocalDateTime.now();
         this.transactionDateTime.format(dateTimeFormatter);
-
+        ValidateCustomerAction.addObserver(this);
         try {
             transactionID = SQL_Connect.getInstance().createTransaction(1);
         } catch (SQLException e) {
@@ -81,8 +83,9 @@ public class OpenTransaction implements ContentObserver {
         if (!isReturn) {
             int price = (item.getDiscountType() == Constants.GENERAL || (item.getDiscountType() == Constants.CUSTOMER && customerID > 0)) ? item.discountPrice : item.getPrice();
             itemToNotify = (ItemCountable) itemsInTransaction.computeIfAbsent(name, k ->
-                    new ItemCountable(name, price, 0)
+                    item.clone()
             );
+            itemToNotify.setPrice(price);
             itemToNotify.addAmount(content);
 
         } else {
@@ -271,19 +274,26 @@ public class OpenTransaction implements ContentObserver {
         try{
             SQL_Connect.getInstance().setCustomerId(transactionID, customerID);
             this.customerID = customerID;
-            applyCustomerDiscounts();
         }catch (SQLException e){
             NotificationController.notifyObservers(e.getMessage(),5000);
         }
     }
 
-    public void applyCustomerDiscounts() {
-
+    @Override
+    public void onCardValidation() {
+        setCustomerID(content);
+        for(Item item : itemsInTransaction.values()){
+            item.applyDiscount();
+        }
+        for(OpenTransactionObserver observer : observerList){
+            observer.onTransactionUpdate();
+        }
     }
 
     public int getCustomerID(){
         return customerID;
     }
+
 
     //Observer
     public static void addObserver(OpenTransactionObserver openTransactionObserver){observerList.add(openTransactionObserver);}
@@ -304,4 +314,6 @@ public class OpenTransaction implements ContentObserver {
             this.content = 1;
         }
     }
+
+
 }

@@ -10,9 +10,12 @@ import services.SQL_Connect;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ValidateCustomerAction extends AbstractAction implements ContentObserver {
     private String content;
+    private static final List<CustomerCardObserver> observerList = new ArrayList<>();
     public ValidateCustomerAction(){
         ContentController.addObserver(this);
     }
@@ -28,9 +31,11 @@ public class ValidateCustomerAction extends AbstractAction implements ContentObs
         try {
             int customerID = Integer.parseInt(content);
             if(SQL_Connect.getInstance().getCustomerIdByCard(customerID)!=-1){
-                OpenTransactionManager.getInstance().getOpenTransaction().setCustomerID(customerID);
                 ViewManager.getInstance().getStatusBar().setStatus("Áno");
                 NotificationController.notifyObservers("Karta úspešne načítaná!", 4000);
+                for(CustomerCardObserver o : observerList){
+                    o.onCardValidation();
+                }
             }else{
                 NotificationController.notifyObservers("Karta nebola rozpoznaná!", 4000);
             }
@@ -39,6 +44,15 @@ public class ValidateCustomerAction extends AbstractAction implements ContentObs
         }finally {
             ContentController.clearContent();
         }
+    }
+
+    //Observer
+    public static void addObserver(CustomerCardObserver o){
+        observerList.add(o);
+    }
+
+    public static void removeObserver(CustomerCardObserver o){
+        observerList.remove(o);
     }
 
     @Override

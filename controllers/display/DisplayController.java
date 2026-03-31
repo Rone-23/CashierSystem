@@ -56,4 +56,10 @@ public class DisplayController implements OpenTransactionObserver, ContentObserv
             display.setText(String.format("%s",content));
         }
     }
+
+    @Override
+    public void onTransactionUpdate() {
+        display.setText(String.format("%.2f",openTransaction.getMissing()*0.01));
+
+    }
 }

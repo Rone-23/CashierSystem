@@ -10,6 +10,7 @@ import java.util.Objects;
 public abstract class Item implements Cloneable {
     protected String name;
     protected int price, discountPrice, amount;
+    protected int basePrice = -1;
     protected Constants discountType = null;
     private static double totalAmount;
     protected boolean isFavorite;
@@ -26,6 +27,9 @@ public abstract class Item implements Cloneable {
     }
     public void setPrice(int price){
         this.price=price;
+        if (this.basePrice == -1) {
+            this.basePrice = price;
+        }
     }
     public void setAmount(int amount){
         this.amount=amount;
@@ -35,9 +39,28 @@ public abstract class Item implements Cloneable {
     }
     public int getPrice(){
         return this.price;
+
+    }
+    public int getBasePrice() {
+        return this.basePrice == -1 ? this.price : this.basePrice;
+    }
+    public void setBasePrice(int basePrice) {
+        this.basePrice = basePrice;
     }
     public int getAmount(){
         return this.amount;
+    }
+    public void applyDiscount() {
+        if (this.basePrice == -1) {
+            this.basePrice = this.price;
+        }
+
+        if (discountType == null) {
+            this.price = this.basePrice;
+            return;
+        }
+
+        this.price = this.discountPrice;
     }
     public void setIsFavorite(boolean isFavorite){this.isFavorite = isFavorite;}
     public boolean getIsFavorite(){return isFavorite;}
@@ -56,14 +79,6 @@ public abstract class Item implements Cloneable {
     public void setSubcategory(String subcategory) {
         this.subcategory = subcategory;
     }
-
-//    public int getFinalPrice(int currentCustomerID) {
-//
-//        if (discountType == Constants.GENERAL || (discountType == Constants.CUSTOMER && currentCustomerID > 0)) {
-//            price = discountPrice;
-//        }
-//        return price;
-//    }
 
     @Override
     public boolean equals(Object obj) {

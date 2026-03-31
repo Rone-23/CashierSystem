@@ -5,6 +5,7 @@ public class ItemCountable extends Item{
     public ItemCountable(String name, int price, int amount){
         this.name = name;
         this.price = price;
+        this.basePrice = price;
         this.amount = amount;
     }
     public void addAmount(int amountToAdd){

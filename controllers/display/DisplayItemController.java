@@ -61,4 +61,11 @@ public class DisplayItemController implements OpenTransactionObserver {
         ViewManager.getInstance().getDuringRegister().getDisplayScrollableItems().addPayment(typeOfPayment, addedAmount);
         ViewManager.getInstance().getDuringReturn().getDisplayScrollableItems().addPayment(typeOfPayment, addedAmount);
     }
+
+    @Override
+    public void onTransactionUpdate() {
+        ViewManager.getInstance().getDuringRegister().getDisplayScrollableItems().repaint();
+        ViewManager.getInstance().getDuringArticles().getDisplayScrollableItems().repaint();
+        ViewManager.getInstance().getDuringReturn().getDisplayScrollableItems().repaint();
+    }
 }
