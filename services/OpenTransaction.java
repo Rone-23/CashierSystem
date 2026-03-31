@@ -64,29 +64,28 @@ public class OpenTransaction implements ContentObserver, CustomerCardObserver {
         if (item == null) return;
 
         String name = item.getName();
-
-        try {
-            int stock = SQL_Connect.getInstance().getStock(SQL_Connect.getInstance().getArticleID(name));
-            int inTransaction = itemsInTransaction.containsKey(name) ? itemsInTransaction.get(name).getAmount() : 0;
-
-            if (stock - content - inTransaction < 0) {
-                NotificationController.notifyObservers("Nedostatok tovaru v sklade, aktualny pocet je " + stock, 5000);
-                return;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Database error during stock check", e);
-        }
-
         ItemCountable itemToNotify = null;
 
 
         if (!isReturn) {
+            try {
+                int stock = SQL_Connect.getInstance().getStock(SQL_Connect.getInstance().getArticleID(name));
+                int inTransaction = itemsInTransaction.containsKey(name) ? itemsInTransaction.get(name).getAmount() : 0;
+
+                if (stock - content - inTransaction < 0) {
+                    NotificationController.notifyObservers("Nedostatok tovaru v sklade, aktualny pocet je " + stock, 5000);
+                    return;
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException("Database error during stock check", e);
+            }
+
             int price = (item.getDiscountType() == Constants.GENERAL || (item.getDiscountType() == Constants.CUSTOMER && customerID > 0)) ? item.discountPrice : item.getPrice();
             itemToNotify = (ItemCountable) itemsInTransaction.computeIfAbsent(name, k ->
                     item.clone()
             );
-            itemToNotify.setPrice(price);
             itemToNotify.addAmount(content);
+            itemToNotify.setPrice(price);
 
         } else {
             ItemCountable returnedItem = (ItemCountable) returnedItems.get(name);
@@ -147,7 +146,10 @@ public class OpenTransaction implements ContentObserver, CustomerCardObserver {
                 returnedItem.addAmount(content);
             } else {
                 int price = (item.getDiscountType() == Constants.GENERAL || (item.getDiscountType() == Constants.CUSTOMER && customerID > 0)) ? item.discountPrice : item.getPrice();
-                returnedItems.put(itemName, new ItemCountable(itemName, price, content));
+                returnedItem = (ItemCountable) item.clone();
+                returnedItem.setPrice(price);
+                returnedItem.setAmount(content);
+                returnedItems.put(itemName, returnedItem);
             }
 
             itemInTransaction.addAmount(-content);

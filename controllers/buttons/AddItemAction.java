@@ -5,6 +5,7 @@ import controllers.transaction.ContentObserver;
 import controllers.transaction.OpenTransactionManager;
 import controllers.transaction.OpenTransactionObserver;
 import services.Item;
+import services.ItemCountable;
 import services.OpenTransaction;
 
 import javax.swing.*;
@@ -24,8 +25,8 @@ public class AddItemAction extends AbstractAction implements ContentObserver, Op
     @Override
     public void actionPerformed(ActionEvent e) {
         if(item!=null){
-            Item itemToAdd = item.clone();
-            item.setAmount(Integer.parseInt(content));
+            ItemCountable itemToAdd = (ItemCountable) item.clone();
+            itemToAdd.addAmount(Integer.parseInt(content));
             OpenTransactionManager.getInstance().addItem(itemToAdd);
         }
     }
