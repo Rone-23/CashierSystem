@@ -272,6 +272,8 @@ public class OpenTransaction implements ContentObserver, CustomerCardObserver {
         isReturn = status;
     }
 
+    public boolean getReturnStatus(){return isReturn;}
+
     public void setCustomerID(int customerID){
         try{
             SQL_Connect.getInstance().setCustomerId(transactionID, customerID);

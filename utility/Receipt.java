@@ -3,7 +3,6 @@ package utility;
 import services.Item;
 import services.ItemUncountable;
 
-import java.util.ArrayList;
 
 public class Receipt {
     private static final StringBuilder receiptBuilder = new StringBuilder();
@@ -13,7 +12,6 @@ public class Receipt {
     private static final String KP = "xxxxxxxxxxxxxxxxx";
 //    String date = "03-11-2024 20:00:12";
 //    int numOfReceipt = 666;
-    ArrayList <Item>itemArrayList = new ArrayList<>();
     public Receipt(){
     }
 
@@ -33,14 +31,19 @@ public class Receipt {
         receiptBuilder.append("----------------------------------------\n");
         //items
         for (Item item : itemArrayList) {
-            //TODO: check for item name length, adjust for receipt length
             String name = item.getName();
+            if(name.length()>18){
+                name = name.substring(0, 18);
+            }
             double amount =  item.getAmount();
             double price = item.getPrice()*0.01;
-            if (item.getClass() == ItemUncountable.class){
-                receiptBuilder.append(String.format("%s   %.3fkg   %9.2f B\n", name,amount*0.001, price * amount*0.001));
-            }else{
-                receiptBuilder.append(String.format("%s   %sks   %9.2f B\n", name, amount, price * amount));
+
+            if (item.getClass() == ItemUncountable.class) {
+                String amountStr = String.format("%.3fkg", amount * 0.001);
+                receiptBuilder.append(String.format("%-18s %8s %9.2f B\n", name, amountStr, price * amount * 0.001));
+            } else {
+                String amountStr = String.format("%sks", item.getAmount());
+                receiptBuilder.append(String.format("%-18s %8s %9.2f B\n", name, amountStr, price * amount));
             }
             totalAmount += item.getPrice() * item.getAmount();
         }
