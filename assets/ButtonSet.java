@@ -122,6 +122,8 @@ public enum ButtonSet {
         CASH_BACK("Vráťiť schodok", Colors.MILD_YELLOW),
         REMOVE("Ubrať", Colors.MILD_YELLOW),
         SEARCH("Vyhladať", Colors.DEFAULT_BLUE),
+        LOGIN("Prihlásiť používateľa", Colors.DEFAULT_BLUE),
+
         ;
 
         private final String displayValue;

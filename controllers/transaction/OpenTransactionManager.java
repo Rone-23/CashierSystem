@@ -4,15 +4,19 @@ import controllers.display.DisplayDispatcher;
 import controllers.panels.ViewManager;
 import services.Item;
 import services.OpenTransaction;
+import services.Users.CashierObserver;
+import services.Users.CashierSession;
 
 import java.awt.event.ActionEvent;
 
-public class OpenTransactionManager implements OpenTransactionObserver{
+public class OpenTransactionManager implements OpenTransactionObserver, CashierObserver {
     private static OpenTransactionManager instance;
     private OpenTransaction openTransaction;
+    private int cashierId = -1;
 
     private OpenTransactionManager(){
         OpenTransaction.addObserver(this);
+        CashierSession.addObserver(this);
     }
 
     public static OpenTransactionManager getInstance(){
@@ -24,9 +28,7 @@ public class OpenTransactionManager implements OpenTransactionObserver{
 
     private OpenTransaction createOpenTransaction(){
         try {
-            openTransaction = new OpenTransaction();
-            ViewManager.getInstance().getStatusBar().setTransactionId(String.valueOf(openTransaction.getTransactionID()));
-            ViewManager.getInstance().getStatusBar().setCashierId("1");
+            openTransaction = new OpenTransaction(cashierId);
             ViewManager.getInstance().getStatusBar().setStatus("Nie");
         } catch (NumberFormatException ignored) {
         }
@@ -85,5 +87,16 @@ public class OpenTransactionManager implements OpenTransactionObserver{
         openTransaction = null;
         ViewManager.getInstance().getStatusBar().setStatus("---");
         ViewManager.getInstance().getStatusBar().setTransactionId("---");
+    }
+
+    @Override
+    public void onCreate(OpenTransaction openTransaction) {
+        ViewManager.getInstance().getStatusBar().setTransactionId(String.valueOf(openTransaction.getTransactionID()));
+    }
+
+    @Override
+    public void onCashierLogin(int cashierId) {
+        this.cashierId = cashierId;
+        ViewManager.getInstance().getStatusBar().setCashierId(String.valueOf(cashierId));
     }
 }

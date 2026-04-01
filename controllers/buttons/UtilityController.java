@@ -9,6 +9,7 @@ import controllers.display.DisplayDispatcher;
 import controllers.panels.ViewManager;
 import controllers.transaction.OpenTransactionManager;
 import services.Customers.ValidateCustomerAction;
+import services.Users.LoginCashierAction;
 import views.panels.DuringPause;
 import views.panels.DuringRegister;
 import views.panels.DuringReturnTransaction;
@@ -22,6 +23,7 @@ public class UtilityController {
     CodeEnterAction codeEnterAction = new CodeEnterAction();
     ValidateCustomerAction validateCustomerAction = new ValidateCustomerAction();
     CheckPauseAction checkPauseAction;
+    LoginCashierAction loginCashierAction = new LoginCashierAction();
     public UtilityController() {
         /*
         #Controlling all the buttons that are on the right side in DuringIdle
@@ -155,6 +157,12 @@ public class UtilityController {
             DisplayDispatcher.activeDisplayForAmount();
         });
         ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(codeEnterAction);
+
+
+        /*
+        #Controlling buttons on bottom side of DuringCodeEnter
+         */
+        ViewManager.getInstance().getDuringPause().getButton(ButtonSet.ButtonLabel.LOGIN.toString()).addActionListener(loginCashierAction);
 
         /*
         #Controlling buttons on bottom side of DuringReturn

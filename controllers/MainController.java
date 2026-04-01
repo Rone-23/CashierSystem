@@ -6,12 +6,14 @@ import controllers.panels.*;
 import controllers.transaction.ContentController;
 import controllers.display.DisplayDispatcher;
 import controllers.display.DisplayItemController;
+import controllers.transaction.OpenTransactionManager;
 import services.OpenTransaction;
 
 import java.sql.SQLException;
 
 public class MainController {
     public MainController() throws SQLException {
+        OpenTransactionManager.getInstance();
         ContentController contentController = new ContentController();
         OpenTransaction.addObserver(contentController);
         new DuringRegisterController();

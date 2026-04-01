@@ -9,6 +9,8 @@ import controllers.transaction.OpenTransactionObserver;
 import services.Item;
 import services.OpenTransaction;
 import services.SQL_Connect;
+import services.Users.CashierObserver;
+import services.Users.CashierSession;
 import utility.ButtonBuilder;
 import views.Components.ArticleButton;
 import views.Components.DisplayArticles;
@@ -20,7 +22,7 @@ import java.util.List;
 
 import java.util.Map;
 
-public class DisplayArticleController implements OpenTransactionObserver, FilterObserver {
+public class DisplayArticleController implements OpenTransactionObserver, FilterObserver, CashierObserver {
 
     private final DisplayArticles displayArticles = ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles();
 
@@ -34,17 +36,20 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
     private String filterKeywordMain = "ALL";
     private String filterKeywordSecondary = "ALL";
 
+    private int cashierId = -1;
+
     private final ArticleSelectAction articleSelectAction = new ArticleSelectAction();
     private final FavoriteArticleAction favoriteArticleAction = new FavoriteArticleAction(this::toggleFavoriteInCache);
 
     public DisplayArticleController() {
+        CashierSession.addObserver(this);
         initializeCache();
         refreshDisplay();
     }
 
     private void initializeCache() {
         try {
-            Item[] allItems = SQL_Connect.getInstance().getAllItems(1);
+            Item[] allItems = SQL_Connect.getInstance().getAllItems(cashierId);
 
             for (Item article : allItems) {
                 ArticleButton btn = (ArticleButton) ButtonBuilder.buildArticleButton(assets.Colors.ARTICLE_BUTTON, article);
@@ -161,5 +166,19 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
                 favoritesIndex.remove(btn);
             }
         }
+    }
+
+    @Override
+    public void onCashierLogin(int cashierId) {
+        this.cashierId = cashierId;
+        categoryIndex.clear();
+        subCategoryIndex.clear();
+        favoritesIndex.clear();
+        allArticlesIndex.clear();
+        buttonMasterMap.clear();
+
+        initializeCache();
+        refreshDisplay();
+
     }
 }

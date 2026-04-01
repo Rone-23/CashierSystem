@@ -97,6 +97,18 @@ public class StatusBar extends JPanel implements NotificationObserver, ThemeObse
         }
     }
 
+    public void setUnregistered(Boolean status){
+        isLocked=status;
+        if(isLocked){
+            if (notificationTimer != null) notificationTimer.stop();
+            notificationLabel.setText("ŽIADEN POKLADNÍK NENI PRIHLÁSENÝ. PROSÍM PRIHLÁSTE SA!");
+            notificationLabel.setForeground(Color.RED);
+        } else {
+            notificationLabel.setText("");
+            notificationLabel.setForeground(Color.RED);
+        }
+    }
+
     private void showNotification(String message, int durationMs) {
         if (notificationTimer != null && notificationTimer.isRunning()) {
             notificationTimer.stop();
@@ -136,4 +148,6 @@ public class StatusBar extends JPanel implements NotificationObserver, ThemeObse
 
         repaint();
     }
+
+
 }

@@ -35,12 +35,12 @@ public class OpenTransaction implements ContentObserver, CustomerCardObserver {
     private final Double EPSILON = 0.0000001;
     //**day is stored using sql.getLastTimeStamp() and split it into day ("dd-MM-yyyy HH:mm:ss")**//
 
-    public OpenTransaction(){
+    public OpenTransaction(int cashierID){
         this.transactionDateTime = LocalDateTime.now();
         this.transactionDateTime.format(dateTimeFormatter);
         ValidateCustomerAction.addObserver(this);
         try {
-            transactionID = SQL_Connect.getInstance().createTransaction(1);
+            transactionID = SQL_Connect.getInstance().createTransaction(cashierID);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -318,6 +318,4 @@ public class OpenTransaction implements ContentObserver, CustomerCardObserver {
             this.content = 1;
         }
     }
-
-
 }
