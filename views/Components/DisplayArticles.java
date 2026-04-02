@@ -49,7 +49,7 @@ public class DisplayArticles extends JScrollPane implements ThemeObserver {
         container.setBackground(Colors.BACKGROUND_GRAY.getColor());
 
         onThemeChange();
-        touchControls();
+//        touchControls();
         recalculate();
 
         gbc.weighty=0;
