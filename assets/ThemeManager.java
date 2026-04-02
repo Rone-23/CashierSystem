@@ -18,6 +18,9 @@ public class ThemeManager {
             observers.add(observer);
         }
     }
+    public void removeObserver(ThemeObserver observer) {
+        observers.remove(observer);
+    }
 
     public boolean toggleTheme() {
         Colors.switchState();

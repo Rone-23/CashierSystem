@@ -32,7 +32,12 @@ public class DisplayArticles extends JScrollPane implements ThemeObserver {
         setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
         setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
         setViewportView(container);
-        getVerticalScrollBar().setUnitIncrement(20);
+
+        JScrollBar verticalScrollBar = getVerticalScrollBar();
+        verticalScrollBar.setUI(new CustomScrollBar());
+        verticalScrollBar.setPreferredSize(new Dimension(20, 0));
+        verticalScrollBar.setOpaque(false);
+        verticalScrollBar.setUnitIncrement(20);
 
         spacerVertical.setName("SPACER_VERTICAL");
         spacerVertical.setOpaque(false);
