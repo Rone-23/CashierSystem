@@ -20,6 +20,7 @@ public class DuringPause extends JPanel implements ButtonFoundable, ThemeObserve
     private ButtonCluster actionButtons;
 
     public DuringPause() {
+        inputDisplay.setText("");
         setLayout(new BorderLayout());
 
         JPanel centerPanel = new JPanel(new GridBagLayout());

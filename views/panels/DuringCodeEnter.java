@@ -18,6 +18,7 @@ public class DuringCodeEnter extends JPanel implements ButtonFoundable, ThemeObs
     private ButtonCluster actionButtons;
 
     public DuringCodeEnter() {
+        inputDisplay.setText("");
         setLayout(new BorderLayout());
 
         JPanel centerPanel = new JPanel(new GridBagLayout());

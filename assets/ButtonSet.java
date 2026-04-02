@@ -86,9 +86,9 @@ public enum ButtonSet {
     public enum ButtonLabel {
         // UTILITY_BUTTON Labels
         ARTICLES("Artikle", Colors.DEFAULT_BLUE),
-        LAST_ARTICLE("Posledna polozka", Colors.MILD_YELLOW),
+        LAST_ARTICLE("Posledná položka", Colors.MILD_YELLOW),
         STORNO("Storno", Colors.DANGER_RED),
-        CASH("Hotovost", Colors.SUCCESS_GREEN),
+        CASH("Hotovosť", Colors.SUCCESS_GREEN),
         CARD("Karta", Colors.SUCCESS_GREEN),
         FOOD_TICKETS("Stravenky", Colors.ALT_PAYMENT_TEAL),
         USE_VOUCHER("Poukážky", Colors.ALT_PAYMENT_TEAL),
@@ -102,12 +102,12 @@ public enum ButtonSet {
         HUNDRED("100€", Colors.DEFAULT_BLUE),
 
         //IDLE_UTILITY_BUTTONS
-        BEGIN("Zacat (Artikle)", Colors.DEFAULT_BLUE),
-        CREATE_CARD("Vybavit kartu", Colors.CUSTOMER_ORANGE),
-        COPY_RECEIPT("Kopia blocku", Colors.DEFAULT_BLUE),
+        BEGIN("Začať (Artikle)", Colors.DEFAULT_BLUE),
+        CREATE_CARD("Vybaviť kartu", Colors.CUSTOMER_ORANGE),
+        COPY_RECEIPT("Kópia bločku", Colors.DEFAULT_BLUE),
         RETURN("Vratka", Colors.DEFAULT_BLUE),
         PAUSE("Pauza", Colors.DANGER_RED),
-        PADAVAN("Zaucenie", Colors.PURPLE),
+        PADAVAN("Zaučenie", Colors.PURPLE),
         THEME_BUTTON("Light", Colors.DEFAULT_BLUE),
 
         //KEYBOARD
@@ -118,7 +118,7 @@ public enum ButtonSet {
 
         // Shared Labels
         EXIT("Naspäť", Colors.DANGER_RED),
-        ADD("Pridat", Colors.MILD_YELLOW),
+        ADD("Pridať", Colors.MILD_YELLOW),
         CASH_BACK("Vráťiť schodok", Colors.MILD_YELLOW),
         REMOVE("Ubrať", Colors.MILD_YELLOW),
         SEARCH("Vyhladať", Colors.DEFAULT_BLUE),

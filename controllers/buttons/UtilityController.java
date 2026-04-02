@@ -13,6 +13,7 @@ import services.Users.LoginCashierAction;
 import views.panels.*;
 
 import javax.swing.*;
+import java.awt.*;
 
 
 public class UtilityController {
@@ -181,5 +182,43 @@ public class UtilityController {
         duringReturnTransaction.getButton(ButtonSet.ButtonLabel.CARD.toString()).addActionListener(duringReturnTransaction::switchState);
         duringReturnTransaction.getButton(ButtonSet.ButtonLabel.CASH_BACK.toString()).addActionListener(new CashBackAction());
         duringReturnTransaction.getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(duringReturnTransaction::switchState);
+
+        applySecurityLock(ViewManager.getInstance().getMainFrame());
+    }
+
+    private void applySecurityLock(java.awt.Container container) {
+        for (Component c : container.getComponents()) {
+            if (c instanceof javax.swing.JButton) {
+                JButton button = (javax.swing.JButton) c;
+                String name = button.getName();
+
+                boolean isExempt = name != null && (
+                        name.equalsIgnoreCase(assets.ButtonSet.ButtonLabel.LOGIN.toString()) ||
+                                name.equalsIgnoreCase(assets.ButtonSet.ButtonLabel.THEME_BUTTON.toString()) ||
+                                name.equalsIgnoreCase(assets.ButtonSet.ButtonLabel.PAUSE.toString()) ||
+                                name.equalsIgnoreCase(assets.ButtonSet.ButtonLabel.PADAVAN.toString()) ||
+                                name.matches("\\d+") ||
+                                name.equalsIgnoreCase(assets.ButtonSet.ButtonLabel.DELETE.toString()) ||
+                                name.equalsIgnoreCase(assets.ButtonSet.ButtonLabel.BACKSPACE.toString())
+                );
+
+                if (!isExempt) {
+                    java.awt.event.ActionListener[] listeners = button.getActionListeners();
+                    for (java.awt.event.ActionListener al : listeners) {
+                        button.removeActionListener(al);
+
+                        button.addActionListener(e -> {
+                            if (services.Users.CashierSession.getCurrentCashierId() == -1) {
+                                controllers.notifications.NotificationController.notifyObservers("Prosím prihláste používateľa!", 3000);
+                            } else {
+                                al.actionPerformed(e);
+                            }
+                        });
+                    }
+                }
+            } else if (c instanceof Container) {
+                applySecurityLock((Container) c);
+            }
+        }
     }
 }
