@@ -55,7 +55,7 @@ public class DisplayArticles extends JScrollPane implements ThemeObserver {
         gbc.weighty=0;
         gbc.weightx=0;
         gbcSpacer.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(2, 2, 2, 2);
 
         gbcSpacer.weighty=0;
         container.add(mainArticlePanel,gbcSpacer);

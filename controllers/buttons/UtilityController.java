@@ -10,13 +10,9 @@ import controllers.panels.ViewManager;
 import controllers.transaction.OpenTransactionManager;
 import services.Customers.ValidateCustomerAction;
 import services.Users.LoginCashierAction;
-import views.panels.ButtonFoundable;
-import views.panels.DuringPause;
-import views.panels.DuringRegister;
-import views.panels.DuringReturnTransaction;
+import views.panels.*;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
 
 
 public class UtilityController {
@@ -30,37 +26,38 @@ public class UtilityController {
         /*
         #Controlling all the buttons that are on the right side in DuringIdle
          */
-        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.BEGIN.toString()).addActionListener(_ -> {
+        DuringIdle duringIdle = ViewManager.getInstance().getDuringIdle();
+        duringIdle.getButton(ButtonSet.ButtonLabel.BEGIN.toString()).addActionListener(_ -> {
             ViewManager.getInstance().showArticles();
             OpenTransactionManager.getInstance().getOpenTransaction();
         });
-        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.RETURN.toString()).addActionListener(_ -> {
+        duringIdle.getButton(ButtonSet.ButtonLabel.RETURN.toString()).addActionListener(_ -> {
             ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).setActionCommand(ButtonSet.ButtonLabel.RETURN.toString());
             ViewManager.getInstance().showCodeEnter();
             DisplayDispatcher.activeDisplayForCode();
         });
-        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.COPY_RECEIPT.toString()).addActionListener(_ -> {
+        duringIdle.getButton(ButtonSet.ButtonLabel.COPY_RECEIPT.toString()).addActionListener(_ -> {
             ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).setActionCommand(ButtonSet.ButtonLabel.COPY_RECEIPT.toString());
             ViewManager.getInstance().showCodeEnter();
             DisplayDispatcher.activeDisplayForCode();
         });
-        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.GENERATE_VOUCHER.toString()).addActionListener(_ -> {
+        duringIdle.getButton(ButtonSet.ButtonLabel.GENERATE_VOUCHER.toString()).addActionListener(_ -> {
             ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).setActionCommand(ButtonSet.ButtonLabel.GENERATE_VOUCHER.toString());
             ViewManager.getInstance().showCodeEnter();
             DisplayDispatcher.activeDisplayForCode();
         });
-        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.CREATE_CARD.toString()).addActionListener(_ -> {
+        duringIdle.getButton(ButtonSet.ButtonLabel.CREATE_CARD.toString()).addActionListener(_ -> {
             ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).setActionCommand(ButtonSet.ButtonLabel.CREATE_CARD.toString());
             ViewManager.getInstance().showCodeEnter();
             DisplayDispatcher.activeDisplayForCode();
         });
-        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.PAUSE.toString()).addActionListener(_ -> {
+        duringIdle.getButton(ButtonSet.ButtonLabel.PAUSE.toString()).addActionListener(_ -> {
             DuringPause duringPause = ViewManager.getInstance().getDuringPause();
             duringPause.getButton(ButtonSet.ButtonLabel.ADD.toString()).removeActionListener(checkPauseAction);
             checkPauseAction = new CheckPauseAction();
             duringPause.getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(checkPauseAction);
         });
-        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.THEME_BUTTON.toString()).addActionListener(e -> {
+        duringIdle.getButton(ButtonSet.ButtonLabel.THEME_BUTTON.toString()).addActionListener(e -> {
             JButton jButton = (JButton) e.getSource();
             boolean isDarkMode = ThemeManager.getInstance().toggleTheme();
             if(isDarkMode){
@@ -150,26 +147,29 @@ public class UtilityController {
         /*
         #Controlling buttons on bottom side of DuringArticles
          */
-        ViewManager.getInstance().getDuringArticles().getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(addItemAction);
-        ViewManager.getInstance().getDuringArticles().getButton(ButtonSet.ButtonLabel.REMOVE.toString()).addActionListener(removeItemAction);
-        ViewManager.getInstance().getDuringArticles().getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(_ -> ViewManager.getInstance().showRegister());
+        DuringArticles duringArticles = ViewManager.getInstance().getDuringArticles();
+        duringArticles.getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(addItemAction);
+        duringArticles.getButton(ButtonSet.ButtonLabel.REMOVE.toString()).addActionListener(removeItemAction);
+        duringArticles.getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(_ -> ViewManager.getInstance().showRegister());
 
 
         /*
         #Controlling buttons on bottom side of DuringCodeEnter
          */
-        ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(_ -> {
+        DuringCodeEnter duringCodeEnter = ViewManager.getInstance().getDuringCodeEnter();
+        duringCodeEnter.getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(_ -> {
             ViewManager.getInstance().showIdle();
             ContentController.clearContent();
             DisplayDispatcher.activeDisplayForAmount();
         });
-        ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(codeEnterAction);
+        duringCodeEnter.getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(codeEnterAction);
 
 
         /*
         #Controlling buttons on bottom side of DuringCodeEnter
          */
-        ViewManager.getInstance().getDuringPause().getButton(ButtonSet.ButtonLabel.LOGIN.toString()).addActionListener(loginCashierAction);
+        DuringPause duringPause = ViewManager.getInstance().getDuringPause();
+        duringPause.getButton(ButtonSet.ButtonLabel.LOGIN.toString()).addActionListener(loginCashierAction);
 
         /*
         #Controlling buttons on bottom side of DuringReturn
@@ -181,33 +181,5 @@ public class UtilityController {
         duringReturnTransaction.getButton(ButtonSet.ButtonLabel.CARD.toString()).addActionListener(duringReturnTransaction::switchState);
         duringReturnTransaction.getButton(ButtonSet.ButtonLabel.CASH_BACK.toString()).addActionListener(new CashBackAction());
         duringReturnTransaction.getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(duringReturnTransaction::switchState);
-    }
-//TODO: Possible refactoring
-    private void bindAction(ButtonFoundable panel, String buttonName, ActionListener action) {
-        try {
-            JButton button = panel.getButton(buttonName);
-            if (button != null) {
-                button.addActionListener(action);
-            }
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
-    }
-
-    private void replaceAction(ButtonFoundable panel, String buttonName, ActionListener newAction, String newCommand) {
-        try {
-            JButton button = panel.getButton(buttonName);
-            if (button != null) {
-                for (ActionListener al : button.getActionListeners()) {
-                    button.removeActionListener(al);
-                }
-                if (newCommand != null) {
-                    button.setActionCommand(newCommand);
-                }
-                button.addActionListener(newAction);
-            }
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
     }
 }

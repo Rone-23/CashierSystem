@@ -6,6 +6,7 @@ import controllers.transaction.OpenTransactionObserver;
 import services.Customers.CustomerCardObserver;
 import services.Customers.ValidateCustomerAction;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -101,11 +102,10 @@ public class OpenTransaction implements CustomerCardObserver {
             itemToNotify = itemInTransaction;
         }
 
-        if (itemToNotify != null) {
-            for (OpenTransactionObserver observer : observerList) {
-                observer.onItemAdd(itemToNotify);
-            }
+        for (OpenTransactionObserver observer : observerList) {
+            observer.onItemAdd(itemToNotify);
         }
+
     }
 
     public void removeItem(Item item, String content) {
@@ -117,7 +117,7 @@ public class OpenTransaction implements CustomerCardObserver {
         ItemCountable itemInTransaction = (ItemCountable) itemsInTransaction.get(itemName);
 
         if (itemInTransaction == null) {
-            NotificationController.notifyObservers("Nemozte vratit tovar ktorý nie je v transakcii", 5000);
+            NotificationController.notifyObservers("Nemozte vratit tovar ktorý nie je v transakcii", 5000, Color.YELLOW);
             return;
         }
 
@@ -125,7 +125,8 @@ public class OpenTransaction implements CustomerCardObserver {
 
         if (remainingAmount < 0) {
             String msg = isReturn ? "Nemozte vratit tovar ktorý nie je v transakcii" : "Nemozte vratit viac tovaru ako je v transakcii";
-            NotificationController.notifyObservers(msg, 5000);
+            Color clr = isReturn ? Color.YELLOW : Color.RED;
+            NotificationController.notifyObservers(msg, 5000, clr);
             return;
         }
 
@@ -203,7 +204,7 @@ public class OpenTransaction implements CustomerCardObserver {
             if(moneyAmount>0){
                 switch (actionEvent.getActionCommand()){
                     case "Hotovost" -> {
-                        SQL_Connect.getInstance().registerPayment(moneyAmount,"card", transactionID);
+                        SQL_Connect.getInstance().registerPayment(moneyAmount,"cash", transactionID);
                         payedCash += moneyAmount;
                     }
                     case "Karta" -> {

@@ -1,5 +1,6 @@
 package controllers.notifications;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class NotificationController {
@@ -7,7 +8,14 @@ public class NotificationController {
 
     public static void notifyObservers(String notification, int timeMs){
         for(NotificationObserver o : observerList.toArray(new NotificationObserver[0])){
-            o.updateNotification(notification,timeMs);
+            o.updateNotification(notification,timeMs, Color.RED);
+        }
+        System.out.printf(notification+"\n");
+    }
+
+    public static void notifyObservers(String notification, int timeMs, Color color){
+        for(NotificationObserver o : observerList.toArray(new NotificationObserver[0])){
+            o.updateNotification(notification,timeMs, color);
         }
         System.out.printf(notification+"\n");
     }

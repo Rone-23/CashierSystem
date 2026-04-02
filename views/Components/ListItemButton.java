@@ -52,12 +52,15 @@ public class ListItemButton extends JToggleButton implements ContainsItem {
         int h = getHeight();
 
         if (isReturnMode) {
-            // Light red if not selected, Darker red if selected
-            Color lightRed = new Color(255, 230, 230); // Very light red
-            Color darkRed = new Color(255, 200, 200);  // Noticeable red
+            Color lightRed = new Color(255, 230, 230);
+            Color darkRed = new Color(255, 200, 200);
             g2.setColor(isSelected() ? darkRed : lightRed);
         } else {
-            g2.setColor(isSelected() ? ColorManipulation.darken(BACKGROUND_COLOR, 0.98f) : BACKGROUND_COLOR);
+            if(Colors.isDarkMode()) {
+                g2.setColor(isSelected() ? ColorManipulation.lighten(BACKGROUND_COLOR, 2.3f) : BACKGROUND_COLOR);
+            }else{
+                g2.setColor(isSelected() ? ColorManipulation.darken(BACKGROUND_COLOR, 0.93f) : BACKGROUND_COLOR);
+            }
         }
         g2.fillRect(0, 0, w, h);
 

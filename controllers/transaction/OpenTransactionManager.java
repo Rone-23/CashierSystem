@@ -10,6 +10,7 @@ import services.Users.CashierObserver;
 import services.Users.CashierSession;
 import services.VoucherService;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class OpenTransactionManager implements OpenTransactionObserver, ContentObserver, CashierObserver {
@@ -60,7 +61,7 @@ public class OpenTransactionManager implements OpenTransactionObserver, ContentO
                 } else {
                     int amountToPay = Integer.parseInt(content);
                     int remaining = VoucherService.getInstance().chargeVoucher(amountToPay);
-                    NotificationController.notifyObservers("Zaplatené poukážkou. Zostatok: " + String.format("%.2f", remaining / 100.0) + " EUR", 5000);
+                    NotificationController.notifyObservers("Zostatok na poukážke: " + String.format("%.2f", remaining / 100.0) + " EUR", 5000, Color.YELLOW);
 
                     openTransaction.pay(paymentType,content);
                     ContentController.clearContent();

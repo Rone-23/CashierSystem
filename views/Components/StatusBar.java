@@ -109,12 +109,13 @@ public class StatusBar extends JPanel implements NotificationObserver, ThemeObse
         }
     }
 
-    private void showNotification(String message, int durationMs) {
+    private void showNotification(String message, int durationMs, Color color) {
         if (notificationTimer != null && notificationTimer.isRunning()) {
             notificationTimer.stop();
         }
 
         notificationLabel.setText(message.toUpperCase());
+        notificationLabel.setForeground(color);
 
         notificationTimer = new Timer(durationMs, _ -> {
             if(!isLocked){
@@ -128,8 +129,8 @@ public class StatusBar extends JPanel implements NotificationObserver, ThemeObse
     }
 
     @Override
-    public void updateNotification(String notification, int timeMs) {
-        showNotification(notification, timeMs);
+    public void updateNotification(String notification, int timeMs, Color color) {
+        showNotification(notification, timeMs, color);
     }
 
     @Override
