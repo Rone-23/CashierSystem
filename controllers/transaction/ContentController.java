@@ -26,7 +26,7 @@ public class ContentController implements OpenTransactionObserver, KeyboardListe
         if(content.length()>6){
             throw new ArithmeticException("Maximal allowed digit is 7.");
         }
-        if(!(content.isEmpty() && text.equals("0"))){
+        if(!(content.isEmpty() && (text.equals("0") || text.equals("00")))){
             content.append(text);
             notifyContentUpdate();
         }

@@ -17,6 +17,7 @@ public class KeyboardController {
         for (int keyName=0; keyName<10; keyName++) {
             keyboard.getButton(String.valueOf(keyName)).addActionListener(this::notifyListeners);
         }
+        keyboard.getButton("00").addActionListener(this::notifyListeners);
     }
 
     // Observer
@@ -29,7 +30,6 @@ public class KeyboardController {
     }
 
     private void notifyListeners(ActionEvent e){
-//        System.out.printf(e.getActionCommand());
         keyboardListeners.forEach(keyboardListener -> keyboardListener.keyboardPress(e.getActionCommand()));
     }
 
