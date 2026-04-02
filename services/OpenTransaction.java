@@ -2,7 +2,6 @@ package services;
 
 import assets.Constants;
 import controllers.notifications.NotificationController;
-import controllers.transaction.ContentObserver;
 import controllers.transaction.OpenTransactionObserver;
 import services.Customers.CustomerCardObserver;
 import services.Customers.ValidateCustomerAction;
@@ -16,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class OpenTransaction implements ContentObserver, CustomerCardObserver {
+public class OpenTransaction implements CustomerCardObserver {
     private final int transactionID;
     private int customerID = -1;
     private final LocalDateTime  transactionDateTime;
@@ -24,7 +23,6 @@ public class OpenTransaction implements ContentObserver, CustomerCardObserver {
     private final Map<String,Item> itemsInTransaction= new HashMap<>();
     private Map<String,Item> returnedItems;
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private int content = 1;
     private int payedCard = 0;
     private int payedCash = 0;
     private int payedFoodTicket = 0;
@@ -60,8 +58,10 @@ public class OpenTransaction implements ContentObserver, CustomerCardObserver {
         }
     }
 
-    public void addItem(Item item) {
+    public void addItem(Item item, String content) {
         if (item == null) return;
+
+        int amount = Integer.parseInt(content);
 
         String name = item.getName();
         ItemCountable itemToNotify = null;
@@ -72,7 +72,7 @@ public class OpenTransaction implements ContentObserver, CustomerCardObserver {
                 int stock = SQL_Connect.getInstance().getStock(SQL_Connect.getInstance().getArticleID(name));
                 int inTransaction = itemsInTransaction.containsKey(name) ? itemsInTransaction.get(name).getAmount() : 0;
 
-                if (stock - content - inTransaction < 0) {
+                if (stock - amount - inTransaction < 0) {
                     NotificationController.notifyObservers("Nedostatok tovaru v sklade, aktualny pocet je " + stock, 5000);
                     return;
                 }
@@ -84,20 +84,20 @@ public class OpenTransaction implements ContentObserver, CustomerCardObserver {
             itemToNotify = (ItemCountable) itemsInTransaction.computeIfAbsent(name, k ->
                     item.clone()
             );
-            itemToNotify.addAmount(content);
+            itemToNotify.addAmount(amount);
             itemToNotify.setPrice(price);
 
         } else {
             ItemCountable returnedItem = (ItemCountable) returnedItems.get(name);
             ItemCountable itemInTransaction = (ItemCountable) itemsInTransaction.get(name);
 
-            if (returnedItem == null || returnedItem.getAmount() - content < 0) {
+            if (returnedItem == null || returnedItem.getAmount() - amount < 0) {
                 NotificationController.notifyObservers("Nemozes nablokovat viac tovaru ako bolo povodne.", 5000);
                 return;
             }
 
-            returnedItem.addAmount(-content);
-            itemInTransaction.addAmount(content);
+            returnedItem.addAmount(-amount);
+            itemInTransaction.addAmount(amount);
             itemToNotify = itemInTransaction;
         }
 
@@ -108,9 +108,10 @@ public class OpenTransaction implements ContentObserver, CustomerCardObserver {
         }
     }
 
-    public void removeItem(Item item) {
+    public void removeItem(Item item, String content) {
         if (item == null) return;
 
+        int amount = Integer.parseInt(content);
 
         String itemName = item.getName();
         ItemCountable itemInTransaction = (ItemCountable) itemsInTransaction.get(itemName);
@@ -120,7 +121,7 @@ public class OpenTransaction implements ContentObserver, CustomerCardObserver {
             return;
         }
 
-        int remainingAmount = itemInTransaction.getAmount() - content;
+        int remainingAmount = itemInTransaction.getAmount() - amount;
 
         if (remainingAmount < 0) {
             String msg = isReturn ? "Nemozte vratit tovar ktorý nie je v transakcii" : "Nemozte vratit viac tovaru ako je v transakcii";
@@ -137,22 +138,22 @@ public class OpenTransaction implements ContentObserver, CustomerCardObserver {
                 return;
             }
 
-            itemInTransaction.addAmount(-content);
+            itemInTransaction.addAmount(-amount);
 
         } else {
             ItemCountable returnedItem = (ItemCountable) returnedItems.get(itemName);
 
             if (returnedItem != null) {
-                returnedItem.addAmount(content);
+                returnedItem.addAmount(amount);
             } else {
                 int price = (item.getDiscountType() == Constants.GENERAL || (item.getDiscountType() == Constants.CUSTOMER && customerID > 0)) ? item.discountPrice : item.getPrice();
                 returnedItem = (ItemCountable) item.clone();
                 returnedItem.setPrice(price);
-                returnedItem.setAmount(content);
+                returnedItem.setAmount(amount);
                 returnedItems.put(itemName, returnedItem);
             }
 
-            itemInTransaction.addAmount(-content);
+            itemInTransaction.addAmount(-amount);
         }
 
         for (OpenTransactionObserver observer : observerList) {
@@ -195,35 +196,37 @@ public class OpenTransaction implements ContentObserver, CustomerCardObserver {
         return getTotal() - payedCard - payedCash - payedFoodTicket - payedVoucher;
     }
 
-    public void pay(ActionEvent actionEvent){
+    public void pay(ActionEvent actionEvent, String content){
+        int moneyAmount = Integer.parseInt(content);
+
         try {
-            if(content>0){
+            if(moneyAmount>0){
                 switch (actionEvent.getActionCommand()){
                     case "Hotovost" -> {
-                        SQL_Connect.getInstance().registerPayment(content,"card", transactionID);
-                        payedCash += content;
+                        SQL_Connect.getInstance().registerPayment(moneyAmount,"card", transactionID);
+                        payedCash += moneyAmount;
                     }
                     case "Karta" -> {
-                        SQL_Connect.getInstance().registerPayment(content,"card", transactionID);
-                        payedCard += content;
+                        SQL_Connect.getInstance().registerPayment(moneyAmount,"card", transactionID);
+                        payedCard += moneyAmount;
                     }
                     case "Stravenky" -> {
-                        SQL_Connect.getInstance().registerPayment(content,"food_ticket", transactionID);
-                        payedFoodTicket += content;
+                        SQL_Connect.getInstance().registerPayment(moneyAmount,"food_ticket", transactionID);
+                        payedFoodTicket += moneyAmount;
                     }
                     case "Poukážky" -> {
-                        SQL_Connect.getInstance().registerPayment(content,"voucher", transactionID);
-                        payedVoucher += content;
+                        SQL_Connect.getInstance().registerPayment(moneyAmount,"voucher", transactionID);
+                        payedVoucher += moneyAmount;
                     }
                 }
-                checkSum(actionEvent.getActionCommand());
+                checkSum(actionEvent.getActionCommand(), moneyAmount);
             }
         } catch (SQLException e) {
             NotificationController.notifyObservers(e.toString(),5000);
         }
     }
 
-    private void checkSum(String typeOfPayment) {
+    private void checkSum(String typeOfPayment, int moneyAmount ) {
         if(isReturn){
             for(Item returnedItem: returnedItems.values().toArray(new Item[0])){
                 try{
@@ -243,7 +246,7 @@ public class OpenTransaction implements ContentObserver, CustomerCardObserver {
         }
 
         for(OpenTransactionObserver observer : observerList){
-            observer.onAddedPayment(getMissing(), typeOfPayment, content);
+            observer.onAddedPayment(getMissing(), typeOfPayment, moneyAmount);
         }
         if(getMissing()<=EPSILON){
             for(Item item : itemsInTransaction.values().toArray(new Item[0])){
@@ -284,8 +287,8 @@ public class OpenTransaction implements ContentObserver, CustomerCardObserver {
     }
 
     @Override
-    public void onCardValidation() {
-        setCustomerID(content);
+    public void onCardValidation(int customerID) {
+        setCustomerID(customerID);
         for(Item item : itemsInTransaction.values()){
             item.applyDiscount();
         }
@@ -307,15 +310,6 @@ public class OpenTransaction implements ContentObserver, CustomerCardObserver {
     public void openTransactionDestroy(){
         for(OpenTransactionObserver observer : observerList){
             observer.onDestroy();
-        }
-    }
-
-    @Override
-    public void notifyContentUpdate(String content) {
-        try {
-            this.content = Integer.parseInt(content);
-        } catch (NumberFormatException e) {
-            this.content = 1;
         }
     }
 }

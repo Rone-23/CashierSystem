@@ -1,5 +1,5 @@
 package services.Customers;
 
 public interface CustomerCardObserver {
-    void onCardValidation();
+    void onCardValidation(int customerID);
 }

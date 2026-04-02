@@ -10,11 +10,13 @@ import controllers.panels.ViewManager;
 import controllers.transaction.OpenTransactionManager;
 import services.Customers.ValidateCustomerAction;
 import services.Users.LoginCashierAction;
+import views.panels.ButtonFoundable;
 import views.panels.DuringPause;
 import views.panels.DuringRegister;
 import views.panels.DuringReturnTransaction;
 
 import javax.swing.*;
+import java.awt.event.ActionListener;
 
 
 public class UtilityController {
@@ -39,6 +41,11 @@ public class UtilityController {
         });
         ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.COPY_RECEIPT.toString()).addActionListener(_ -> {
             ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).setActionCommand(ButtonSet.ButtonLabel.COPY_RECEIPT.toString());
+            ViewManager.getInstance().showCodeEnter();
+            DisplayDispatcher.activeDisplayForCode();
+        });
+        ViewManager.getInstance().getDuringIdle().getButton(ButtonSet.ButtonLabel.GENERATE_VOUCHER.toString()).addActionListener(_ -> {
+            ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).setActionCommand(ButtonSet.ButtonLabel.GENERATE_VOUCHER.toString());
             ViewManager.getInstance().showCodeEnter();
             DisplayDispatcher.activeDisplayForCode();
         });
@@ -130,7 +137,7 @@ public class UtilityController {
             }
         });
 
-        duringRegister.getButton(ButtonSet.ButtonLabel.VOUCHER.toString()).addActionListener(e -> {
+        duringRegister.getButton(ButtonSet.ButtonLabel.USE_VOUCHER.toString()).addActionListener(e -> {
             duringRegister.switchState(e);
             DisplayDispatcher.activeDisplayForPayment();
             ContentController.clearContent();
@@ -175,5 +182,32 @@ public class UtilityController {
         duringReturnTransaction.getButton(ButtonSet.ButtonLabel.CASH_BACK.toString()).addActionListener(new CashBackAction());
         duringReturnTransaction.getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(duringReturnTransaction::switchState);
     }
+//TODO: Possible refactoring
+    private void bindAction(ButtonFoundable panel, String buttonName, ActionListener action) {
+        try {
+            JButton button = panel.getButton(buttonName);
+            if (button != null) {
+                button.addActionListener(action);
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+    }
 
+    private void replaceAction(ButtonFoundable panel, String buttonName, ActionListener newAction, String newCommand) {
+        try {
+            JButton button = panel.getButton(buttonName);
+            if (button != null) {
+                for (ActionListener al : button.getActionListeners()) {
+                    button.removeActionListener(al);
+                }
+                if (newCommand != null) {
+                    button.setActionCommand(newCommand);
+                }
+                button.addActionListener(newAction);
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+    }
 }

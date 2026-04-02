@@ -10,7 +10,7 @@ public enum ButtonSet {
             ButtonLabel.CASH,
             ButtonLabel.CARD,
             ButtonLabel.FOOD_TICKETS,
-            ButtonLabel.VOUCHER
+            ButtonLabel.USE_VOUCHER
     }),
 
     CASH_NAMES(new ButtonLabel[]{
@@ -91,7 +91,7 @@ public enum ButtonSet {
         CASH("Hotovost", Colors.SUCCESS_GREEN),
         CARD("Karta", Colors.SUCCESS_GREEN),
         FOOD_TICKETS("Stravenky", Colors.ALT_PAYMENT_TEAL),
-        VOUCHER("Poukážky", Colors.ALT_PAYMENT_TEAL),
+        USE_VOUCHER("Poukážky", Colors.ALT_PAYMENT_TEAL),
         GENERATE_VOUCHER("Vybaviť poukážky", Colors.CUSTOMER_ORANGE),
 
         //CASH_BUTTON Labels

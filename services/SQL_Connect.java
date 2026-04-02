@@ -613,7 +613,7 @@ public class SQL_Connect {
         throw new SQLException("Nepodarilo sa vytvoriť zákaznícku kartu.");
     }
 
-    //Users
+    //USERS
     public boolean validateCashier(int cashierId) throws SQLException {
         String sql = "SELECT cashier_id FROM cashier WHERE cashier_id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -621,6 +621,76 @@ public class SQL_Connect {
             ResultSet rs = pstmt.executeQuery();
             return rs.next();
         }
+    }
+
+    /*
+    VOUCHERS
+     */
+    public boolean checkVoucherExists(int voucherId) throws SQLException {
+        String sql = "SELECT voucher_id FROM voucher WHERE voucher_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, voucherId);
+            ResultSet rs = pstmt.executeQuery();
+            return rs.next();
+        }
+    }
+
+    public void activateVoucher(int voucherId) throws SQLException {
+        String checkSql = "SELECT is_active, balance FROM voucher WHERE voucher_id = ?";
+        try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+            checkStmt.setInt(1, voucherId);
+            ResultSet rs = checkStmt.executeQuery();
+
+            if (!rs.next()) {
+                throw new SQLException("Poukážka s číslom " + voucherId + " neexistuje v systéme!");
+            }
+
+            int isActive = rs.getInt("is_active");
+            if (isActive == 1) {
+                throw new SQLException("Poukážka " + voucherId + " je už aktívna!");
+            }
+        }
+
+        String updateSql = "UPDATE voucher SET is_active = 1 WHERE voucher_id = ?";
+        try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
+            updateStmt.setInt(1, voucherId);
+            updateStmt.executeUpdate();
+        }
+    }
+
+    public int getVoucherBalance(int voucherId) throws SQLException {
+        String sql = "SELECT balance, is_active FROM voucher WHERE voucher_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, voucherId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                if (rs.getInt("is_active") == 0) {
+                    throw new SQLException("Poukážka je neaktívna alebo vyčerpaná!");
+                }
+                return rs.getInt("balance"); // Returns balance in cents
+            }
+            throw new SQLException("Poukážka " + voucherId + " neexistuje!");
+        }
+    }
+
+    public int deductVoucherBalance(int voucherId, int amountToDeductInCents) throws SQLException {
+        int currentBalance = getVoucherBalance(voucherId);
+        if (amountToDeductInCents > currentBalance) {
+            throw new SQLException("Nedostatok prostriedkov! Zostatok je len " + (currentBalance / 100.0) + " EUR");
+        }
+
+        int newBalance = currentBalance - amountToDeductInCents;
+        int newActiveState = (newBalance > 0) ? 1 : 0;
+
+        String updateSql = "UPDATE voucher SET balance = ?, is_active = ? WHERE voucher_id = ?";
+        try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
+            updateStmt.setInt(1, newBalance);
+            updateStmt.setInt(2, newActiveState);
+            updateStmt.setInt(3, voucherId);
+            updateStmt.executeUpdate();
+        }
+
+        return newBalance;
     }
 
 

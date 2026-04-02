@@ -21,6 +21,8 @@ public class CodeEnterAction extends AbstractAction implements ContentObserver {
 
     @Override
     public void actionPerformed(ActionEvent e){
+
+        //CREATING CUSTOMER CARDS
         if(ButtonSet.ButtonLabel.CREATE_CARD.toString().equals(e.getActionCommand())){
             if (content == null || !content.matches("\\d{7}")) {
                 NotificationController.notifyObservers("Karta musí obsahovať presne 7 čísel!", 4000);
@@ -41,6 +43,36 @@ public class CodeEnterAction extends AbstractAction implements ContentObserver {
             return;
         }
 
+        //GENERATING VOUCHERS
+        if(ButtonSet.ButtonLabel.GENERATE_VOUCHER.toString().equals(e.getActionCommand())){
+            if (content == null || !content.matches("\\d{7}")) {
+                NotificationController.notifyObservers("Číslo poukážky musí obsahovať presne 7 čísel!", 4000);
+                ContentController.clearContent();
+                return;
+            }
+
+            if (!utility.LuhnValidator.isValid(content)) {
+                NotificationController.notifyObservers("Neplatný formát karty!", 5000);
+                ContentController.clearContent();
+                return;
+            }
+
+            try {
+                int voucherId = Integer.parseInt(content);
+                SQL_Connect.getInstance().activateVoucher(voucherId);
+
+                NotificationController.notifyObservers("Poukážka " + content + " úspešne aktivovaná!", 4000);
+                ContentController.clearContent();
+                ViewManager.getInstance().showIdle();
+                ViewManager.getInstance().returnToDefault();
+            } catch (SQLException ex) {
+                NotificationController.notifyObservers(ex.getMessage(), 5000);
+                ContentController.clearContent();
+            }
+            return;
+        }
+
+
         try {
             int insertedTransactionID = Integer.parseInt(content);
             OpenTransactionManager.getInstance().loadHistoricalTransaction(
@@ -48,11 +80,12 @@ public class CodeEnterAction extends AbstractAction implements ContentObserver {
                     SQL_Connect.getInstance().getDateOfTransaction(insertedTransactionID),
                     SQL_Connect.getInstance().getAllArticlesFromPastTransaction(insertedTransactionID)
             );
-
+            //RETURN TRANSACTION
             if(ButtonSet.ButtonLabel.RETURN.toString().equals(e.getActionCommand())){
                 ViewManager.getInstance().showReturnTransaction();
                 DisplayDispatcher.activeDisplayForAmount();
             } else{
+                //COPY RECEIPT
                 OpenTransactionManager.getInstance().addPayment(e);
             }
         } catch (SQLException | IllegalStateException ex) {

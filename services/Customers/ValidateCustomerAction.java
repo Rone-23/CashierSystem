@@ -34,7 +34,7 @@ public class ValidateCustomerAction extends AbstractAction implements ContentObs
                 ViewManager.getInstance().getStatusBar().setStatus("Áno");
                 NotificationController.notifyObservers("Karta úspešne načítaná!", 4000);
                 for(CustomerCardObserver o : observerList){
-                    o.onCardValidation();
+                    o.onCardValidation(customerID);
                 }
             }else{
                 NotificationController.notifyObservers("Karta nebola rozpoznaná!", 4000);

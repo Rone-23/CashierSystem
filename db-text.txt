@@ -60,3 +60,18 @@ CREATE TABLE IF NOT EXISTS "transaction" (
     FOREIGN KEY ("cashier_id") REFERENCES "cashier"("cashier_id"),
     FOREIGN KEY ("customer_id") REFERENCES "customer"("customer_id")
 );
+CREATE TABLE IF NOT EXISTS "discount" (
+    "discount_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "article_id" INTEGER NOT NULL,
+    "requires_customer_card" INTEGER NOT NULL DEFAULT 0, -- 0 = Everyone, 1 = Only cardholders
+    "discount_percent" INTEGER NOT NULL CHECK (discount_percent BETWEEN 1 AND 100),
+    "valid_from" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    "valid_to" TIMESTAMP, -- NULL = active indefinitely
+    FOREIGN KEY ("article_id") REFERENCES "article"("article_id")
+);
+CREATE TABLE IF NOT EXISTS "voucher" (
+    "voucher_id" INTEGER PRIMARY KEY,
+    "balance" INTEGER NOT NULL DEFAULT 0,
+    "is_active" INTEGER NOT NULL DEFAULT 1,
+    "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
