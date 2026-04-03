@@ -14,6 +14,7 @@ import views.panels.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 
 public class UtilityController {
@@ -188,8 +189,8 @@ public class UtilityController {
 
     private void applySecurityLock(java.awt.Container container) {
         for (Component c : container.getComponents()) {
-            if (c instanceof javax.swing.JButton) {
-                JButton button = (javax.swing.JButton) c;
+            if (c instanceof JButton) {
+                JButton button = (JButton) c;
                 String name = button.getName();
 
                 boolean isExempt = name != null && (
@@ -203,8 +204,8 @@ public class UtilityController {
                 );
 
                 if (!isExempt) {
-                    java.awt.event.ActionListener[] listeners = button.getActionListeners();
-                    for (java.awt.event.ActionListener al : listeners) {
+                    ActionListener[] listeners = button.getActionListeners();
+                    for (ActionListener al : listeners) {
                         button.removeActionListener(al);
 
                         button.addActionListener(e -> {
