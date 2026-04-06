@@ -45,7 +45,7 @@ public class ListItemButton extends JToggleButton implements ContainsItem {
 
     @Override
     protected void paintComponent(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g.create();
+        Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         int w = getWidth();
@@ -77,22 +77,41 @@ public class ListItemButton extends JToggleButton implements ContainsItem {
 
         g2.drawString(item.getName(), HORIZONTAL_MARGIN, textY);
 
+        int savedAmountPerItem = item.getBasePrice() - item.getPrice();
+        int totalSaved = savedAmountPerItem * item.getAmount();
+        boolean hasDiscount = totalSaved > 0;
+
         String priceStr = priceFormat.format(item.getAmount() * item.getPrice() * 0.01);
         int priceWidth = fm.stringWidth(priceStr);
+
+        g2.setFont(SMALL_FONT);
+        FontMetrics sfm = g2.getFontMetrics();
+        String savedStr = hasDiscount ? priceFormat.format(totalSaved * 0.01) : "";
+        int savedWidth = hasDiscount ? sfm.stringWidth(savedStr) : 0;
+
+        int maxRightWidth = Math.max(priceWidth, savedWidth);
+
+        g2.setFont(MAIN_FONT);
+        g2.setColor(TEXT_COLOR);
         g2.drawString(priceStr, w - priceWidth - HORIZONTAL_MARGIN, textY);
 
         String amountStr = item.getAmount() + " ks";
         int amountWidth = fm.stringWidth(amountStr);
-        int amountX = w - priceWidth - amountWidth - 70;
+        int amountX = w - maxRightWidth - amountWidth - 70;
         g2.drawString(amountStr, amountX, textY);
 
         if (isReturnMode && returningAmount > 0) {
             g2.setFont(SMALL_FONT);
             g2.setColor(Colors.DANGER_RED.getColor());
             String subStr = "-" + returningAmount +" ks";
-            FontMetrics sfm = g2.getFontMetrics();
             int subX = amountX + (amountWidth / 2) - (sfm.stringWidth(subStr) / 2);
             g2.drawString(subStr, subX, textY + 15);
+        }
+
+        if (hasDiscount) {
+            g2.setFont(SMALL_FONT);
+            g2.setColor(Colors.CUSTOMER_ORANGE.getColor());
+            g2.drawString(savedStr, w - savedWidth - HORIZONTAL_MARGIN, textY + 16);
         }
 
         g2.dispose();
