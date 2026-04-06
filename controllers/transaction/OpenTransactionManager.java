@@ -1,6 +1,7 @@
 package controllers.transaction;
 
 import assets.ButtonSet;
+import assets.Colors;
 import controllers.display.DisplayDispatcher;
 import controllers.notifications.NotificationController;
 import controllers.panels.ViewManager;
@@ -10,7 +11,6 @@ import services.Users.CashierObserver;
 import services.Users.CashierSession;
 import services.VoucherService;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class OpenTransactionManager implements OpenTransactionObserver, ContentObserver, CashierObserver {
@@ -61,7 +61,7 @@ public class OpenTransactionManager implements OpenTransactionObserver, ContentO
                 } else {
                     int amountToPay = Integer.parseInt(content);
                     int remaining = VoucherService.getInstance().chargeVoucher(amountToPay);
-                    NotificationController.notifyObservers("Zostatok na poukážke: " + String.format("%.2f", remaining / 100.0) + " EUR", 5000, Color.YELLOW);
+                    NotificationController.notifyObservers("Zostatok na poukážke: " + String.format("%.2f", remaining / 100.0) + " EUR", 5000, Colors.YELLOW.getColor());
 
                     openTransaction.pay(paymentType,content);
                     ContentController.clearContent();

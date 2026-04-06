@@ -92,7 +92,7 @@ public class DuringPause extends JPanel implements ButtonFoundable, ThemeObserve
         JPanel rightPanel = new JPanel(new BorderLayout());
         rightPanel.setOpaque(false);
 
-        actionButtons = new ButtonCluster(new ButtonSet.ButtonLabel[]{ButtonSet.ButtonLabel.ADD, ButtonSet.ButtonLabel.LOGIN}, Constants.VERTICAL);
+        actionButtons = new ButtonCluster(new ButtonSet.ButtonLabel[]{ButtonSet.ButtonLabel.CONFIRM, ButtonSet.ButtonLabel.LOGIN}, Constants.VERTICAL);
 
         rightPanel.add(actionButtons, BorderLayout.NORTH);
 

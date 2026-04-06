@@ -90,7 +90,7 @@ public class DuringCodeEnter extends JPanel implements ButtonFoundable, ThemeObs
         JPanel rightPanel = new JPanel(new BorderLayout());
         rightPanel.setOpaque(false);
 
-        actionButtons = new ButtonCluster(ButtonSet.COMMON_NAMES.getLabels(), Constants.VERTICAL);
+        actionButtons = new ButtonCluster(ButtonSet.DURING_CODE_NAMES.getLabels(), Constants.VERTICAL);
 
         rightPanel.add(actionButtons, BorderLayout.NORTH);
 

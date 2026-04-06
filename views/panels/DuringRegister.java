@@ -8,7 +8,6 @@ import views.Components.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -218,7 +217,7 @@ public class DuringRegister extends JPanel implements ButtonFoundable, ThemeObse
                 cardLayout.show(rightPanel, "UTILITY_BUTTON_CLUSTER");
                 cardLayoutDisplay.show(displayPanel, "AMOUNT");
             }
-            case "Hotovost" -> {
+            case "Hotovosť" -> {
                 cardLayout.show(rightPanel, "CASH_BUTTON_CLUSTER");
                 cardLayoutDisplay.show(displayPanel, "TOTAL");
             }

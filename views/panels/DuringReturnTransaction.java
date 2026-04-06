@@ -199,7 +199,7 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable, 
 
     public void switchState(ActionEvent actionEvent) {
         switch (actionEvent.getActionCommand()) {
-            case "Hotovost" -> {
+            case "Hotovosť" -> {
                 cardLayout.show(rightPanel, "COMMON_BUTTON_CLUSTER");
                 cardLayoutDisplay.show(displayPanel, "TOTAL");
             }

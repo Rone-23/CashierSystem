@@ -1,5 +1,6 @@
 package services;
 
+import assets.Colors;
 import assets.Constants;
 import controllers.notifications.NotificationController;
 import controllers.transaction.OpenTransactionObserver;
@@ -117,7 +118,7 @@ public class OpenTransaction implements CustomerCardObserver {
         ItemCountable itemInTransaction = (ItemCountable) itemsInTransaction.get(itemName);
 
         if (itemInTransaction == null) {
-            NotificationController.notifyObservers("Nemozte vratit tovar ktorý nie je v transakcii", 5000, Color.YELLOW);
+            NotificationController.notifyObservers("Nemozte vratit tovar ktorý nie je v transakcii", 5000, Colors.YELLOW.getColor());
             return;
         }
 
@@ -125,7 +126,7 @@ public class OpenTransaction implements CustomerCardObserver {
 
         if (remainingAmount < 0) {
             String msg = isReturn ? "Nemozte vratit tovar ktorý nie je v transakcii" : "Nemozte vratit viac tovaru ako je v transakcii";
-            Color clr = isReturn ? Color.YELLOW : Color.RED;
+            Color clr = isReturn ? Colors.YELLOW.getColor() : Color.RED;
             NotificationController.notifyObservers(msg, 5000, clr);
             return;
         }
@@ -203,7 +204,7 @@ public class OpenTransaction implements CustomerCardObserver {
         try {
             if(moneyAmount>0){
                 switch (actionEvent.getActionCommand()){
-                    case "Hotovost" -> {
+                    case "Hotovosť" -> {
                         SQL_Connect.getInstance().registerPayment(moneyAmount,"cash", transactionID);
                         payedCash += moneyAmount;
                     }

@@ -27,6 +27,10 @@ public enum ButtonSet {
             ButtonLabel.ADD,
             ButtonLabel.EXIT
     }),
+    DURING_CODE_NAMES(new ButtonLabel[]{
+            ButtonLabel.CONFIRM,
+            ButtonLabel.EXIT
+    }),
 
     IDLE_UTILITY_NAMES(new ButtonLabel[]{
             ButtonLabel.BEGIN,
@@ -123,6 +127,7 @@ public enum ButtonSet {
         REMOVE("Ubrať", Colors.MILD_YELLOW),
         SEARCH("Vyhladať", Colors.DEFAULT_BLUE),
         LOGIN("Prihlásiť používateľa", Colors.DEFAULT_BLUE),
+        CONFIRM("Potvrdiť", Colors.MILD_YELLOW),
 
         ;
 

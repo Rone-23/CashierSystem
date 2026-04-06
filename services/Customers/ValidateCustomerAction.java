@@ -1,5 +1,6 @@
 package services.Customers;
 
+import assets.Colors;
 import controllers.notifications.NotificationController;
 import controllers.panels.ViewManager;
 import controllers.transaction.ContentController;
@@ -8,7 +9,6 @@ import controllers.transaction.OpenTransactionManager;
 import services.SQL_Connect;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class ValidateCustomerAction extends AbstractAction implements ContentObs
     public void actionPerformed(ActionEvent e) {
 
         if(OpenTransactionManager.getInstance().getOpenTransaction().getCustomerID()!=-1){
-            NotificationController.notifyObservers("Karta už bola načítaná.", 4000, Color.YELLOW);
+            NotificationController.notifyObservers("Karta už bola načítaná.", 4000, Colors.YELLOW.getColor());
             ContentController.clearContent();
             return;
         }
@@ -33,7 +33,7 @@ public class ValidateCustomerAction extends AbstractAction implements ContentObs
             int customerID = Integer.parseInt(content);
             if(SQL_Connect.getInstance().getCustomerIdByCard(customerID)!=-1){
                 ViewManager.getInstance().getStatusBar().setStatus("Áno");
-                NotificationController.notifyObservers("Karta úspešne načítaná!", 4000, Color.GREEN);
+                NotificationController.notifyObservers("Karta úspešne načítaná!", 4000, Colors.GREEN.getColor());
                 for(CustomerCardObserver o : observerList){
                     o.onCardValidation(customerID);
                 }

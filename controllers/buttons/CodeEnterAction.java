@@ -1,6 +1,7 @@
 package controllers.buttons;
 
 import assets.ButtonSet;
+import assets.Colors;
 import controllers.display.DisplayDispatcher;
 import controllers.notifications.NotificationController;
 import controllers.panels.ViewManager;
@@ -10,7 +11,6 @@ import controllers.transaction.ContentObserver;
 import services.SQL_Connect;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.sql.SQLException;
 
@@ -47,7 +47,7 @@ public class CodeEnterAction extends AbstractAction implements ContentObserver {
         //GENERATING VOUCHERS
         if(ButtonSet.ButtonLabel.GENERATE_VOUCHER.toString().equals(e.getActionCommand())){
             if (content == null || !content.matches("\\d{7}")) {
-                NotificationController.notifyObservers("Číslo poukážky musí obsahovať presne 7 čísel!", 4000, Color.YELLOW);
+                NotificationController.notifyObservers("Číslo poukážky musí obsahovať presne 7 čísel!", 4000, Colors.YELLOW.getColor());
                 ContentController.clearContent();
                 return;
             }
@@ -62,7 +62,7 @@ public class CodeEnterAction extends AbstractAction implements ContentObserver {
                 int voucherId = Integer.parseInt(content);
                 SQL_Connect.getInstance().activateVoucher(voucherId);
 
-                NotificationController.notifyObservers("Poukážka " + content + " úspešne aktivovaná!", 4000, Color.GREEN);
+                NotificationController.notifyObservers("Poukážka " + content + " úspešne aktivovaná!", 4000, Colors.GREEN.getColor());
                 ContentController.clearContent();
                 ViewManager.getInstance().showIdle();
                 ViewManager.getInstance().returnToDefault();

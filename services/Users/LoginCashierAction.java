@@ -1,5 +1,6 @@
 package services.Users;
 
+import assets.Colors;
 import controllers.display.DisplayDispatcher;
 import controllers.panels.ViewManager;
 import controllers.transaction.ContentController;
@@ -7,7 +8,6 @@ import controllers.transaction.ContentObserver;
 import services.SQL_Connect;
 import controllers.notifications.NotificationController;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -22,7 +22,7 @@ public class LoginCashierAction implements ActionListener, ContentObserver {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (loginCredentials == null || loginCredentials.isEmpty()) {
-            NotificationController.notifyObservers("Zadajte ID používateľa.", 3000, Color.YELLOW);
+            NotificationController.notifyObservers("Zadajte ID používateľa.", 3000, Colors.YELLOW.getColor());
             return;
         }
 
