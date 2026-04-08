@@ -10,6 +10,7 @@ import controllers.panels.ViewManager;
 import controllers.transaction.OpenTransactionManager;
 import services.Customers.ValidateCustomerAction;
 import services.Users.LoginCashierAction;
+import utility.tutorial.TutorialStep;
 import views.panels.*;
 
 import javax.swing.*;
@@ -34,30 +35,30 @@ public class UtilityController {
             OpenTransactionManager.getInstance().getOpenTransaction();
         });
         duringIdle.getButton(ButtonSet.ButtonLabel.RETURN.toString()).addActionListener(_ -> {
-            ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).setActionCommand(ButtonSet.ButtonLabel.RETURN.toString());
+            ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.CONFIRM.toString()).setActionCommand(ButtonSet.ButtonLabel.RETURN.toString());
             ViewManager.getInstance().showCodeEnter();
             DisplayDispatcher.activeDisplayForCode();
         });
         duringIdle.getButton(ButtonSet.ButtonLabel.COPY_RECEIPT.toString()).addActionListener(_ -> {
-            ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).setActionCommand(ButtonSet.ButtonLabel.COPY_RECEIPT.toString());
+            ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.CONFIRM.toString()).setActionCommand(ButtonSet.ButtonLabel.COPY_RECEIPT.toString());
             ViewManager.getInstance().showCodeEnter();
             DisplayDispatcher.activeDisplayForCode();
         });
         duringIdle.getButton(ButtonSet.ButtonLabel.GENERATE_VOUCHER.toString()).addActionListener(_ -> {
-            ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).setActionCommand(ButtonSet.ButtonLabel.GENERATE_VOUCHER.toString());
+            ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.CONFIRM.toString()).setActionCommand(ButtonSet.ButtonLabel.GENERATE_VOUCHER.toString());
             ViewManager.getInstance().showCodeEnter();
             DisplayDispatcher.activeDisplayForCode();
         });
         duringIdle.getButton(ButtonSet.ButtonLabel.CREATE_CARD.toString()).addActionListener(_ -> {
-            ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.ADD.toString()).setActionCommand(ButtonSet.ButtonLabel.CREATE_CARD.toString());
+            ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.CONFIRM.toString()).setActionCommand(ButtonSet.ButtonLabel.CREATE_CARD.toString());
             ViewManager.getInstance().showCodeEnter();
             DisplayDispatcher.activeDisplayForCode();
         });
         duringIdle.getButton(ButtonSet.ButtonLabel.PAUSE.toString()).addActionListener(_ -> {
             DuringPause duringPause = ViewManager.getInstance().getDuringPause();
-            duringPause.getButton(ButtonSet.ButtonLabel.ADD.toString()).removeActionListener(checkPauseAction);
+            duringPause.getButton(ButtonSet.ButtonLabel.CONFIRM.toString()).removeActionListener(checkPauseAction);
             checkPauseAction = new CheckPauseAction();
-            duringPause.getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(checkPauseAction);
+            duringPause.getButton(ButtonSet.ButtonLabel.CONFIRM.toString()).addActionListener(checkPauseAction);
         });
         duringIdle.getButton(ButtonSet.ButtonLabel.THEME_BUTTON.toString()).addActionListener(e -> {
             JButton jButton = (JButton) e.getSource();
@@ -76,7 +77,8 @@ public class UtilityController {
         DuringRegister duringRegister = ViewManager.getInstance().getDuringRegister();
         duringRegister.getButton(ButtonSet.ButtonLabel.ARTICLES.toString()).addActionListener(_ -> ViewManager.getInstance().showArticles());
         duringRegister.getButton(ButtonSet.ButtonLabel.LAST_ARTICLE.toString()).addActionListener(addItemAction);
-        duringRegister.getButton(ButtonSet.ButtonLabel.STORNO.toString()).addActionListener(validateCustomerAction);
+        duringRegister.getButton(ButtonSet.ButtonLabel.STORNO.toString()).addActionListener(removeItemAction);
+        duringRegister.getButton(ButtonSet.ButtonLabel.VALIDATE_CARD.toString()).addActionListener(validateCustomerAction);
 
         /*
         ##Adding control for handling cash
@@ -96,7 +98,6 @@ public class UtilityController {
                 ContentController.clearContent();
             });
         }
-
         duringRegister.getButton(ButtonSet.ButtonLabel.CASH.toString()).addActionListener(e -> {
             duringRegister.switchState(e);
             DisplayDispatcher.activeDisplayForPayment();
@@ -164,7 +165,7 @@ public class UtilityController {
             ContentController.clearContent();
             DisplayDispatcher.activeDisplayForAmount();
         });
-        duringCodeEnter.getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(codeEnterAction);
+        duringCodeEnter.getButton(ButtonSet.ButtonLabel.CONFIRM.toString()).addActionListener(codeEnterAction);
 
 
         /*
@@ -210,7 +211,7 @@ public class UtilityController {
 
                         button.addActionListener(e -> {
                             if (services.Users.CashierSession.getCurrentCashierId() == -1) {
-                                controllers.notifications.NotificationController.notifyObservers("Prosím prihláste používateľa!", 3000);
+                                controllers.notifications.NotificationController.notifyObservers("Prosím prihláste používateľa!", 5000);
                             } else {
                                 al.actionPerformed(e);
                             }

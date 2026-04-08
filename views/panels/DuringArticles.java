@@ -32,14 +32,21 @@ public class DuringArticles extends JPanel implements ButtonFoundable, ThemeObse
         GridBagConstraints gbcMain = GridBagConstraintsBuilder.buildGridBagConstraints(0, 0);
         setLayout(new GridBagLayout());
 
-        gbcMain.gridy = 0;
-        gbcMain.gridx = 0;
-        gbcMain.weighty = 1.0;
-        gbcMain.fill = GridBagConstraints.BOTH;
-        add(createLeftPanel(), gbcMain);
+        JPanel leftPanel = createLeftPanel();
+        JPanel rightPanel = createRightPanel();
 
-        gbcMain.gridx = 1;
-        add(createRightPanel(), gbcMain);
+        gbcMain.fill = GridBagConstraints.BOTH;
+        gbcMain.weighty = 1.0;
+
+        gbcMain.gridx = 0;
+        gbcMain.weightx = 0.35;
+        leftPanel.setPreferredSize(new Dimension(0, 0));
+        add(leftPanel, gbcMain);
+
+        gbcMain.gridx++;
+        gbcMain.weightx = 0.65;
+        rightPanel.setPreferredSize(new Dimension(0, 0));
+        add(rightPanel, gbcMain);
 
         onThemeChange();
         ThemeManager.getInstance().addObserver(this);

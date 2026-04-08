@@ -1,9 +1,6 @@
 package views.panels;
 
-import assets.ButtonSet;
-import assets.Colors;
-import assets.ThemeManager;
-import assets.ThemeObserver;
+import assets.*;
 import utility.ButtonBuilder;
 import utility.GridBagConstraintsBuilder;
 import views.Components.ButtonCluster;
@@ -13,21 +10,35 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class DuringIdle extends JPanel implements ButtonFoundable, ThemeObserver {
-    private final ButtonCluster buttonCluster;
-    JButton themeButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.THEME_BUTTON.toString(), Colors.BUTTON_LIGHT_BLUE);
+
+    private final ButtonCluster buttonCluster = new ButtonCluster(ButtonSet.IDLE_UTILITY_NAMES.getLabels());
+    private final JButton themeButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.THEME_BUTTON.toString(), Colors.BUTTON_LIGHT_BLUE);
 
     public DuringIdle() {
         setLayout(new GridBagLayout());
+        onThemeChange();
+        ThemeManager.getInstance().addObserver(this);
 
-        GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(1, 1);
-        gbc.gridy = 0;
-        gbc.gridx = 0;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
+        JPanel leftPanel = createLeftPanel();
+        JPanel rightPanel = createRightPanel();
 
-        JPanel fillerPanel = new JPanel(new GridBagLayout());
-        fillerPanel.setOpaque(false);
+        GridBagConstraints gbcMain = GridBagConstraintsBuilder.buildGridBagConstraints(1, 1);
+        gbcMain.fill = GridBagConstraints.BOTH;
+        gbcMain.weighty = 1.0;
 
+        gbcMain.weightx = 0.70;
+        leftPanel.setPreferredSize(new Dimension(0, 0));
+        add(leftPanel, gbcMain);
+
+        gbcMain.gridx++;
+        gbcMain.weightx = 0.30;
+        rightPanel.setPreferredSize(new Dimension(0, 0));
+        add(rightPanel, gbcMain);
+
+
+    }
+
+    public JPanel createLeftPanel(){
         themeButton.setPreferredSize(new Dimension(200, 124));
         themeButton.setFont(new Font("Roboto", Font.BOLD, 24));
 
@@ -36,18 +47,20 @@ public class DuringIdle extends JPanel implements ButtonFoundable, ThemeObserver
         themeGbc.weightx = 1.0;
         themeGbc.weighty = 1.0;
 
-        fillerPanel.setOpaque(false);
-        fillerPanel.add(themeButton, themeGbc);
+        final JPanel leftPanel = new JPanel(new GridBagLayout());
+        leftPanel.setName("leftPanel");
+        leftPanel.setOpaque(false);
+        leftPanel.add(themeButton, themeGbc);
+        return leftPanel;
+    }
 
-        add(fillerPanel, gbc);
+    public JPanel createRightPanel(){
+        JPanel rightPanel = new JPanel(new BorderLayout());
+        rightPanel.setOpaque(false);
 
-        gbc.weightx = 0.2;
-        gbc.gridx = 1;
-        buttonCluster = new ButtonCluster(ButtonSet.IDLE_UTILITY_NAMES.getLabels());
-        add(buttonCluster, gbc);
+        rightPanel.add(buttonCluster, BorderLayout.CENTER);
 
-        onThemeChange();
-        ThemeManager.getInstance().addObserver(this);
+        return rightPanel;
     }
 
 

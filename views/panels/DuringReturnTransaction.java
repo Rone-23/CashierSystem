@@ -42,12 +42,19 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable, 
         gbcMain.fill = GridBagConstraints.BOTH;
         gbcMain.weighty = 1.0;
 
+        gbcMain.gridx = 0;
+        gbcMain.weightx = 0.35;
+        leftPanel.setPreferredSize(new Dimension(0, 0));
         mainContent.add(leftPanel, gbcMain);
+
         gbcMain.gridx++;
-        gbcMain.weightx = 0.3;
+        gbcMain.weightx = 0.35;
+        middlePanel.setPreferredSize(new Dimension(0, 0));
         mainContent.add(middlePanel, gbcMain);
+
         gbcMain.gridx++;
-        gbcMain.weightx = 0.3;
+        gbcMain.weightx = 0.30;
+        rightPanel.setPreferredSize(new Dimension(0, 0));
         mainContent.add(rightPanel, gbcMain);
 
         GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(1, 1);

@@ -34,12 +34,19 @@ public class DuringPause extends JPanel implements ButtonFoundable, ThemeObserve
         gbcMain.fill = GridBagConstraints.BOTH;
         gbcMain.weighty = 1.0;
 
+        gbcMain.gridx = 0;
+        gbcMain.weightx = 0.35;
+        leftPanel.setPreferredSize(new Dimension(0, 0));
         centerPanel.add(leftPanel, gbcMain);
+
         gbcMain.gridx++;
         gbcMain.weightx = 0.35;
+        middlePanel.setPreferredSize(new Dimension(0, 0));
         centerPanel.add(middlePanel, gbcMain);
+
         gbcMain.gridx++;
-        gbcMain.weightx = 2.0;
+        gbcMain.weightx = 0.30;
+        rightPanel.setPreferredSize(new Dimension(0, 0));
         centerPanel.add(rightPanel, gbcMain);
 
         add(centerPanel, BorderLayout.CENTER);
@@ -52,7 +59,6 @@ public class DuringPause extends JPanel implements ButtonFoundable, ThemeObserve
         final JPanel leftPanel = new JPanel();
         leftPanel.setName("leftPanel");
         leftPanel.setOpaque(false);
-        leftPanel.setPreferredSize(dimension);
         return leftPanel;
     }
 
@@ -141,6 +147,7 @@ public class DuringPause extends JPanel implements ButtonFoundable, ThemeObserve
     public Display getInputDisplay() {
         return inputDisplay;
     }
+    public Keyboard getKeyboard(){return keyboard;}
 
     @Override
     public void onThemeChange() {
