@@ -4,7 +4,7 @@ import assets.*;
 import utility.GridBagConstraintsBuilder;
 import views.Components.ButtonCluster;
 import views.Components.Display;
-import views.Components.Keyboard;
+import views.Components.Keypad;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -16,7 +16,7 @@ public class DuringPause extends JPanel implements ButtonFoundable, ThemeObserve
     private final Dimension dimension = new Dimension(500, 114);
 
     private final Display inputDisplay = new Display(Constants.CODE,"Zadajte kód");
-    private final Keyboard keyboard = new Keyboard();
+    private final Keypad keypad = new Keypad();
     private ButtonCluster actionButtons;
 
     public DuringPause() {
@@ -89,7 +89,7 @@ public class DuringPause extends JPanel implements ButtonFoundable, ThemeObserve
         gbc.weighty = 0.0;
         gbc.weightx = 0.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        middlePanel.add(keyboard, gbc);
+        middlePanel.add(keypad, gbc);
 
         return middlePanel;
     }
@@ -107,7 +107,7 @@ public class DuringPause extends JPanel implements ButtonFoundable, ThemeObserve
 
     @Override
     public JButton getButton(String key) {
-        for (Component c : keyboard.getComponentsInside()) {
+        for (Component c : keypad.getComponentsInside()) {
             if (c instanceof JButton && c.getName() != null && c.getName().equals(key.toLowerCase())) {
                 return (JButton) c;
             }
@@ -126,7 +126,7 @@ public class DuringPause extends JPanel implements ButtonFoundable, ThemeObserve
         ArrayList<JButton> jButtons = new ArrayList<>();
 
 
-        for (Component c : keyboard.getComponentsInside()) {
+        for (Component c : keypad.getComponentsInside()) {
             if (c instanceof JButton && c.getName() != null && c.getName().equals(key.toLowerCase())) {
                 jButtons.add((JButton) c);
             }
@@ -147,7 +147,7 @@ public class DuringPause extends JPanel implements ButtonFoundable, ThemeObserve
     public Display getInputDisplay() {
         return inputDisplay;
     }
-    public Keyboard getKeyboard(){return keyboard;}
+    public Keypad getKeyboard(){return keypad;}
 
     @Override
     public void onThemeChange() {

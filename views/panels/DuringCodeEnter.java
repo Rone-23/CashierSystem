@@ -14,7 +14,7 @@ public class DuringCodeEnter extends JPanel implements ButtonFoundable, ThemeObs
     private final Dimension dimension = new Dimension(500, 114);
 
     private final Display inputDisplay = new Display(Constants.CODE,"Číslo bloku");
-    private final Keyboard keyboard = new Keyboard();
+    private final Keypad keypad = new Keypad();
     private ButtonCluster actionButtons;
 
     public DuringCodeEnter() {
@@ -88,7 +88,7 @@ public class DuringCodeEnter extends JPanel implements ButtonFoundable, ThemeObs
         gbc.weighty = 0.0;
         gbc.weightx = 0.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        middlePanel.add(keyboard, gbc);
+        middlePanel.add(keypad, gbc);
 
         return middlePanel;
     }
@@ -106,7 +106,7 @@ public class DuringCodeEnter extends JPanel implements ButtonFoundable, ThemeObs
 
     @Override
     public JButton getButton(String key) {
-        for (Component c : keyboard.getComponentsInside()) {
+        for (Component c : keypad.getComponentsInside()) {
             if (c instanceof JButton && c.getName() != null && c.getName().equals(key.toLowerCase())) {
                 return (JButton) c;
             }
@@ -125,7 +125,7 @@ public class DuringCodeEnter extends JPanel implements ButtonFoundable, ThemeObs
         ArrayList<JButton> jButtons = new ArrayList<>();
 
 
-        for (Component c : keyboard.getComponentsInside()) {
+        for (Component c : keypad.getComponentsInside()) {
             if (c instanceof JButton && c.getName() != null && c.getName().equals(key.toLowerCase())) {
                 jButtons.add((JButton) c);
             }

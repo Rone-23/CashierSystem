@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class DuringArticles extends JPanel implements ButtonFoundable, ThemeObserver {
     private final DisplayItems displayItems = new DisplayItems();
     private final Display display = new Display(Constants.SPLIT);
-    private final Keyboard keyboard = new Keyboard();
+    private final Keypad keypad = new Keypad();
     private final DisplayArticles displayArticles = new DisplayArticles();
     private final ArticleFilterButtonCluster articleFilterButtonCluster = new ArticleFilterButtonCluster();
 
@@ -67,7 +67,7 @@ public class DuringArticles extends JPanel implements ButtonFoundable, ThemeObse
         main.add(display, gbcLeftPanel);
 
         gbcLeftPanel.gridy++;
-        main.add(keyboard, gbcLeftPanel);
+        main.add(keypad, gbcLeftPanel);
 
         Border rightBorder = new ThemeMatteBorder(0, 0, 0, 3, Colors.BUTTON_LIGHT_BLUE);
         main.setBorder(rightBorder);
@@ -152,7 +152,7 @@ public class DuringArticles extends JPanel implements ButtonFoundable, ThemeObse
 
     @Override
     public JButton getButton(String key) {
-        for (Component c : keyboard.getComponentsInside()) {
+        for (Component c : keypad.getComponentsInside()) {
             if (c instanceof JButton && c.getName() != null && c.getName().equals(key.toLowerCase())) {
                 return (JButton) c;
             }
@@ -180,7 +180,7 @@ public class DuringArticles extends JPanel implements ButtonFoundable, ThemeObse
     @Override
     public JButton[] getButtons(String key) {
         ArrayList<JButton> jButtons = new ArrayList<>();
-        for (Component c : keyboard.getComponentsInside()) {
+        for (Component c : keypad.getComponentsInside()) {
             if (c instanceof JButton && c.getName() != null && c.getName().equals(key.toLowerCase())) {
                 jButtons.add((JButton) c);
             }

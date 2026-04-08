@@ -531,6 +531,33 @@ public class SQL_Connect {
         }
     }
 
+    public List<String> searchItemPathsByName(String searchTerm) {
+        List<String> results = new ArrayList<>();
+
+        String sql = "SELECT a.name, t.type_name AS category, s.subtype_name AS subcategory " +
+                "FROM article a " +
+                "JOIN subtype s ON a.subtype_id = s.subtype_id " +
+                "JOIN type t ON s.parent_type_id = t.type_id " +
+                "WHERE a.name LIKE ? " +
+                "LIMIT 10";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, "%" + searchTerm + "%");
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                String itemName = rs.getString("name");
+                String cat = rs.getString("category");
+                String sub = rs.getString("subcategory");
+
+                results.add(itemName + "  (" + cat + " -> " + sub + ")");
+            }
+        } catch (SQLException e) {
+            System.out.println("Search error: " + e.getMessage());
+        }
+        return results;
+    }
+
     /*
     FAVORITE ARTICLES
      */

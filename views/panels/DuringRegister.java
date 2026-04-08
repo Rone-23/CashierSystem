@@ -20,7 +20,7 @@ public class DuringRegister extends JPanel implements ButtonFoundable, ThemeObse
     private final Display displayTotal = new Display(Constants.TOTAL);
     private final Display displayTopAmount = new Display(Constants.WEIGHT);
     private final Display displayTopTotal = new Display(Constants.TOTAL);
-    private final Keyboard keyboard = new Keyboard();
+    private final Keypad keypad = new Keypad();
     private final ButtonCluster utilityButtonCluster = new ButtonCluster(ButtonSet.UTILITY_NAMES.getLabels(), Constants.VERTICAL);
     private final ButtonCluster cashButtonCluster = new ButtonCluster(ButtonSet.CASH_NAMES.getLabels(), Constants.VERTICAL);
     private final ButtonCluster commonButtonCluster = new ButtonCluster(ButtonSet.COMMON_NAMES.getLabels(), Constants.VERTICAL);
@@ -135,7 +135,7 @@ public class DuringRegister extends JPanel implements ButtonFoundable, ThemeObse
         gbc.weighty = 0;
         gbc.weightx = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        middlePanel.add(keyboard, gbc);
+        middlePanel.add(keypad, gbc);
 
         return middlePanel;
     }
@@ -159,7 +159,7 @@ public class DuringRegister extends JPanel implements ButtonFoundable, ThemeObse
 
     @Override
     public JButton getButton(String key) {
-        for (Component c : keyboard.getComponentsInside()) {
+        for (Component c : keypad.getComponentsInside()) {
             if (c instanceof JButton && c.getName() != null && c.getName().equals(key.toLowerCase())) {
                 return (JButton) c;
             }
@@ -186,7 +186,7 @@ public class DuringRegister extends JPanel implements ButtonFoundable, ThemeObse
     public JButton[] getButtons(String key) {
         ArrayList<JButton> jButtons = new ArrayList<>();
 
-        for (Component c : keyboard.getComponentsInside()) {
+        for (Component c : keypad.getComponentsInside()) {
             if (c instanceof JButton && c.getName() != null && c.getName().equals(key.toLowerCase())) {
                 jButtons.add((JButton) c);
             }

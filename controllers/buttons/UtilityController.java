@@ -153,6 +153,7 @@ public class UtilityController {
         DuringArticles duringArticles = ViewManager.getInstance().getDuringArticles();
         duringArticles.getButton(ButtonSet.ButtonLabel.ADD.toString()).addActionListener(addItemAction);
         duringArticles.getButton(ButtonSet.ButtonLabel.REMOVE.toString()).addActionListener(removeItemAction);
+        duringArticles.getButton(ButtonSet.ButtonLabel.SEARCH.toString()).addActionListener(_ ->ViewManager.getInstance().showKeyboard());
         duringArticles.getButton(ButtonSet.ButtonLabel.EXIT.toString()).addActionListener(_ -> ViewManager.getInstance().showRegister());
 
 

@@ -3,6 +3,7 @@ package controllers.panels;
 import javax.swing.*;
 import java.awt.*;
 
+import views.Components.Keyboard;
 import views.Components.StatusBar;
 import views.panels.*;
 
@@ -121,6 +122,10 @@ public class ViewManager {
     public void returnToDefault(){
         duringRegister.returnToDefault();
         duringReturn.returnToDefault();
+    }
 
+    public void showKeyboard(){
+        Keyboard keyboard = new Keyboard(mainFrame);
+        keyboard.setVisible(true);
     }
 }

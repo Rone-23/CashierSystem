@@ -20,7 +20,7 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable, 
     private final Display displayTotal = new Display(Constants.TOTAL);
     private final Display displayTopAmount = new Display(Constants.WEIGHT);
     private final Display displayTopTotal = new Display(Constants.TOTAL, "Ku výdavku");
-    private final Keyboard keyboard = new Keyboard();
+    private final Keypad keypad = new Keypad();
     private final ButtonCluster utilityButtonCluster = new ButtonCluster(ButtonSet.RETURN_TRANSACTION_UTILITY_NAMES.getLabels(), Constants.VERTICAL);
     private final ButtonCluster commonButtonCluster = new ButtonCluster(ButtonSet.RETURN_TRANSACTION_RETURN_MONEY.getLabels(), Constants.VERTICAL);
     private final CardLayout cardLayout = new CardLayout();
@@ -133,7 +133,7 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable, 
         gbc.weighty = 0;
         gbc.weightx = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        middlePanel.add(keyboard, gbc);
+        middlePanel.add(keypad, gbc);
 
         return middlePanel;
     }
@@ -155,7 +155,7 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable, 
 
     @Override
     public JButton getButton(String key) {
-        for (Component c : keyboard.getComponentsInside()) {
+        for (Component c : keypad.getComponentsInside()) {
             if (c instanceof JButton && c.getName() != null && c.getName().equals(key.toLowerCase())) {
                 return (JButton) c;
             }
@@ -177,7 +177,7 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable, 
     public JButton[] getButtons(String key) {
         ArrayList<JButton> jButtons = new ArrayList<>();
 
-        for (Component c : keyboard.getComponentsInside()) {
+        for (Component c : keypad.getComponentsInside()) {
             if (c instanceof JButton && c.getName() != null && c.getName().equals(key.toLowerCase())) {
                 jButtons.add((JButton) c);
             }
