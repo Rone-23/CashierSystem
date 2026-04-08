@@ -18,20 +18,19 @@ public class ArticleSelectAction extends AbstractAction implements ContentObserv
     }
 
     public void deselectArticle(){
-        if(sourceButton !=null){
-            sourceButton.setSelected(false);
-        }
-        sourceButton = null;
         notifyItemSelect(null);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        deselectArticle();
-        sourceButton = (JToggleButton) e.getSource();
-        sourceButton.setSelected(true);
-        ContainsItem containsItem = (ContainsItem) sourceButton;
-        notifyItemSelect(containsItem.getItem());
+        JToggleButton clickedButton = (JToggleButton) e.getSource();
+        ContainsItem containsItem = (ContainsItem) clickedButton;
+
+        if (clickedButton.isSelected()) {
+            notifyItemSelect(containsItem.getItem());
+        } else {
+            notifyItemSelect(null);
+        }
     }
 
     //Observer

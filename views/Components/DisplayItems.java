@@ -184,6 +184,18 @@ public class DisplayItems extends JScrollPane {
         return 0;
     }
 
+    public void syncSelectionState(Item selectedItem) {
+        for (Component c : mainItemPanel.getComponents()) {
+            if (c instanceof ListItemButton listItemButton) {
+                if (selectedItem == null) {
+                    listItemButton.setSelected(false);
+                } else {
+                    listItemButton.setSelected(listItemButton.getItemName().equals(selectedItem.getName()));
+                }
+            }
+        }
+    }
+
     private void touchControls(){
         // add "touch scroll" behavior
         JViewport view = this.getViewport();

@@ -2,17 +2,19 @@ package controllers.display;
 
 import controllers.buttons.ArticleSelectAction;
 import controllers.panels.ViewManager;
+import controllers.transaction.ContentObserver;
 import controllers.transaction.OpenTransactionManager;
 import controllers.transaction.OpenTransactionObserver;
 import services.Item;
 
 import javax.swing.*;
 
-public class DisplayItemController implements OpenTransactionObserver {
+public class DisplayItemController implements OpenTransactionObserver, ContentObserver {
     private final ArticleSelectAction articleSelectAction;
 
     public DisplayItemController(){
         articleSelectAction = new ArticleSelectAction();
+        ArticleSelectAction.addObserver(this);
     }
 
     @Override
@@ -67,5 +69,12 @@ public class DisplayItemController implements OpenTransactionObserver {
         ViewManager.getInstance().getDuringRegister().getDisplayScrollableItems().repaint();
         ViewManager.getInstance().getDuringArticles().getDisplayScrollableItems().repaint();
         ViewManager.getInstance().getDuringReturn().getDisplayScrollableItems().repaint();
+    }
+
+    @Override
+    public void notifyItemSelect(Item item) {
+        ViewManager.getInstance().getDuringArticles().getDisplayScrollableItems().syncSelectionState(item);
+        ViewManager.getInstance().getDuringRegister().getDisplayScrollableItems().syncSelectionState(item);
+        ViewManager.getInstance().getDuringReturn().getDisplayScrollableItems().syncSelectionState(item);
     }
 }

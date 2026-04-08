@@ -5,6 +5,7 @@ import controllers.buttons.FavoriteArticleAction;
 import controllers.notifications.NotificationController;
 import controllers.panels.ViewManager;
 import controllers.buttons.FilterObserver;
+import controllers.transaction.ContentObserver;
 import controllers.transaction.OpenTransactionObserver;
 import services.Item;
 import services.OpenTransaction;
@@ -22,7 +23,7 @@ import java.util.List;
 
 import java.util.Map;
 
-public class DisplayArticleController implements OpenTransactionObserver, FilterObserver, CashierObserver {
+public class DisplayArticleController implements OpenTransactionObserver, FilterObserver, CashierObserver, ContentObserver {
 
     private final DisplayArticles displayArticles = ViewManager.getInstance().getDuringArticles().getDisplayScrollableArticles();
 
@@ -42,6 +43,7 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
     private final FavoriteArticleAction favoriteArticleAction = new FavoriteArticleAction(this::toggleFavoriteInCache);
 
     public DisplayArticleController() {
+        ArticleSelectAction.addObserver(this);
         CashierSession.addObserver(this);
         initializeCache();
         refreshDisplay();
@@ -179,6 +181,10 @@ public class DisplayArticleController implements OpenTransactionObserver, Filter
 
         initializeCache();
         refreshDisplay();
+    }
 
+    @Override
+    public void notifyItemSelect(Item item) {
+        displayArticles.syncSelectionState(item);
     }
 }

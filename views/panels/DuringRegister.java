@@ -104,7 +104,7 @@ public class DuringRegister extends JPanel implements ButtonFoundable, ThemeObse
         final JPanel middlePanel = new JPanel();
         middlePanel.setName("middlePanel");
 
-        middlePanel.setBorder(new EmptyBorder(20, 0, 20, 0));
+        middlePanel.setBorder(new EmptyBorder(20, 0, 0, 0));
         middlePanel.setLayout(new GridBagLayout());
         middlePanel.setOpaque(false);
 

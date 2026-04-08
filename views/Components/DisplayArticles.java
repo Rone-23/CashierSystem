@@ -137,6 +137,20 @@ public class DisplayArticles extends JScrollPane implements ThemeObserver {
         });
     }
 
+    public void syncSelectionState(services.Item selectedItem) {
+        for (Component c : mainArticlePanel.getComponents()) {
+            if (c instanceof JToggleButton button) {
+                if (selectedItem == null) {
+                    button.setSelected(false);
+                } else {
+                    if (button.getName() != null) {
+                        button.setSelected(button.getName().equalsIgnoreCase(selectedItem.getName()));
+                    }
+                }
+            }
+        }
+    }
+
     private void moveSpacer(int currentGridX, int currentGridY){
 
 
