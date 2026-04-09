@@ -4,45 +4,144 @@ import assets.Colors;
 import assets.Constants;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.geom.RoundRectangle2D;
 
-public class Display extends JTextArea {
-    private final String[] text = {"0.00","1"};
+public class Display extends JPanel {
+    private String[] text = {"0.00", "1"};
     private final Constants displayType;
-    private final Dimension dimension = new Dimension(400,100);
-    private final String[] textToDisplay = new String[2];
+
+    private JLabel topTitleLabel;
+    private JLabel topValueLabel;
+    private JLabel bottomTitleLabel;
+    private JLabel bottomValueLabel;
 
     public Display(Constants displayType) {
         this.displayType = displayType;
-        switch (displayType){
-            case TOTAL -> textToDisplay[0] = "Cena";
-            case WEIGHT -> textToDisplay[0] = "Množstvo";
-            case SPLIT -> {
-                textToDisplay[0] = "Cena";
-                textToDisplay[1] = "Množstvo";
-            }
-            case CODE -> textToDisplay[0] = "Zadajte kód";
-        }
-        setPreferredSize(dimension);
-        setOpaque(false);
-        setBorder(new EmptyBorder(10,10,10,10));
-        setMargin(new Insets(30,30,30,30));
-        setFont(new Font("Roboto", Font.BOLD, 40));
-        setEditable(false);
-        setFocusable(false);
+        initUI();
+        setSuggestionText(displayType);
     }
+
     public Display(Constants displayType, String textToDisplay) {
         this.displayType = displayType;
-        this.textToDisplay[0] = textToDisplay;
-        setPreferredSize(dimension);
+        initUI();
+        setTopText(textToDisplay);
+    }
+
+    private void initUI() {
         setOpaque(false);
-        setBorder(new EmptyBorder(10,10,10,10));
-        setMargin(new Insets(30,30,30,30));
-        setFont(new Font("Roboto", Font.BOLD, 40));
-        setEditable(false);
-        setFocusable(false);
+        setLayout(new GridLayout(displayType == Constants.SPLIT ? 2 : 1, 1));
+        setPreferredSize(new Dimension(400, 100));
+
+        setBorder(BorderFactory.createEmptyBorder(10, 35, 10, 35));
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setOpaque(false);
+
+        topTitleLabel = new JLabel("", SwingConstants.LEFT);
+        topTitleLabel.setForeground(Colors.BLACK_TEXT.getColor());
+
+        topValueLabel = new JLabel(formatValue(text[0], true), SwingConstants.RIGHT);
+        topValueLabel.setForeground(Colors.BLACK_TEXT.getColor());
+
+        topPanel.add(topTitleLabel, BorderLayout.WEST);
+        topPanel.add(topValueLabel, BorderLayout.EAST);
+        add(topPanel);
+
+        if (displayType == Constants.SPLIT) {
+            JPanel bottomPanel = new JPanel(new BorderLayout());
+            bottomPanel.setOpaque(false);
+
+            bottomTitleLabel = new JLabel("", SwingConstants.LEFT);
+            bottomTitleLabel.setForeground(Colors.BLACK_TEXT.getColor());
+
+            bottomValueLabel = new JLabel(formatValue(text[1], false), SwingConstants.RIGHT);
+            bottomValueLabel.setForeground(Colors.BLACK_TEXT.getColor());
+
+            bottomPanel.add(bottomTitleLabel, BorderLayout.WEST);
+            bottomPanel.add(bottomValueLabel, BorderLayout.EAST);
+            add(bottomPanel);
+        }
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                updateFonts();
+            }
+        });
+    }
+
+    private void updateFonts() {
+        int h = getHeight();
+        int panelCount = displayType == Constants.SPLIT ? 2 : 1;
+        int sectionHeight = h / panelCount;
+
+        Font titleFont = getResponsiveFont(sectionHeight * 0.40f, 12, 50);
+        Font valueFont = getResponsiveFont(sectionHeight * 0.60f, 30, 60);
+
+        topTitleLabel.setFont(titleFont);
+        topValueLabel.setFont(valueFont);
+
+        if (displayType == Constants.SPLIT) {
+            bottomTitleLabel.setFont(titleFont);
+            bottomValueLabel.setFont(valueFont);
+        }
+    }
+
+    private Font getResponsiveFont(float targetSize, int minSize, int maxSize) {
+        int size = (int) targetSize;
+        size = Math.max(minSize, Math.min(maxSize, size));
+        return new Font("Roboto", Font.BOLD, size);
+    }
+
+    private String formatValue(String rawValue, boolean isTopRow) {
+        if (displayType == Constants.TOTAL) return rawValue + " €";
+        if (displayType == Constants.WEIGHT) return rawValue + " ks";
+        if (displayType == Constants.SPLIT) {
+            return isTopRow ? rawValue + " €" : rawValue + " ks";
+        }
+        return rawValue;
+    }
+
+    public void setTopText(String text) {
+        topTitleLabel.setText(text);
+    }
+
+    public void setText(String text) {
+        this.text[0] = text;
+        topValueLabel.setText(formatValue(text, true));
+    }
+
+    public void setText(String[] text) {
+        this.text = text;
+        topValueLabel.setText(formatValue(text[0], true));
+        if (displayType == Constants.SPLIT && text.length > 1) {
+            bottomValueLabel.setText(formatValue(text[1], false));
+        }
+    }
+
+    public void setSuggestionText(Constants suggestionText) {
+        switch (suggestionText) {
+            case TOTAL -> topTitleLabel.setText("Cena");
+            case WEIGHT -> topTitleLabel.setText("Množstvo");
+            case SPLIT -> {
+                topTitleLabel.setText("Cena");
+                if (bottomTitleLabel != null) bottomTitleLabel.setText("Množstvo");
+            }
+            case RECEIPT -> topTitleLabel.setText("Číslo bloku");
+            case CUSTOMER -> topTitleLabel.setText("Zadajte ID");
+            case CODE -> topTitleLabel.setText("Zadajte kód");
+        }
+    }
+
+    public Constants getDisplayType() {
+        return displayType;
+    }
+
+    public String[] getTextArray() {
+        return text;
     }
 
     @Override
@@ -50,7 +149,6 @@ public class Display extends JTextArea {
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        //Painting display shape
         int arc = getHeight();
         int inset = 5;
         Shape pill = new RoundRectangle2D.Double(
@@ -59,184 +157,20 @@ public class Display extends JTextArea {
         g2.setColor(Colors.DEFAULT_BLUE.getColor());
         g2.fill(pill);
 
-        //Setting up variants
-        g2.setPaint(Colors.BLACK_TEXT.getColor());
-        int drawTextCoordinatesX;
-        int drawTextCoordinatesY;
-        int strWidth;
+        if (displayType == Constants.SPLIT) {
+            g2.setColor(Colors.BLACK_TEXT.getColor());
 
-        switch(displayType){
-            case TOTAL -> {
-                g2.setFont(paintVariantTotal());
-                FontMetrics fm = g2.getFontMetrics();
-                Shape writableArea = new Rectangle(
-                        (int) (inset+ (double) getHeight() /2*0.6),
-                        (int) (inset+ (double) getHeight() /2-getHeight()*0.4),
-                        (int) (getWidth()-getHeight()*0.6-inset*2),
-                        (int) (getHeight()*0.8-inset*2)
-                        );
-                drawTextCoordinatesX = writableArea.getBounds().x;
-                drawTextCoordinatesY = writableArea.getBounds().y+fm.getHeight();
+            float[] dottedPattern = {15.0f, 15.0f};
+            Stroke dottedStroke = new BasicStroke(
+                    2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,
+                    10.0f, dottedPattern, 8.0f
+            );
 
-                g2.drawString(textToDisplay[0],drawTextCoordinatesX,drawTextCoordinatesY);
-
-                strWidth = fm.stringWidth(getTextArray()[0] + " €");
-                drawTextCoordinatesX = (int) writableArea.getBounds().getWidth()+writableArea.getBounds().x-strWidth;
-                g2.drawString(getTextArray()[0]+" €",drawTextCoordinatesX,drawTextCoordinatesY);
-
-            }
-            case WEIGHT -> {
-                g2.setFont(paintVariantWeight());
-                FontMetrics fm = g2.getFontMetrics();
-                Shape writableArea = new Rectangle(
-                        (int) (inset+ (double) getHeight() /2*0.6),
-                        (int) (inset+ (double) getHeight() /2-getHeight()*0.4),
-                        (int) (getWidth()-getHeight()*0.6-inset*2),
-                        (int) (getHeight()*0.8-inset*2)
-                );
-
-                drawTextCoordinatesX = writableArea.getBounds().x;
-                drawTextCoordinatesY = writableArea.getBounds().y+fm.getHeight();
-
-                g2.drawString(textToDisplay[0],drawTextCoordinatesX,drawTextCoordinatesY);
-
-                strWidth = fm.stringWidth(getTextArray()[0] +" ks");
-                drawTextCoordinatesX = (int) writableArea.getBounds().getWidth()+writableArea.getBounds().x-strWidth;
-                g2.drawString(getTextArray()[0]+" ks",drawTextCoordinatesX,drawTextCoordinatesY);
-            }
-            case SPLIT -> {
-                g2.setFont(paintVariantSplit(g2));
-                FontMetrics fm = g2.getFontMetrics();
-                Shape writableAreaTop = new Rectangle(
-                        (int) (inset+ (double) getHeight() /2*0.6),
-                        (int) (inset+ (double) getHeight() /2-getHeight()*0.4),
-                        (int) (getWidth()-getHeight()*0.6-inset*2),
-                        (int) (getHeight()*0.8-inset*4)/2
-                );
-                Shape writableAreaBottom = new Rectangle(
-                        (int) (inset+ (double) getHeight() /2*0.6),
-                        (int) (inset*2+ (double) getHeight() /2-getHeight()*0.4 + writableAreaTop.getBounds().getHeight() + inset),
-                        (int) (getWidth()-getHeight()*0.6-inset*2),
-                        (int) (getHeight()*0.8-inset*2)/2
-                );
-
-                drawTextCoordinatesX = writableAreaTop.getBounds().x;
-                drawTextCoordinatesY = (int) (writableAreaTop.getBounds().y+fm.getHeight()*0.7);
-
-                g2.drawString(textToDisplay[0],drawTextCoordinatesX,drawTextCoordinatesY);
-
-                strWidth = fm.stringWidth(getTextArray()[0] +" €");
-                drawTextCoordinatesX = (int) writableAreaTop.getBounds().getWidth()+writableAreaTop.getBounds().x-strWidth;
-                g2.drawString(getTextArray()[0] + " €",drawTextCoordinatesX,drawTextCoordinatesY);
-
-                drawTextCoordinatesX = writableAreaBottom.getBounds().x;
-                drawTextCoordinatesY = (int) (writableAreaBottom.getBounds().y+fm.getHeight()*0.7);
-
-                g2.drawString(textToDisplay[1],drawTextCoordinatesX,drawTextCoordinatesY);
-
-                strWidth = fm.stringWidth(getTextArray()[1] + " ks");
-                drawTextCoordinatesX =  (int) writableAreaBottom.getBounds().getWidth()+writableAreaBottom.getBounds().x-strWidth;
-                g2.drawString(getTextArray()[1]+ " ks",drawTextCoordinatesX,drawTextCoordinatesY);
-            }
-            case CODE -> {
-                g2.setFont(paintVariantTotal());
-                FontMetrics fm = g2.getFontMetrics();
-                Shape writableArea = new Rectangle(
-                        (int) (inset+ (double) getHeight() /2*0.6),
-                        (int) (inset+ (double) getHeight() /2-getHeight()*0.4),
-                        (int) (getWidth()-getHeight()*0.6-inset*2),
-                        (int) (getHeight()*0.8-inset*2)
-                );
-                drawTextCoordinatesX = writableArea.getBounds().x;
-                drawTextCoordinatesY = writableArea.getBounds().y+fm.getHeight();
-
-                g2.drawString(textToDisplay[0],drawTextCoordinatesX,drawTextCoordinatesY);
-
-                strWidth = fm.stringWidth(getTextArray()[0]);
-                drawTextCoordinatesX = (int) writableArea.getBounds().getWidth()+writableArea.getBounds().x-strWidth;
-                g2.drawString(getTextArray()[0],drawTextCoordinatesX,drawTextCoordinatesY);
-
-            }
+            g2.setStroke(dottedStroke);
+            int y = getHeight() / 2;
+            g2.drawLine(35, y, getWidth() - 35, y);
         }
 
         g2.dispose();
-        repaint();
     }
-
-    @Override
-    public void setText(String text1){
-        text[0] = text1;
-    }
-
-    public void setText(String text1, String text2){
-        text[0] = text1;
-        text[1] = text2;
-    }
-
-    public String[] getTextArray(){
-            return text;
-    }
-
-    private Font paintVariantTotal(){
-
-        final float fontHeightRatio =  0.45f;
-
-        int newFontSize = (int) (getHeight() * fontHeightRatio);
-
-        newFontSize = Math.max(12, newFontSize);
-        newFontSize = Math.min(60, newFontSize);
-
-        Font currentFont = getFont();
-
-        return currentFont.deriveFont((float) newFontSize);
-    }
-
-    private Font paintVariantWeight(){
-        final float fontHeightRatio =  0.45f;
-
-        int newFontSize = (int) (getHeight() * fontHeightRatio);
-
-        newFontSize = Math.max(12, newFontSize);
-        newFontSize = Math.min(60, newFontSize);
-
-        Font currentFont = getFont();
-
-        return currentFont.deriveFont((float) newFontSize);
-    }
-
-    private Font paintVariantSplit(Graphics2D g2){
-        int insets = 20;
-        float thickness = 2.0f;
-        g2.setPaint(Colors.BLACK_TEXT.getColor());
-
-        float[] dottedPattern = {15.0f, 15.0f};
-        Stroke dottedStroke = new BasicStroke(
-                thickness,
-                BasicStroke.CAP_ROUND,
-                BasicStroke.JOIN_ROUND,
-                10.0f,
-                dottedPattern,
-                8.0f
-        );
-        g2.setStroke(dottedStroke);
-        g2.drawLine(insets, getHeight() /2,getWidth()-insets,getHeight() /2);
-
-
-        final float fontHeightRatio =  0.55f;
-
-        int newFontSize = (int) ((float) getHeight() /2 * fontHeightRatio);
-
-        newFontSize = Math.max(12, newFontSize);
-        newFontSize = Math.min(60, newFontSize);
-        Font currentFont = getFont();
-
-        return currentFont.deriveFont((float) newFontSize);
-    }
-
-    public Constants getDisplayType() {
-        return displayType;
-    }
-
-
-
 }

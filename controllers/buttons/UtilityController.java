@@ -36,21 +36,25 @@ public class UtilityController {
         });
         duringIdle.getButton(ButtonSet.ButtonLabel.RETURN.toString()).addActionListener(_ -> {
             ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.CONFIRM.toString()).setActionCommand(ButtonSet.ButtonLabel.RETURN.toString());
+            ViewManager.getInstance().getDuringCodeEnter().setMode(Constants.RECEIPT);
             ViewManager.getInstance().showCodeEnter();
             DisplayDispatcher.activeDisplayForCode();
         });
         duringIdle.getButton(ButtonSet.ButtonLabel.COPY_RECEIPT.toString()).addActionListener(_ -> {
             ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.CONFIRM.toString()).setActionCommand(ButtonSet.ButtonLabel.COPY_RECEIPT.toString());
+            ViewManager.getInstance().getDuringCodeEnter().setMode(Constants.RECEIPT);
             ViewManager.getInstance().showCodeEnter();
             DisplayDispatcher.activeDisplayForCode();
         });
         duringIdle.getButton(ButtonSet.ButtonLabel.GENERATE_VOUCHER.toString()).addActionListener(_ -> {
             ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.CONFIRM.toString()).setActionCommand(ButtonSet.ButtonLabel.GENERATE_VOUCHER.toString());
+            ViewManager.getInstance().getDuringCodeEnter().setMode(Constants.CUSTOMER);
             ViewManager.getInstance().showCodeEnter();
             DisplayDispatcher.activeDisplayForCode();
         });
         duringIdle.getButton(ButtonSet.ButtonLabel.CREATE_CARD.toString()).addActionListener(_ -> {
             ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.CONFIRM.toString()).setActionCommand(ButtonSet.ButtonLabel.CREATE_CARD.toString());
+            ViewManager.getInstance().getDuringCodeEnter().setMode(Constants.CUSTOMER);
             ViewManager.getInstance().showCodeEnter();
             DisplayDispatcher.activeDisplayForCode();
         });

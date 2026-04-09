@@ -13,7 +13,7 @@ public class DuringCodeEnter extends JPanel implements ButtonFoundable, ThemeObs
 
     private final Dimension dimension = new Dimension(500, 114);
 
-    private final Display inputDisplay = new Display(Constants.CODE,"Číslo bloku");
+    private final Display inputDisplay = new Display(Constants.CODE);
     private final Keypad keypad = new Keypad();
     private ButtonCluster actionButtons;
 
@@ -141,6 +141,11 @@ public class DuringCodeEnter extends JPanel implements ButtonFoundable, ThemeObs
         }
 
         throw new ArrayIndexOutOfBoundsException();
+    }
+
+    public void setMode(Constants mode) {
+        inputDisplay.setSuggestionText(mode);
+        inputDisplay.setText("");
     }
 
     public Display getInputDisplay() {

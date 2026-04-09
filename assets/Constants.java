@@ -6,6 +6,9 @@ public enum Constants {
     WEIGHT(11),
     SPLIT(12),
     CODE(13),
+    CUSTOMER(14),
+    RECEIPT(15),
+
 
     //ARROW TYPE
     LEFT(20),
@@ -17,9 +20,8 @@ public enum Constants {
     HORIZONTAL(0),
     VERTICAL(1),
 
-    CUSTOMER(6),
     GENERAL(7),
-    NONE(7),
+    NONE(9),
 
     ;
     private final double value;
