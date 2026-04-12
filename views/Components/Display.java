@@ -2,6 +2,8 @@ package views.Components;
 
 import assets.Colors;
 import assets.Constants;
+import assets.ThemeManager;
+import assets.ThemeObserver;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +11,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.RoundRectangle2D;
 
-public class Display extends JPanel {
+public class Display extends JPanel implements ThemeObserver{
     private String[] text = {"0.00", "1"};
     private final Constants displayType;
 
@@ -22,12 +24,16 @@ public class Display extends JPanel {
         this.displayType = displayType;
         initUI();
         setSuggestionText(displayType);
+        ThemeManager.getInstance().addObserver(this);
+        onThemeChange();
     }
 
     public Display(Constants displayType, String textToDisplay) {
         this.displayType = displayType;
         initUI();
         setTopText(textToDisplay);
+        ThemeManager.getInstance().addObserver(this);
+        onThemeChange();
     }
 
     private void initUI() {
@@ -172,5 +178,16 @@ public class Display extends JPanel {
         }
 
         g2.dispose();
+    }
+
+    @Override
+    public void onThemeChange() {
+        Color standardText = Colors.BLACK_TEXT.getColor();
+        if (topTitleLabel != null) topTitleLabel.setForeground(standardText);
+        if (topValueLabel != null) topValueLabel.setForeground(standardText);
+        if (bottomTitleLabel != null) bottomTitleLabel.setForeground(standardText);
+        if (bottomValueLabel != null) bottomValueLabel.setForeground(standardText);
+
+        repaint();
     }
 }

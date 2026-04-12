@@ -149,6 +149,7 @@ public class DuringArticles extends JPanel implements ButtonFoundable, ThemeObse
     public DisplayArticles getDisplayScrollableArticles() { return displayArticles; }
     public Display getDisplay() { return display; }
     public ArticleFilterButtonCluster getArticleFilterButtonCluster() { return articleFilterButtonCluster; }
+    public Keypad getKeypad(){return keypad;}
 
     @Override
     public JButton getButton(String key) {

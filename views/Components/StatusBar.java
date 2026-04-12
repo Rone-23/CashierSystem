@@ -5,6 +5,10 @@ import assets.ThemeManager;
 import assets.ThemeObserver;
 import controllers.notifications.NotificationController;
 import controllers.notifications.NotificationObserver;
+import controllers.transaction.OpenTransactionObserver;
+import services.OpenTransaction;
+import services.Users.CashierObserver;
+import services.Users.CashierSession;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -12,7 +16,7 @@ import java.awt.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class StatusBar extends JPanel implements NotificationObserver, ThemeObserver {
+public class StatusBar extends JPanel implements NotificationObserver, ThemeObserver, OpenTransactionObserver, CashierObserver {
     private final JLabel dateTimeLabel = new JLabel();
     private final JLabel notificationLabel = new JLabel("", SwingConstants.CENTER);
     private final JLabel infoLabel = new JLabel("", SwingConstants.RIGHT); // New label for the right side
@@ -27,6 +31,8 @@ public class StatusBar extends JPanel implements NotificationObserver, ThemeObse
     private Boolean isLocked=false;
 
     public StatusBar() {
+        CashierSession.addObserver(this);
+        OpenTransaction.addObserver(this);
         NotificationController.addObserver(this);
         setLayout(new BorderLayout());
         setBackground(Colors.BUTTON_BACKGROUND_WHITE_ELEVATED.getColor());
@@ -64,7 +70,7 @@ public class StatusBar extends JPanel implements NotificationObserver, ThemeObse
     }
 
     public void setCashierId(String cashierId) {
-        this.cashierId = (cashierId != null && !cashierId.isEmpty()) ? cashierId : "---";
+        this.cashierId = (cashierId != null && !cashierId.isEmpty() && !cashierId.equals("-1"))  ? cashierId : "---";
         updateInfoLabel();
     }
 
@@ -97,21 +103,13 @@ public class StatusBar extends JPanel implements NotificationObserver, ThemeObse
         }
     }
 
-    public void setUnregistered(Boolean status){
-        isLocked=status;
-        if(isLocked){
-            if (notificationTimer != null) notificationTimer.stop();
-            notificationLabel.setText("ŽIADEN POKLADNÍK NENI PRIHLÁSENÝ. PROSÍM PRIHLÁSTE SA!");
-            notificationLabel.setForeground(Color.RED);
-        } else {
-            notificationLabel.setText("");
-            notificationLabel.setForeground(Color.RED);
-        }
-    }
-
     private void showNotification(String message, int durationMs, Color color) {
         if (notificationTimer != null && notificationTimer.isRunning()) {
             notificationTimer.stop();
+        }
+
+        if (message == null) {
+            message = "Neznama chyba";
         }
 
         notificationLabel.setText(message.toUpperCase());
@@ -150,5 +148,24 @@ public class StatusBar extends JPanel implements NotificationObserver, ThemeObse
         repaint();
     }
 
+    public JComponent getNotificationLabel(){return notificationLabel;}
+
+
+    @Override
+    public void onDestroy() {
+        setStatus("---");
+        setTransactionId("---");
+    }
+
+    @Override
+    public void onCreate(OpenTransaction openTransaction) {
+        setTransactionId(String.valueOf(openTransaction.getTransactionID()));
+        setStatus("Nie");
+    }
+
+    @Override
+    public void onCashierLogin(int cashierId) {
+        setCashierId(String.valueOf(cashierId));
+    }
 
 }

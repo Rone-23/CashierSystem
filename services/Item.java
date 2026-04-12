@@ -1,18 +1,15 @@
 package services;
 
 import assets.Constants;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import utility.ItemDeserializer;
 
 import java.util.Objects;
 
-@JsonDeserialize(using = ItemDeserializer.class)
 public abstract class Item implements Cloneable {
     protected String name;
     protected int price, discountPrice, amount;
     protected int basePrice = -1;
     protected Constants discountType = null;
-    private static double totalAmount;
+    private static int totalAmount;
     protected boolean isFavorite;
 
     protected String category;
@@ -64,7 +61,7 @@ public abstract class Item implements Cloneable {
     }
     public void setIsFavorite(boolean isFavorite){this.isFavorite = isFavorite;}
     public boolean getIsFavorite(){return isFavorite;}
-    public double getTotalAmount(){return totalAmount; }
+    public int getTotalAmount(){return totalAmount; }
     public static void setTotalAmountZero(){totalAmount = 0;}
     public String toString(){return String.format("Name: %s Price: %s Amount: %s",this.name, this.price, this.amount);}
     public String getSubcategory() {
@@ -104,7 +101,6 @@ public abstract class Item implements Cloneable {
         return discountType;
     }
 
-    // Override hashCode() to ensure consistency with equals()
     @Override
     public int hashCode() {
         return Objects.hash(this.name);

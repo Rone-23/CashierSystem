@@ -12,8 +12,7 @@ import java.util.List;
 
 public class ArticleSelectAction extends AbstractAction implements ContentObserver {
     private static final List<ContentObserver> observerList = new ArrayList<>();
-    private AbstractButton sourceButton;
-    public ArticleSelectAction(){
+        public ArticleSelectAction(){
         ContentController.addObserver(this);
     }
 

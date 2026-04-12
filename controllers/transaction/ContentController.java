@@ -13,8 +13,8 @@ public class ContentController implements OpenTransactionObserver, KeyboardListe
 
     public static String getContent(){
         if(content.toString().equals("default")){
-            return "1";
-        }else {
+            return "";
+        } else {
             return content.toString();
         }
     }

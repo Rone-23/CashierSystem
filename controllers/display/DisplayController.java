@@ -1,7 +1,6 @@
 package controllers.display;
 
 import assets.Constants;
-import controllers.transaction.ContentController;
 import controllers.transaction.OpenTransactionObserver;
 import controllers.transaction.ContentObserver;
 import services.Item;
@@ -13,7 +12,6 @@ public class DisplayController implements OpenTransactionObserver, ContentObserv
     protected OpenTransaction openTransaction;
 
     public DisplayController(Display display){
-        ContentController.addObserver(this);
         this.display = display;
     }
 

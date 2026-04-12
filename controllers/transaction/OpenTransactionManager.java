@@ -35,7 +35,6 @@ public class OpenTransactionManager implements OpenTransactionObserver, ContentO
     private OpenTransaction createOpenTransaction(){
         try {
             openTransaction = new OpenTransaction(cashierId);
-            ViewManager.getInstance().getStatusBar().setStatus("Nie");
         } catch (NumberFormatException ignored) {
         }
 
@@ -50,12 +49,14 @@ public class OpenTransactionManager implements OpenTransactionObserver, ContentO
     }
 
     public void addPayment(ActionEvent paymentType){
-        System.out.printf(ButtonSet.ButtonLabel.USE_VOUCHER.toString());
+        if(content.isEmpty()){
+            return;
+        }
         try {
             if (ButtonSet.ButtonLabel.USE_VOUCHER.toString().equals(paymentType.getActionCommand())) {
                 if (!VoucherService.getInstance().isVoucherStaged()) {
                     String msg = VoucherService.getInstance().stageVoucher(content);
-                    NotificationController.notifyObservers(msg, 5000);
+                    NotificationController.notifyObservers(msg, 5000, Colors.YELLOW.getColor());
                     ContentController.clearContent();
                     return;
                 } else {
@@ -63,16 +64,16 @@ public class OpenTransactionManager implements OpenTransactionObserver, ContentO
                     int remaining = VoucherService.getInstance().chargeVoucher(amountToPay);
                     NotificationController.notifyObservers("Zostatok na poukážke: " + String.format("%.2f", remaining / 100.0) + " EUR", 5000, Colors.YELLOW.getColor());
 
-                    openTransaction.pay(paymentType,content);
+                    openTransaction.pay(paymentType.getActionCommand(),content);
                     ContentController.clearContent();
                     return;
                 }
             }
 
-            openTransaction.pay(paymentType, content);
+            openTransaction.pay(paymentType.getActionCommand(), content);
             ContentController.clearContent();
 
-        } catch (NumberFormatException ex) {
+        } catch (NumberFormatException e) {
             NotificationController.notifyObservers("Neplatná hodnota!", 3000);
             ContentController.clearContent();
         } catch (Exception ex) {
@@ -82,12 +83,12 @@ public class OpenTransactionManager implements OpenTransactionObserver, ContentO
     }
 
     public void addItem(Item item){
-        getOpenTransaction().addItem(item, content);
+        getOpenTransaction().addItem(item, content.isEmpty() ? "1" : content);
         System.out.printf("Name %s Amount %d Price %d\n",item.getName(), item.getAmount(), item.getPrice());
     }
 
     public void removeItem(Item item){
-        getOpenTransaction().removeItem(item, content);
+        getOpenTransaction().removeItem(item, content.isEmpty() ? "1" : content);
     }
 
     public void loadHistoricalTransaction(int transactionID, String date, Item[] items){

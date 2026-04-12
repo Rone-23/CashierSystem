@@ -25,7 +25,9 @@ public class DuringRegister extends JPanel implements ButtonFoundable, ThemeObse
     private final ButtonCluster cashButtonCluster = new ButtonCluster(ButtonSet.CASH_NAMES.getLabels(), Constants.VERTICAL);
     private final ButtonCluster commonButtonCluster = new ButtonCluster(ButtonSet.COMMON_NAMES.getLabels(), Constants.VERTICAL);
     private final CardLayout cardLayout = new CardLayout();
-    final JPanel rightPanel = new JPanel();
+    private JPanel rightPanel = new JPanel();
+    private JPanel leftPanel = new JPanel();
+    private JPanel middlePanel = new JPanel();
     JPanel displayPanel = new JPanel();
     CardLayout cardLayoutDisplay = new CardLayout();
 
@@ -35,9 +37,9 @@ public class DuringRegister extends JPanel implements ButtonFoundable, ThemeObse
         JPanel mainContent = new JPanel(new GridBagLayout());
         mainContent.setOpaque(false);
 
-        JPanel leftPanel = createLeftPanel();
-        JPanel middlePanel = createMiddlePanel();
-        JPanel rightPanel = createRightPanel();
+        leftPanel = createLeftPanel();
+        middlePanel = createMiddlePanel();
+        rightPanel = createRightPanel();
 
         GridBagConstraints gbcMain = GridBagConstraintsBuilder.buildGridBagConstraints(1, 1);
         gbcMain.fill = GridBagConstraints.BOTH;
@@ -86,7 +88,6 @@ public class DuringRegister extends JPanel implements ButtonFoundable, ThemeObse
 
         leftPanel.setLayout(new GridBagLayout());
         leftPanel.setOpaque(false);
-//        leftPanel.setBackground(Colors.BACKGROUND_WHITE.getColor());
 
         leftPanel.add(displayItems, gbc);
 
@@ -218,8 +219,8 @@ public class DuringRegister extends JPanel implements ButtonFoundable, ThemeObse
         utilityButtonCluster.replaceButton(name, replaceName);
     }
 
-    public void switchState(ActionEvent actionEvent) {
-        switch (actionEvent.getActionCommand()) {
+    public void switchState(String command) {
+        switch (command) {
             case "Naspäť" -> {
                 cardLayout.show(rightPanel, "UTILITY_BUTTON_CLUSTER");
                 cardLayoutDisplay.show(displayPanel, "AMOUNT");
@@ -235,6 +236,10 @@ public class DuringRegister extends JPanel implements ButtonFoundable, ThemeObse
         }
     }
 
+    public void switchState(ActionEvent actionEvent) {
+        switchState(actionEvent.getActionCommand());
+    }
+
     public void returnToDefault(){
         cardLayout.show(rightPanel, "UTILITY_BUTTON_CLUSTER");
         cardLayoutDisplay.show(displayPanel, "AMOUNT");
@@ -244,6 +249,9 @@ public class DuringRegister extends JPanel implements ButtonFoundable, ThemeObse
     public Display getDisplayTotal() { return displayTotal; }
     public Display getDisplayTopAmount() { return displayTopAmount; }
     public Display getDisplayTopTotal() { return displayTopTotal; }
+    public JPanel getRightPanel(){return rightPanel;}
+    public JPanel getLeftPanel(){return leftPanel;}
+    public JPanel getMiddlePanel(){return middlePanel;}
 
     @Override
     public void onThemeChange() {

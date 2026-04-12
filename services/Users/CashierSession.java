@@ -21,7 +21,12 @@ public class CashierSession {
         for (CashierObserver obs : observers) {
             obs.onCashierLogin(cashierId);
         }
-
+    }
+    public static void logout() {
+        currentCashierId = -1;
+        for (CashierObserver obs : observers) {
+            obs.onCashierLogin(currentCashierId);
+        }
     }
 
     public static int getCurrentCashierId() {

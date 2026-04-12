@@ -604,6 +604,15 @@ public class SQL_Connect {
         }
     }
 
+    public void disconnectAllFavoriteArticles(int cashierID) throws SQLException{
+        try(PreparedStatement connectFavoriteArticle = conn.prepareStatement(
+                "DELETE FROM \"favorite_article\" WHERE cashier_id = ? ;"
+        )){
+            connectFavoriteArticle.setInt(1, cashierID);
+            connectFavoriteArticle.executeUpdate();
+        }
+    }
+
     /*
     CUSTOMER CARDS
      */
@@ -694,7 +703,7 @@ public class SQL_Connect {
                 if (rs.getInt("is_active") == 0) {
                     throw new SQLException("Poukážka je neaktívna alebo vyčerpaná!");
                 }
-                return rs.getInt("balance"); // Returns balance in cents
+                return rs.getInt("balance");
             }
             throw new SQLException("Poukážka " + voucherId + " neexistuje!");
         }

@@ -1,16 +1,19 @@
 package controllers.buttons;
 
 import assets.ButtonSet;
+import assets.Constants;
 import assets.ThemeManager;
 import controllers.notifications.CheckPauseAction;
+import controllers.notifications.NotificationController;
 import controllers.transaction.CashBackAction;
 import controllers.transaction.ContentController;
 import controllers.display.DisplayDispatcher;
 import controllers.panels.ViewManager;
 import controllers.transaction.OpenTransactionManager;
 import services.Customers.ValidateCustomerAction;
+import services.Users.CashierSession;
 import services.Users.LoginCashierAction;
-import utility.tutorial.TutorialStep;
+import utility.tutorial.Tutorial;
 import views.panels.*;
 
 import javax.swing.*;
@@ -19,12 +22,8 @@ import java.awt.event.ActionListener;
 
 
 public class UtilityController {
-    AddItemAction addItemAction = new AddItemAction();
-    RemoveItemAction removeItemAction = new RemoveItemAction();
-    CodeEnterAction codeEnterAction = new CodeEnterAction();
-    ValidateCustomerAction validateCustomerAction = new ValidateCustomerAction();
-    CheckPauseAction checkPauseAction;
-    LoginCashierAction loginCashierAction = new LoginCashierAction();
+    private CheckPauseAction checkPauseAction;
+
     public UtilityController() {
         /*
         #Controlling all the buttons that are on the right side in DuringIdle
@@ -73,6 +72,10 @@ public class UtilityController {
                 jButton.setText("Dark");
             }
         });
+        duringIdle.getButton(ButtonSet.ButtonLabel.PADAVAN.toString()).addActionListener(e -> {
+            Tutorial tutorial = new Tutorial();
+            utility.tutorial.TutorialManager.getInstance().startTutorial(tutorial.getTutorialSteps());
+        });
 
 
         /*
@@ -80,8 +83,11 @@ public class UtilityController {
          */
         DuringRegister duringRegister = ViewManager.getInstance().getDuringRegister();
         duringRegister.getButton(ButtonSet.ButtonLabel.ARTICLES.toString()).addActionListener(_ -> ViewManager.getInstance().showArticles());
+        AddItemAction addItemAction = new AddItemAction();
         duringRegister.getButton(ButtonSet.ButtonLabel.LAST_ARTICLE.toString()).addActionListener(addItemAction);
+        RemoveItemAction removeItemAction = new RemoveItemAction();
         duringRegister.getButton(ButtonSet.ButtonLabel.STORNO.toString()).addActionListener(removeItemAction);
+        ValidateCustomerAction validateCustomerAction = new ValidateCustomerAction();
         duringRegister.getButton(ButtonSet.ButtonLabel.VALIDATE_CARD.toString()).addActionListener(validateCustomerAction);
 
         /*
@@ -170,6 +176,7 @@ public class UtilityController {
             ContentController.clearContent();
             DisplayDispatcher.activeDisplayForAmount();
         });
+        CodeEnterAction codeEnterAction = new CodeEnterAction();
         duringCodeEnter.getButton(ButtonSet.ButtonLabel.CONFIRM.toString()).addActionListener(codeEnterAction);
 
 
@@ -177,6 +184,7 @@ public class UtilityController {
         #Controlling buttons on bottom side of DuringCodeEnter
          */
         DuringPause duringPause = ViewManager.getInstance().getDuringPause();
+        LoginCashierAction loginCashierAction = new LoginCashierAction();
         duringPause.getButton(ButtonSet.ButtonLabel.LOGIN.toString()).addActionListener(loginCashierAction);
 
         /*
@@ -195,8 +203,7 @@ public class UtilityController {
 
     private void applySecurityLock(java.awt.Container container) {
         for (Component c : container.getComponents()) {
-            if (c instanceof JButton) {
-                JButton button = (JButton) c;
+            if (c instanceof JButton button) {
                 String name = button.getName();
 
                 boolean isExempt = name != null && (
@@ -215,8 +222,8 @@ public class UtilityController {
                         button.removeActionListener(al);
 
                         button.addActionListener(e -> {
-                            if (services.Users.CashierSession.getCurrentCashierId() == -1) {
-                                controllers.notifications.NotificationController.notifyObservers("Prosím prihláste používateľa!", 5000);
+                            if (CashierSession.getCurrentCashierId() == -1) {
+                                NotificationController.notifyObservers("Prosím prihláste používateľa!", 5000);
                             } else {
                                 al.actionPerformed(e);
                             }

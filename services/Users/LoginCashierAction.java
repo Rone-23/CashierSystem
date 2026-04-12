@@ -21,7 +21,7 @@ public class LoginCashierAction implements ActionListener, ContentObserver {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (loginCredentials == null || loginCredentials.isEmpty()) {
+        if (loginCredentials == null || loginCredentials.isEmpty() || loginCredentials.equals(String.valueOf(0))) {
             NotificationController.notifyObservers("Zadajte ID používateľa.", 3000, Colors.YELLOW.getColor());
             return;
         }

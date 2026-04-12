@@ -17,6 +17,11 @@ public class DuringCodeEnter extends JPanel implements ButtonFoundable, ThemeObs
     private final Keypad keypad = new Keypad();
     private ButtonCluster actionButtons;
 
+    private final JPanel leftPanel;
+    private final JPanel middlePanel;
+    private final JPanel rightPanel;
+
+
     public DuringCodeEnter() {
         inputDisplay.setText("");
         setLayout(new BorderLayout());
@@ -24,9 +29,9 @@ public class DuringCodeEnter extends JPanel implements ButtonFoundable, ThemeObs
         JPanel centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setOpaque(false);
 
-        JPanel leftPanel = createLeftPanel();
-        JPanel middlePanel = createMiddlePanel();
-        JPanel rightPanel = createRightPanel();
+        leftPanel = createLeftPanel();
+        middlePanel = createMiddlePanel();
+        rightPanel = createRightPanel();
 
         GridBagConstraints gbcMain = GridBagConstraintsBuilder.buildGridBagConstraints(1, 1);
         gbcMain.fill = GridBagConstraints.BOTH;
@@ -147,6 +152,10 @@ public class DuringCodeEnter extends JPanel implements ButtonFoundable, ThemeObs
         inputDisplay.setSuggestionText(mode);
         inputDisplay.setText("");
     }
+
+    public JPanel getRightPanel(){return rightPanel;}
+    public JPanel getMiddlePanel(){return middlePanel;}
+    public JPanel getLeftPanel(){return leftPanel;}
 
     public Display getInputDisplay() {
         return inputDisplay;

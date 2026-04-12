@@ -24,7 +24,9 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable, 
     private final ButtonCluster utilityButtonCluster = new ButtonCluster(ButtonSet.RETURN_TRANSACTION_UTILITY_NAMES.getLabels(), Constants.VERTICAL);
     private final ButtonCluster commonButtonCluster = new ButtonCluster(ButtonSet.RETURN_TRANSACTION_RETURN_MONEY.getLabels(), Constants.VERTICAL);
     private final CardLayout cardLayout = new CardLayout();
-    private final JPanel rightPanel = new JPanel();
+    private final JPanel rightPanel;
+    private final JPanel leftPanel;
+    private final JPanel middlePanel;
     private final JPanel displayPanel = new JPanel();
     private final CardLayout cardLayoutDisplay = new CardLayout();
 
@@ -34,9 +36,9 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable, 
         JPanel mainContent = new JPanel(new GridBagLayout());
         mainContent.setOpaque(false);
 
-        JPanel leftPanel = createLeftPanel();
-        JPanel middlePanel = createMiddlePanel();
-        JPanel rightPanel = createRightPanel();
+        this.rightPanel = createRightPanel();
+        this.leftPanel = createLeftPanel();
+        this.middlePanel = createMiddlePanel();
 
         GridBagConstraints gbcMain = GridBagConstraintsBuilder.buildGridBagConstraints(1, 1);
         gbcMain.fill = GridBagConstraints.BOTH;
@@ -139,6 +141,7 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable, 
     }
 
     private JPanel createRightPanel() {
+        final JPanel rightPanel = new JPanel();
         rightPanel.setName("rightPanel");
         rightPanel.setLayout(cardLayout);
         rightPanel.setOpaque(false);
@@ -230,6 +233,9 @@ public class DuringReturnTransaction extends JPanel implements ButtonFoundable, 
     public Display getDisplayTotal() { return displayTotal; }
     public Display getDisplayTopAmount() { return displayTopAmount; }
     public Display getDisplayTopTotal() { return displayTopTotal; }
+    public JPanel getLeftPanel(){return leftPanel;}
+    public JPanel getMiddlePanel(){return this.middlePanel;}
+    public JPanel getRightPanel(){return this.rightPanel;}
 
     @Override
     public void onThemeChange() {

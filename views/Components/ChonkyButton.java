@@ -143,7 +143,7 @@ public class ChonkyButton extends JButton implements ThemeObserver{
     @Override
     public void onThemeChange() {
         this.colorActive = this.colorEnum.getColor();
-        this.colorDisabled = ColorManipulation.darken(this.colorActive, 0.9f);
+        this.colorDisabled = ColorManipulation.darken(this.colorActive, 0.7f);
         this.repaint();
     }
 }
