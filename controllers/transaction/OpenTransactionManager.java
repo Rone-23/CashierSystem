@@ -49,7 +49,7 @@ public class OpenTransactionManager implements OpenTransactionObserver, ContentO
     }
 
     public void addPayment(ActionEvent paymentType){
-        if(content.isEmpty()){
+        if(content.isEmpty() && !paymentType.getActionCommand().equalsIgnoreCase(ButtonSet.ButtonLabel.CASH_BACK.toString())){
             return;
         }
         try {

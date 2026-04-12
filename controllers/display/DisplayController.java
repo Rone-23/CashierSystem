@@ -56,17 +56,17 @@ public class DisplayController implements OpenTransactionObserver, ContentObserv
     public void notifyContentUpdate(String content) {
         if (display.getDisplayType() == Constants.SPLIT) {
             String currentTop = display.getTextArray()[0];
-            display.setText(new String[]{currentTop, content});
+            display.setText(new String[]{currentTop, content.isEmpty() ? "1" : content});
 
         } else if (display.getDisplayType() == Constants.TOTAL) {
             try {
-                display.setText(String.format("%.2f", Integer.parseInt(content) * 0.01));
+                display.setText(String.format("%.2f", Integer.parseInt(content.isEmpty() ? "0" : content) * 0.01));
             } catch (NumberFormatException e) {
-                display.setText(content);
+                display.setText(content.isEmpty() ? "0" : content);
             }
 
         } else {
-            display.setText(content);
+            display.setText(content.isEmpty() ? "1" : content);
         }
     }
 

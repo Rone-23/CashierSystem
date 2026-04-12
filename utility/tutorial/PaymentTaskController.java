@@ -11,10 +11,9 @@ public class PaymentTaskController implements OpenTransactionObserver {
     private boolean isReverting = false;
 
     public PaymentTaskController(String requiredPaymentType, Runnable onCompletionCallback) {
+        OpenTransaction.addObserver(this);
         this.requiredPaymentType = requiredPaymentType;
         this.onCompletionCallback = onCompletionCallback;
-
-        OpenTransaction.addObserver(this);
     }
 
     @Override

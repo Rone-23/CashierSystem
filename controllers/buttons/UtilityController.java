@@ -22,8 +22,12 @@ import java.awt.event.ActionListener;
 
 
 public class UtilityController {
-    private CheckPauseAction checkPauseAction;
-
+    AddItemAction addItemAction = new AddItemAction();
+    RemoveItemAction removeItemAction = new RemoveItemAction();
+    CodeEnterAction codeEnterAction = new CodeEnterAction();
+    ValidateCustomerAction validateCustomerAction = new ValidateCustomerAction();
+    CheckPauseAction checkPauseAction;
+    LoginCashierAction loginCashierAction = new LoginCashierAction();
     public UtilityController() {
         /*
         #Controlling all the buttons that are on the right side in DuringIdle
@@ -83,11 +87,8 @@ public class UtilityController {
          */
         DuringRegister duringRegister = ViewManager.getInstance().getDuringRegister();
         duringRegister.getButton(ButtonSet.ButtonLabel.ARTICLES.toString()).addActionListener(_ -> ViewManager.getInstance().showArticles());
-        AddItemAction addItemAction = new AddItemAction();
         duringRegister.getButton(ButtonSet.ButtonLabel.LAST_ARTICLE.toString()).addActionListener(addItemAction);
-        RemoveItemAction removeItemAction = new RemoveItemAction();
         duringRegister.getButton(ButtonSet.ButtonLabel.STORNO.toString()).addActionListener(removeItemAction);
-        ValidateCustomerAction validateCustomerAction = new ValidateCustomerAction();
         duringRegister.getButton(ButtonSet.ButtonLabel.VALIDATE_CARD.toString()).addActionListener(validateCustomerAction);
 
         /*
@@ -176,7 +177,6 @@ public class UtilityController {
             ContentController.clearContent();
             DisplayDispatcher.activeDisplayForAmount();
         });
-        CodeEnterAction codeEnterAction = new CodeEnterAction();
         duringCodeEnter.getButton(ButtonSet.ButtonLabel.CONFIRM.toString()).addActionListener(codeEnterAction);
 
 
@@ -184,7 +184,6 @@ public class UtilityController {
         #Controlling buttons on bottom side of DuringCodeEnter
          */
         DuringPause duringPause = ViewManager.getInstance().getDuringPause();
-        LoginCashierAction loginCashierAction = new LoginCashierAction();
         duringPause.getButton(ButtonSet.ButtonLabel.LOGIN.toString()).addActionListener(loginCashierAction);
 
         /*

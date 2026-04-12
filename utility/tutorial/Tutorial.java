@@ -359,11 +359,11 @@ public class Tutorial {
                 TutorialStep.DialogPosition.TOP_LEFT
         ));
         tutorial.add(new TutorialStep((nextStepCallback) -> {
+            vm.getMainFrame().getGlassPane().setVisible(false);
             vm.getDuringReturn().getButton(ButtonSet.ButtonLabel.ADD.toString()).setEnabled(false);
             vm.getDuringReturn().getButton(ButtonSet.ButtonLabel.REMOVE.toString()).setEnabled(false);
-            vm.getMainFrame().getGlassPane().setVisible(false);
 
-            new PaymentTaskController("CASH", () -> {
+            new PaymentTaskController("Hotovosť", () -> {
                 vm.getDuringReturn().getButton(ButtonSet.ButtonLabel.ADD.toString()).setEnabled(true);
                 vm.getDuringReturn().getButton(ButtonSet.ButtonLabel.REMOVE.toString()).setEnabled(true);
                 vm.getMainFrame().getGlassPane().setVisible(true);

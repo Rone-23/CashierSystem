@@ -1,5 +1,6 @@
 package services;
 
+import assets.ButtonSet;
 import assets.Colors;
 import assets.Constants;
 import controllers.notifications.NotificationController;
@@ -199,6 +200,10 @@ public class OpenTransaction implements CustomerCardObserver {
     }
 
     public void pay(String actionEvent, String content){
+        if(actionEvent.equalsIgnoreCase(ButtonSet.ButtonLabel.CASH_BACK.toString())){
+            checkSum(actionEvent,0);
+            return;
+        }
         int moneyAmount = Integer.parseInt(content);
 
         try {
