@@ -33,8 +33,12 @@ public class DisplayController implements OpenTransactionObserver, ContentObserv
 
     @Override
     public void onDestroy() {
-        if (display.getDisplayType() == Constants.TOTAL || display.getDisplayType() == Constants.SPLIT) {
+        if (display.getDisplayType() == Constants.TOTAL) {
+            display.setText("0.00");
+        } else if (display.getDisplayType() == Constants.SPLIT) {
             display.setText(new String[]{"0.00", "1"});
+        } else if (display.getDisplayType() == Constants.CODE || display.getDisplayType() == Constants.CUSTOMER) {
+            display.setText("");
         } else {
             display.setText("0");
         }
