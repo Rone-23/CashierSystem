@@ -1,9 +1,6 @@
 package views.Components;
 
-import assets.Colors;
-import assets.Constants;
-import assets.ThemeManager;
-import assets.ThemeObserver;
+import assets.*;
 import services.Item;
 import utility.ColorManipulation;
 
@@ -39,9 +36,8 @@ public class ArticleButton extends JToggleButton implements ContainsItem, ThemeO
         setOpaque(false);
         setFocusPainted(false);
         setBorderPainted(false);
-        setFont(new Font("Roboto", Font.BOLD, 12));
+        setFont(Scaler.getFont(0.011, Font.BOLD));
         setForeground(Colors.BLACK_TEXT.getColor());
-        setMargin(new Insets(75, 50, 75, 50));
     }
 
     public void addStarActionListener(ActionListener l) {
@@ -220,13 +216,6 @@ public class ArticleButton extends JToggleButton implements ContainsItem, ThemeO
     @Override public int getItemPrice() { return item.getPrice(); }
     @Override public int getItemAmount() { return item.getAmount(); }
     public void setItemAmount(int amount) { item.setAmount(amount); }
-
-//    @Override
-//    public void setEnabled(boolean b) {
-//        super.setEnabled(b);
-//        color = b ? colorActive : colorDisabled;
-//        repaint();
-//    }
 
     @Override
     public void onThemeChange() {

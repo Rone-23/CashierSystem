@@ -1,14 +1,9 @@
 package views.Components;
 
-import assets.Colors;
-import assets.Constants;
-import assets.ThemeManager;
-import assets.ThemeObserver;
+import assets.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.geom.RoundRectangle2D;
 
 public class Display extends JPanel implements ThemeObserver{
@@ -39,68 +34,41 @@ public class Display extends JPanel implements ThemeObserver{
     private void initUI() {
         setOpaque(false);
         setLayout(new GridLayout(displayType == Constants.SPLIT ? 2 : 1, 1));
-        setPreferredSize(new Dimension(400, 100));
 
-        setBorder(BorderFactory.createEmptyBorder(10, 35, 10, 35));
+        int vPad = displayType == Constants.SPLIT ? Scaler.getPadding(0.015) : Scaler.getPadding(0.03);
+        int hPad = displayType == Constants.SPLIT ? Scaler.getPadding(0.055) : Scaler.getPadding(0.045);
+        setBorder(BorderFactory.createEmptyBorder(vPad, hPad, vPad, hPad));
 
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setOpaque(false);
-
-        topTitleLabel = new JLabel("", SwingConstants.LEFT);
-        topTitleLabel.setForeground(Colors.BLACK_TEXT.getColor());
-
-        topValueLabel = new JLabel(formatValue(text[0], true), SwingConstants.RIGHT);
-        topValueLabel.setForeground(Colors.BLACK_TEXT.getColor());
-
-        topPanel.add(topTitleLabel, BorderLayout.WEST);
-        topPanel.add(topValueLabel, BorderLayout.EAST);
-        add(topPanel);
+        double titleFontScale = displayType == Constants.SPLIT ? 0.03 : 0.05;
+        double valueFontScale = displayType == Constants.SPLIT ? 0.03 : 0.05;
 
         if (displayType == Constants.SPLIT) {
+            bottomTitleLabel = new JLabel();
+            bottomValueLabel = new JLabel("", SwingConstants.RIGHT);
+
+            bottomTitleLabel.setFont(Scaler.getFont(titleFontScale, Font.BOLD));
+            bottomValueLabel.setFont(Scaler.getFont(valueFontScale, Font.BOLD));
+
             JPanel bottomPanel = new JPanel(new BorderLayout());
             bottomPanel.setOpaque(false);
-
-            bottomTitleLabel = new JLabel("", SwingConstants.LEFT);
-            bottomTitleLabel.setForeground(Colors.BLACK_TEXT.getColor());
-
-            bottomValueLabel = new JLabel(formatValue(text[1], false), SwingConstants.RIGHT);
-            bottomValueLabel.setForeground(Colors.BLACK_TEXT.getColor());
-
             bottomPanel.add(bottomTitleLabel, BorderLayout.WEST);
             bottomPanel.add(bottomValueLabel, BorderLayout.EAST);
             add(bottomPanel);
         }
 
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                updateFonts();
-            }
-        });
+        topTitleLabel = new JLabel();
+        topValueLabel = new JLabel("", SwingConstants.RIGHT);
+
+        topTitleLabel.setFont(Scaler.getFont(titleFontScale, Font.BOLD));
+        topValueLabel.setFont(Scaler.getFont(valueFontScale, Font.BOLD));
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setOpaque(false);
+        topPanel.add(topTitleLabel, BorderLayout.WEST);
+        topPanel.add(topValueLabel, BorderLayout.EAST);
+        add(topPanel, 0);
     }
 
-    private void updateFonts() {
-        int h = getHeight();
-        int panelCount = displayType == Constants.SPLIT ? 2 : 1;
-        int sectionHeight = h / panelCount;
-
-        Font titleFont = getResponsiveFont(sectionHeight * 0.40f, 12, 50);
-        Font valueFont = getResponsiveFont(sectionHeight * 0.60f, 30, 60);
-
-        topTitleLabel.setFont(titleFont);
-        topValueLabel.setFont(valueFont);
-
-        if (displayType == Constants.SPLIT) {
-            bottomTitleLabel.setFont(titleFont);
-            bottomValueLabel.setFont(valueFont);
-        }
-    }
-
-    private Font getResponsiveFont(float targetSize, int minSize, int maxSize) {
-        int size = (int) targetSize;
-        size = Math.max(minSize, Math.min(maxSize, size));
-        return new Font("Roboto", Font.BOLD, size);
-    }
 
     private String formatValue(String rawValue, boolean isTopRow) {
         if (displayType == Constants.TOTAL) return rawValue + " €";
@@ -156,7 +124,7 @@ public class Display extends JPanel implements ThemeObserver{
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         int arc = getHeight();
-        int inset = 5;
+        int inset = Math.max(1, (int)(getHeight() * 0.05));
         Shape pill = new RoundRectangle2D.Double(
                 inset, inset, getWidth() - 2 * inset, getHeight() - 2 * inset, arc, arc
         );
@@ -166,15 +134,17 @@ public class Display extends JPanel implements ThemeObserver{
         if (displayType == Constants.SPLIT) {
             g2.setColor(Colors.BLACK_TEXT.getColor());
 
+            float strokeThickness = Math.max(1.0f, getHeight() * 0.02f);
             float[] dottedPattern = {15.0f, 15.0f};
             Stroke dottedStroke = new BasicStroke(
-                    2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,
+                    strokeThickness, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,
                     10.0f, dottedPattern, 8.0f
             );
 
             g2.setStroke(dottedStroke);
             int y = getHeight() / 2;
-            g2.drawLine(35, y, getWidth() - 35, y);
+            int lineOffset = (int)(getWidth() * 0.06);
+            g2.drawLine(lineOffset, y, getWidth() - lineOffset, y);
         }
 
         g2.dispose();

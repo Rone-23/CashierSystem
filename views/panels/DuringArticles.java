@@ -18,7 +18,7 @@ public class DuringArticles extends JPanel implements ButtonFoundable, ThemeObse
     private final Keypad keypad = new Keypad();
     private final DisplayArticles displayArticles = new DisplayArticles();
     private final ArticleFilterButtonCluster articleFilterButtonCluster = new ArticleFilterButtonCluster();
-
+    int dividerThickness = Math.max(1, assets.Scaler.getPadding(0.004));
     private final JButton plusButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.ADD.toString(), ButtonSet.ButtonLabel.ADD.getColor());
     private final JButton minusButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.REMOVE.toString(), ButtonSet.ButtonLabel.REMOVE.getColor());
     private final JButton searchButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.SEARCH.toString(), ButtonSet.ButtonLabel.SEARCH.getColor());
@@ -56,20 +56,21 @@ public class DuringArticles extends JPanel implements ButtonFoundable, ThemeObse
         JPanel main = new JPanel();
         main.setLayout(new GridBagLayout());
         main.setOpaque(false);
-        GridBagConstraints gbcLeftPanel = GridBagConstraintsBuilder.buildGridBagConstraints(1, 1);
-
+        GridBagConstraints gbcLeftPanel = GridBagConstraintsBuilder.buildGridBagConstraints(0, 0);
+        gbcLeftPanel.weighty = 1.0;
         main.add(displayItems, gbcLeftPanel);
 
-        gbcLeftPanel.weighty = 0;
-        gbcLeftPanel.weightx = 0;
 
+        gbcLeftPanel.weightx = 0;
+        gbcLeftPanel.weighty = 0.0;
         gbcLeftPanel.gridy++;
         main.add(display, gbcLeftPanel);
 
+        gbcLeftPanel.weighty = 0.0;
         gbcLeftPanel.gridy++;
         main.add(keypad, gbcLeftPanel);
 
-        Border rightBorder = new ThemeMatteBorder(0, 0, 0, 3, Colors.BUTTON_LIGHT_BLUE);
+        Border rightBorder = new ThemeMatteBorder(0, 0, 0, dividerThickness, Colors.BUTTON_LIGHT_BLUE);
         main.setBorder(rightBorder);
 
         return main;
@@ -79,10 +80,10 @@ public class DuringArticles extends JPanel implements ButtonFoundable, ThemeObse
         JPanel main = new JPanel();
         main.setLayout(new GridBagLayout());
         main.setOpaque(false);
-        GridBagConstraints gbcRightPanel = GridBagConstraintsBuilder.buildGridBagConstraints(1, 1);
+        GridBagConstraints gbcRightPanel = GridBagConstraintsBuilder.buildGridBagConstraints(0, 0);
 
         gbcRightPanel.weighty = 0;
-        Border bottomBorder = new ThemeMatteBorder(0, 0, 3, 0, Colors.BUTTON_LIGHT_BLUE);
+        Border bottomBorder = new ThemeMatteBorder(0, 0, dividerThickness, 0, Colors.BUTTON_LIGHT_BLUE);
         articleFilterButtonCluster.setBorder(bottomBorder);
         main.add(articleFilterButtonCluster, gbcRightPanel);
 
@@ -107,20 +108,15 @@ public class DuringArticles extends JPanel implements ButtonFoundable, ThemeObse
         subsection.setBorder(new EmptyBorder(5, 5, 5, 5));
         subsection.setOpaque(false);
 
-        Border topBorder = new ThemeMatteBorder(3, 0, 0, 0, Colors.BUTTON_LIGHT_BLUE);
+        Border topBorder = new ThemeMatteBorder(dividerThickness, 0, 0, 0, Colors.BUTTON_LIGHT_BLUE);
         main.setBorder(topBorder);
         final Dimension buttonDimensions = new Dimension(183, 136);
-        GridBagConstraints gbcBottomCluster = GridBagConstraintsBuilder.buildGridBagConstraints(1, 1);
-        GridBagConstraints gbcSubsection = GridBagConstraintsBuilder.buildGridBagConstraints(1, 1);
-
-        plusButton.setPreferredSize(buttonDimensions);
-        minusButton.setPreferredSize(buttonDimensions);
-        searchButton.setPreferredSize(buttonDimensions);
-        cancelButton.setPreferredSize(buttonDimensions);
+        GridBagConstraints gbcBottomCluster = GridBagConstraintsBuilder.buildGridBagConstraints(0, 0);
+        GridBagConstraints gbcSubsection = GridBagConstraintsBuilder.buildGridBagConstraints(0, 0);
 
         subsectionLabel.setText("Množstvo tovaru");
         subsectionLabel.setForeground(Colors.BLACK_TEXT.getColor());
-        subsectionLabel.setFont(new Font("Roboto", Font.BOLD, 21));
+        subsectionLabel.setFont(assets.Scaler.getFont(0.025, Font.BOLD));
 
         gbcSubsection.gridwidth = 2;
         subsection.add(subsectionLabel, gbcSubsection);

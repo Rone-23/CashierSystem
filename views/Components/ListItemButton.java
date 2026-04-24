@@ -1,6 +1,7 @@
 package views.Components;
 
 import assets.Colors;
+import assets.Scaler;
 import services.Item;
 import utility.ColorManipulation;
 
@@ -17,10 +18,8 @@ public class ListItemButton extends JToggleButton implements ContainsItem {
     private final Color TEXT_COLOR = Colors.BLACK_TEXT.getColor();
     private final Color BORDER_COLOR = Colors.GRAY.getColor();
 
-    private final Font MAIN_FONT = new Font("Roboto", Font.BOLD, 18);
-    private final Font SMALL_FONT = new Font("Roboto", Font.BOLD, 12);
-    private final int BUTTON_HEIGHT = 65;
-    private final int HORIZONTAL_MARGIN = 25;
+    private final Font MAIN_FONT;
+    private final Font SMALL_FONT;
 
     private int returningAmount = 0;
     private boolean isReturnMode = false;
@@ -28,12 +27,15 @@ public class ListItemButton extends JToggleButton implements ContainsItem {
     public ListItemButton(Color color, Item item) {
         this.item = item;
         this.BACKGROUND_COLOR = color;
+        this.MAIN_FONT = Scaler.getFont(0.018, Font.BOLD);
+        this.SMALL_FONT = Scaler.getFont(0.012, Font.BOLD);
         setContentAreaFilled(false);
         setFocusPainted(false);
         setBorderPainted(false);
         setCursor(new Cursor(Cursor.HAND_CURSOR));
-        setPreferredSize(new Dimension(500, BUTTON_HEIGHT));
-        setMaximumSize(new Dimension(Integer.MAX_VALUE, BUTTON_HEIGHT));
+        int dynamicHeight = Scaler.getPadding(0.06);
+        setPreferredSize(new Dimension(0, dynamicHeight));
+        setMaximumSize(new Dimension(Integer.MAX_VALUE, dynamicHeight));
         setName(item.getName());
     }
 
@@ -50,6 +52,8 @@ public class ListItemButton extends JToggleButton implements ContainsItem {
 
         int w = getWidth();
         int h = getHeight();
+
+        int HORIZONTAL_MARGIN = Math.max(10, (int)(w * 0.04));
 
         if (isReturnMode) {
             Color lightRed = new Color(255, 230, 230);
@@ -97,21 +101,23 @@ public class ListItemButton extends JToggleButton implements ContainsItem {
 
         String amountStr = item.getAmount() + " ks";
         int amountWidth = fm.stringWidth(amountStr);
-        int amountX = w - maxRightWidth - amountWidth - 70;
+        int dynamicGap = (int)(w * 0.15);
+        int amountX = w - maxRightWidth - amountWidth - dynamicGap;
         g2.drawString(amountStr, amountX, textY);
 
+        int textDrop = (int)(h * 0.25);
         if (isReturnMode && returningAmount > 0) {
             g2.setFont(SMALL_FONT);
             g2.setColor(Colors.DANGER_RED.getColor());
             String subStr = "-" + returningAmount +" ks";
             int subX = amountX + (amountWidth / 2) - (sfm.stringWidth(subStr) / 2);
-            g2.drawString(subStr, subX, textY + 15);
+            g2.drawString(subStr, subX, textY + textDrop);
         }
 
         if (hasDiscount) {
             g2.setFont(SMALL_FONT);
             g2.setColor(Colors.CUSTOMER_ORANGE.getColor());
-            g2.drawString(savedStr, w - savedWidth - HORIZONTAL_MARGIN, textY + 16);
+            g2.drawString(savedStr, w - savedWidth - HORIZONTAL_MARGIN, textY + textDrop);
         }
 
         g2.dispose();

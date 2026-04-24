@@ -1,11 +1,13 @@
 package views.Components;
 
 import assets.Colors;
+import assets.Scaler;
 import assets.ThemeManager;
 import assets.ThemeObserver;
 import utility.GridBagConstraintsBuilder;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
@@ -35,7 +37,8 @@ public class DisplayArticles extends JScrollPane implements ThemeObserver {
 
         JScrollBar verticalScrollBar = getVerticalScrollBar();
         verticalScrollBar.setUI(new CustomScrollBar());
-        verticalScrollBar.setPreferredSize(new Dimension(20, 0));
+        int scrollBarWidth = Scaler.getPadding(0.015);
+        verticalScrollBar.setPreferredSize(new Dimension(scrollBarWidth, 0));
         verticalScrollBar.setOpaque(false);
         verticalScrollBar.setUnitIncrement(20);
 
@@ -47,23 +50,28 @@ public class DisplayArticles extends JScrollPane implements ThemeObserver {
 
         mainArticlePanel.setOpaque(false);
         container.setBackground(Colors.BACKGROUND_GRAY.getColor());
+        int hPad = Scaler.getPadding(0.001);
+        int vPad = Scaler.getPadding(0.002);
+        container.setBorder(new EmptyBorder(0, hPad, vPad, hPad));
 
-        onThemeChange();
 //        touchControls();
         recalculate();
 
         gbc.weighty=0;
         gbc.weightx=0;
-        gbcSpacer.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(2, 2, 2, 2);
+        gbcSpacer.fill = GridBagConstraints.NONE;
+
+        gbcSpacer.anchor = GridBagConstraints.NORTHWEST;
 
         gbcSpacer.weighty=0;
-        container.add(mainArticlePanel,gbcSpacer);
-        gbcSpacer.fill = GridBagConstraints.HORIZONTAL;
-        gbcSpacer.weighty=1;
-        gbcSpacer.gridy++;
-        container.add(spacerVertical,gbcSpacer);
+        gbcSpacer.weightx=1.0;
+        container.add(mainArticlePanel, gbcSpacer);
 
+        gbcSpacer.fill = GridBagConstraints.BOTH;
+        gbcSpacer.weighty=1.0;
+        gbcSpacer.gridy++;
+        container.add(spacerVertical, gbcSpacer);
+        onThemeChange();
     }
 
     public void addArticle(ArticleButton articleButton){
@@ -78,7 +86,6 @@ public class DisplayArticles extends JScrollPane implements ThemeObserver {
         mainArticlePanel.add(articleButton,gbc);
         componentCount++;
 
-        moveSpacer(gbc.gridx, gbc.gridy);
     }
 
     public void clear() {

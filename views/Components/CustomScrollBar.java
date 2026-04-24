@@ -81,13 +81,14 @@ public class CustomScrollBar extends BasicScrollBarUI implements ThemeObserver {
             g2.setColor(restingColor);
         }
 
-        int padding = 3;
+        int padding = Math.max(1, (int)(thumbBounds.width * 0.15));
         int x = thumbBounds.x + padding;
         int y = thumbBounds.y + padding;
         int width = thumbBounds.width - 2 * padding;
         int height = thumbBounds.height - 2 * padding;
+        int arc = Math.min(width, height);
 
-        g2.fillRoundRect(x, y, width, height, 10, 10);
+        g2.fillRoundRect(x, y, width, height, arc, arc);
         g2.dispose();
     }
 }

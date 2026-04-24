@@ -9,66 +9,48 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Keypad extends JPanel{
+public class Keypad extends JPanel {
     final String[] buttonNames = {"7", "8", "9", "4", "5", "6", "1", "2", "3", "0", "00", ","};
     private final JPanel topPanel = new JPanel();
     private final JPanel bottomPanel = new JPanel();
-    private final Dimension numberButtonDimensions = new Dimension(183,136);
-    private final Dimension utilityButtonDimensions = new Dimension(280,136);
     private final JButton deleteButton;
     private final JButton backspaceButton;
 
-    public Keypad(){
-        topPanel.setLayout( new GridBagLayout());
-        bottomPanel.setLayout( new GridBagLayout());
+    public Keypad() {
+        topPanel.setLayout(new GridLayout(1, 2));
+        bottomPanel.setLayout(new GridLayout(4, 3));
 
         topPanel.setOpaque(false);
         bottomPanel.setOpaque(false);
-
         setOpaque(false);
-        GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints(0,0);
 
-        //Adding delete button
         deleteButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.DELETE.toString(), ButtonSet.ButtonLabel.DELETE.getColor());
-        deleteButton.setPreferredSize(utilityButtonDimensions);
-        topPanel.add(deleteButton,gbc);
+        topPanel.add(deleteButton);
 
-        //Adding delete button
-        gbc.gridx = 1;
         backspaceButton = ButtonBuilder.buildChonkyButton(ButtonSet.ButtonLabel.BACKSPACE.toString(), ButtonSet.ButtonLabel.BACKSPACE.getColor());
-        backspaceButton.setPreferredSize(utilityButtonDimensions);
-        topPanel.add(backspaceButton,gbc);
+        topPanel.add(backspaceButton);
 
-        //Making and Adding buttons
-        gbc.gridy = 1;
-        gbc.gridx = 0;
         for (int numberIndex = 0; numberIndex < 12; numberIndex++) {
-            JButton[] keypadButtons = new JButton[12];
-            keypadButtons[numberIndex] = ButtonBuilder.buildChonkyButton(buttonNames[numberIndex], ButtonSet.ButtonLabel.NUMBERS.getColor());
-            keypadButtons[numberIndex].setPreferredSize(numberButtonDimensions);
-            bottomPanel.add(keypadButtons[numberIndex],gbc);
-
-            gbc.gridx++;
-            if ((numberIndex + 1) % 3 == 0) {
-                gbc.gridx=0;
-                gbc.gridy++;
-            }
+            JButton btn = ButtonBuilder.buildChonkyButton(buttonNames[numberIndex], ButtonSet.ButtonLabel.NUMBERS.getColor());
+            bottomPanel.add(btn);
         }
 
         this.setLayout(new GridBagLayout());
-        gbc.gridwidth = 1;
-        gbc.gridy = 1;
-        gbc.gridx = 0;
-        this.add(topPanel,gbc);
-        gbc.gridy = 2;
-        gbc.gridx = 0;
-        this.add(bottomPanel,gbc);
+
+        GridBagConstraints gbcMain = GridBagConstraintsBuilder.buildGridBagConstraints(0, 0);
+
+        gbcMain.weighty = 0.2;
+        this.add(topPanel, gbcMain);
+
+        gbcMain.gridy = 1;
+        gbcMain.weighty = 0.8;
+        this.add(bottomPanel, gbcMain);
     }
 
     public Component[] getComponentsInside() {
         ArrayList<Component> components = new ArrayList<>();
-        components.addAll(Arrays.asList(bottomPanel.getComponents()));
         components.addAll(Arrays.asList(topPanel.getComponents()));
+        components.addAll(Arrays.asList(bottomPanel.getComponents()));
         return components.toArray(new Component[0]);
     }
 }

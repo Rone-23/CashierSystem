@@ -1,6 +1,7 @@
 package views.Components;
 
 import assets.Colors;
+import assets.Scaler;
 import services.Item;
 import utility.GridBagConstraintsBuilder;
 
@@ -16,7 +17,7 @@ public class DisplayItems extends JScrollPane {
     JPanel spacer = new JPanel();
     GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints();
     GridBagConstraints gbcSpacer = GridBagConstraintsBuilder.buildGridBagConstraints();
-    private final Font font = new Font("Roboto",Font.BOLD,21);
+private final Font font = Scaler.getFont(0.02, Font.BOLD);
 
     public DisplayItems(){
         spacer.setOpaque(false);
@@ -37,8 +38,8 @@ public class DisplayItems extends JScrollPane {
         getViewport().setOpaque(false);
         setBorder(null);
         setOpaque(false);
-        touchControls();
-        setPreferredSize(new Dimension(0,0));
+//        touchControls();
+        setPreferredSize(new Dimension(10,10));
         setAlignmentY(JScrollPane.TOP_ALIGNMENT);
         getVerticalScrollBar().setUnitIncrement(20);
     }
@@ -147,7 +148,6 @@ public class DisplayItems extends JScrollPane {
     }
 
     private void setBackgroundVariation() {
-        //Swapping of background colors
         int i = 0;
 
         for(Component component : mainItemPanel.getComponents()){
@@ -172,10 +172,8 @@ public class DisplayItems extends JScrollPane {
     }
 
     private int compoundItems(Item item) {
-        //Checking for existing item listings and adding them together
         for(Component itemContainer : mainItemPanel.getComponents()){
             if(itemContainer instanceof ListItemButton listItemButton){
-                //Selecting out the spacer which contents are 0
                 if(listItemButton.getItemName().equals(item.getName())){
                     return 1;
                 }
@@ -197,7 +195,6 @@ public class DisplayItems extends JScrollPane {
     }
 
     private void touchControls(){
-        // add "touch scroll" behavior
         JViewport view = this.getViewport();
         final Point lastDrag = new Point();
         this.getViewport().addMouseMotionListener(new MouseMotionAdapter() {

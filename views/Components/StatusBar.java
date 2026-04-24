@@ -19,8 +19,7 @@ import java.time.format.DateTimeFormatter;
 public class StatusBar extends JPanel implements NotificationObserver, ThemeObserver, OpenTransactionObserver, CashierObserver {
     private final JLabel dateTimeLabel = new JLabel();
     private final JLabel notificationLabel = new JLabel("", SwingConstants.CENTER);
-    private final JLabel infoLabel = new JLabel("", SwingConstants.RIGHT); // New label for the right side
-
+    private final JLabel infoLabel = new JLabel("", SwingConstants.RIGHT);
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy  |  HH:mm:ss");
     private Timer notificationTimer;
 
@@ -36,15 +35,10 @@ public class StatusBar extends JPanel implements NotificationObserver, ThemeObse
         NotificationController.addObserver(this);
         setLayout(new BorderLayout());
         setBackground(Colors.BUTTON_BACKGROUND_WHITE_ELEVATED.getColor());
-
-        setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(2, 0, 0, 0, Colors.BUTTON_LIGHT_BLUE.getColor()),
-                new EmptyBorder(10, 20, 10, 20)
-        ));
-
-        dateTimeLabel.setFont(new Font("Roboto", Font.BOLD, 16));
-        notificationLabel.setFont(new Font("Roboto", Font.BOLD, 14));
-        infoLabel.setFont(new Font("Roboto", Font.BOLD, 16));
+        Font statusFont = assets.Scaler.getFont(0.015, Font.BOLD);
+        dateTimeLabel.setFont(statusFont);
+        notificationLabel.setFont(statusFont);
+        infoLabel.setFont(statusFont);
 
         updateTime();
         updateInfoLabel();
@@ -135,9 +129,12 @@ public class StatusBar extends JPanel implements NotificationObserver, ThemeObse
     public void onThemeChange() {
         setBackground(Colors.BUTTON_BACKGROUND_WHITE_ELEVATED.getColor());
 
+        int borderThickness = Math.max(1, assets.Scaler.getPadding(0.002));
+        int vPad = assets.Scaler.getPadding(0.01);
+        int hPad = assets.Scaler.getPadding(0.02);
         setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(2, 0, 0, 0, Colors.BUTTON_LIGHT_BLUE.getColor()),
-                new EmptyBorder(10, 20, 10, 20)
+                BorderFactory.createMatteBorder(borderThickness, 0, 0, 0, Colors.BUTTON_LIGHT_BLUE.getColor()),
+                new EmptyBorder(vPad, hPad, vPad, hPad)
         ));
 
         Color standardText = Colors.BLACK_TEXT.getColor();

@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS "subtype" (
 CREATE TABLE IF NOT EXISTS "article" (
     "article_id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "name" VARCHAR(255) NOT NULL,
-    "price" INTEGER NOT NULL, -- Stored in cents/smallest unit to avoid float issues
+    "price" INTEGER NOT NULL,
     "stock" INTEGER DEFAULT 0,
     "subtype_id" INTEGER NOT NULL, path_to_image varchar,
     FOREIGN KEY ("subtype_id") REFERENCES "subtype"("subtype_id")
@@ -68,10 +68,112 @@ CREATE TABLE IF NOT EXISTS "discount" (
     "valid_from" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "valid_to" TIMESTAMP, -- NULL = active indefinitely
     FOREIGN KEY ("article_id") REFERENCES "article"("article_id")
-);
+);\
 CREATE TABLE IF NOT EXISTS "voucher" (
     "voucher_id" INTEGER PRIMARY KEY,
     "balance" INTEGER NOT NULL DEFAULT 0,
     "is_active" INTEGER NOT NULL DEFAULT 1,
     "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+
+
+
+///FOR DB DIAGRAM
+// Database Schema for POS System
+
+Table type {
+  type_id integer [primary key, increment]
+  type_name varchar(100) [not null]
+}
+
+Table subtype {
+  subtype_id integer [primary key, increment]
+  parent_type_id integer [not null]
+  subtype_name varchar(100) [not null]
+}
+
+Table article {
+  article_id integer [primary key, increment]
+  name varchar(255) [not null]
+  price integer [not null, note: 'Stored in cents']
+  stock integer [default: 0]
+  subtype_id integer [not null]
+  path_to_image varchar
+}
+
+Table cashier {
+  cashier_id integer [primary key, increment]
+  name varchar(255) [not null]
+}
+
+Table customer {
+  customer_id integer [primary key, increment]
+  name varchar(255) [not null]
+}
+
+Table transaction {
+  transaction_id integer [primary key, increment]
+  created_at timestamp [default: `now()`]
+  cashier_id integer [not null]
+  customer_id integer
+  card integer [default: 0]
+  cash integer [default: 0]
+  voucher integer [default: 0]
+  food_ticket integer [default: 0]
+}
+
+Table in_transaction {
+  transaction_id integer [not null]
+  article_id integer [not null]
+  amount integer [not null, note: 'CHECK amount > 0']
+  price_at_sale integer [not null]
+  
+  indexes {
+    (transaction_id, article_id) [pk]
+  }
+}
+
+Table returned_items {
+  transaction_id integer [not null]
+  article_id integer [not null]
+  amount integer [not null]
+  
+  indexes {
+    (transaction_id, article_id) [pk]
+  }
+}
+
+Table favorite_article {
+  cashier_id integer [not null]
+  article_id integer [not null]
+}
+
+Table discount {
+  discount_id integer [primary key, increment]
+  article_id integer [not null]
+  requires_customer_card integer [not null, default: 0]
+  discount_percent integer [not null, note: 'BETWEEN 1 AND 100']
+  valid_from timestamp [default: `now()`]
+  valid_to timestamp
+}
+
+Table voucher {
+  voucher_id integer [primary key]
+  balance integer [not null, default: 0]
+  is_active integer [not null, default: 1]
+  created_at timestamp [default: `now()`]
+}
+
+// Relationships
+Ref: subtype.parent_type_id > type.type_id
+Ref: article.subtype_id > subtype.subtype_id
+Ref: transaction.cashier_id > cashier.cashier_id
+Ref: transaction.customer_id > customer.customer_id
+Ref: in_transaction.transaction_id > transaction.transaction_id
+Ref: in_transaction.article_id > article.article_id
+Ref: favorite_article.cashier_id > cashier.cashier_id
+Ref: favorite_article.article_id > article.article_id
+Ref: returned_items.transaction_id > transaction.transaction_id
+Ref: returned_items.article_id > article.article_id
+Ref: discount.article_id > article.article_id

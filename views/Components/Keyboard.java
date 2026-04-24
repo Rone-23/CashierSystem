@@ -1,9 +1,9 @@
 package views.Components;
 
 import assets.Colors;
+import assets.Scaler;
 import services.SQL_Connect;
 import utility.ButtonBuilder;
-import utility.ColorManipulation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,16 +19,18 @@ public class Keyboard extends JDialog {
 
     public Keyboard(JFrame parent) {
         super(parent, "Kde nájdem položku?", true);
-        setSize(800, 600);
+        setSize(Scaler.getDimension(0.6, 0.7));
         setLocationRelativeTo(parent);
-        setLayout(new BorderLayout(10, 10));
+        int gap = Scaler.getPadding(0.01);
+        setLayout(new BorderLayout(gap, gap));
         getContentPane().setBackground(Colors.BACKGROUND_GRAY.getColor());
         setUndecorated(true);
 
         inputDisplay = new JLabel("Začnite písať...", SwingConstants.CENTER);
-        inputDisplay.setFont(new Font("Roboto", Font.BOLD, 32));
+        inputDisplay.setFont(Scaler.getFont(0.04, Font.BOLD));
         inputDisplay.setForeground(Colors.BLACK_TEXT.getColor());
-        inputDisplay.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        int pad20 = Scaler.getPadding(0.02);
+        inputDisplay.setBorder(BorderFactory.createEmptyBorder(pad20, pad20, pad20, pad20));
         add(inputDisplay, BorderLayout.NORTH);
 
         resultsPanel = new JPanel();
@@ -41,6 +43,9 @@ public class Keyboard extends JDialog {
         scrollPane.setBorder(BorderFactory.createMatteBorder(2, 0, 2, 0, Colors.GRAY.getColor()));
         scrollPane.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
+        int guaranteedWidth = assets.Scaler.getDimension(0.15, 0).width;
+        scrollPane.setPreferredSize(new Dimension(guaranteedWidth, 0));
+        scrollPane.setMinimumSize(new Dimension(guaranteedWidth, 0));
 
         JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
         verticalScrollBar.setUI(new CustomScrollBar());
@@ -71,6 +76,8 @@ public class Keyboard extends JDialog {
         gbc.insets = new Insets(5, 5, 5, 5);
 
         for (int row = 0; row < keys.length; row++) {
+            Dimension uniformButtonSize = Scaler.getDimension(0.045, 0.07);
+            Dimension utilityButtonSize = Scaler.getDimension(0.1, 0.07);
             JPanel rowPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 2, 3));
             rowPanel.setOpaque(false);
 
@@ -80,19 +87,22 @@ public class Keyboard extends JDialog {
 
                 if (key.equals("Zavrieť")) {
                     btn = ButtonBuilder.buildChonkyButton(key, Colors.DANGER_RED);
-                    btn.setPreferredSize(new Dimension(120, 65));
+                    btn.setPreferredSize(utilityButtonSize);
+                    btn.setFont(Scaler.getFont(0.03,Font.BOLD));
                 } else if (key.equals("Medzera")) {
                     btn = ButtonBuilder.buildChonkyButton(key, Colors.BUTTON_LIGHT_BLUE);
-                    btn.setPreferredSize(new Dimension(300, 65));
+                    btn.setPreferredSize(utilityButtonSize);
+                    btn.setFont(Scaler.getFont(0.03,Font.BOLD));
                 } else if (key.equals("<-")) {
                     btn = ButtonBuilder.buildChonkyButton(key, Colors.DEFAULT_BLUE);
-                    btn.setPreferredSize(new Dimension(70, 70));
+                    btn.setPreferredSize(utilityButtonSize);
+                    btn.setFont(Scaler.getFont(0.03,Font.BOLD));
                 } else {
                     btn = ButtonBuilder.buildChonkyButton(key, Colors.BUTTON_LIGHT_BLUE);
-                    btn.setPreferredSize(new Dimension(70, 70));
+                    btn.setPreferredSize(uniformButtonSize);
+                    btn.setFont(Scaler.getFont(0.04,Font.BOLD));
                 }
                 btn.setMargin(new Insets(1, 1, 1, 1));
-                btn.setFont(new Font("Roboto", Font.BOLD, 22));
                 btn.addActionListener(e -> handleKeyPress(key));
                 rowPanel.add(btn);
             }
@@ -134,16 +144,18 @@ public class Keyboard extends JDialog {
 
         if (paths.isEmpty()) {
             JLabel noResult = new JLabel("Nenašli sa žiadne položky.");
-            noResult.setFont(new Font("Roboto", Font.BOLD, 18));
+            noResult.setFont(Scaler.getFont(0.02, Font.BOLD));
             resultsPanel.add(noResult);
             return;
         }
 
+        int pad10 = Scaler.getPadding(0.01);
         for (String pathInfo : paths) {
             JLabel label = new JLabel(pathInfo);
-            label.setFont(new Font("Roboto", Font.BOLD, 22));
+            label.setFont(Scaler.getFont(0.025, Font.BOLD));
             label.setForeground(Colors.BLACK_TEXT.getColor());
-            label.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
+
+            label.setBorder(BorderFactory.createEmptyBorder(pad10, pad10, pad10, pad10));
             resultsPanel.add(label);
         }
     }

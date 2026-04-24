@@ -7,13 +7,10 @@ import views.Components.Display;
 import views.Components.Keypad;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
 
 public class DuringPause extends JPanel implements ButtonFoundable, ThemeObserver {
-
-    private final Dimension dimension = new Dimension(500, 114);
 
     private final Display inputDisplay = new Display(Constants.CODE,"Zadajte kód");
     private final Keypad keypad = new Keypad();
@@ -67,14 +64,12 @@ public class DuringPause extends JPanel implements ButtonFoundable, ThemeObserve
         final JPanel middlePanel = new JPanel();
         middlePanel.setName("middlePanel");
 
-        middlePanel.setBorder(new EmptyBorder(20, 0, 20, 0));
         middlePanel.setLayout(new GridBagLayout());
         middlePanel.setOpaque(false);
 
         gbc.weightx = 0.0;
         gbc.weighty = 0.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        inputDisplay.setPreferredSize(dimension);
         middlePanel.add(inputDisplay, gbc);
 
         gbc.gridy++;
@@ -86,8 +81,8 @@ public class DuringPause extends JPanel implements ButtonFoundable, ThemeObserve
         middlePanel.add(fillerPanel, gbc);
 
         gbc.gridy++;
-        gbc.weighty = 0.0;
         gbc.weightx = 0.0;
+        gbc.weighty = 0.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         middlePanel.add(keypad, gbc);
 

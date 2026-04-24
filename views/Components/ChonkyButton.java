@@ -1,6 +1,7 @@
 package views.Components;
 
 import assets.Colors;
+import assets.Scaler;
 import assets.ThemeManager;
 import assets.ThemeObserver;
 import utility.ColorManipulation;
@@ -13,7 +14,6 @@ import java.awt.geom.RoundRectangle2D;
 
 public class ChonkyButton extends JButton implements ThemeObserver{
     protected Shape innerRectangle;
-    private final Insets insets = new Insets(60,25,60,25);
     Color colorActive;
     Color colorDisabled;
     Colors colorEnum;
@@ -24,7 +24,7 @@ public class ChonkyButton extends JButton implements ThemeObserver{
         setOpaque(false);
         setFocusPainted(false);
         setBorderPainted(false);
-        setMargin(insets);
+        setMargin(getDynamicInsets());
         onThemeChange();
     }
 
@@ -36,9 +36,15 @@ public class ChonkyButton extends JButton implements ThemeObserver{
         setOpaque(false);
         setFocusPainted(false);
         setBorderPainted(false);
-        setFont(new Font("Roboto", Font.BOLD, 40));
-        setMargin(insets);
+        setFont(Scaler.getFont(0.035, Font.BOLD));
+        setMargin(getDynamicInsets());
         onThemeChange();
+    }
+
+    private Insets getDynamicInsets() {
+        int vPad = Scaler.getPadding(0.04);
+        int hPad = Scaler.getPadding(0.015);
+        return new Insets(vPad, hPad, vPad, hPad);
     }
 
     @Override
@@ -50,18 +56,15 @@ public class ChonkyButton extends JButton implements ThemeObserver{
         if (getModel().isPressed()) {
             baseColor = ColorManipulation.darken(baseColor, 0.8f);
         }
-        //setting width and height
         int width = getWidth();
         int height = getHeight();
 
-        //setting main rectangle
         int margin = Math.max(5,(int) (Math.min(width,height)*0.1));
         int mainArc = (int) (height * 0.3);
 
         g2.setPaint(ColorManipulation.darken(baseColor,0.93f));
         g2.fillRoundRect(margin/2,margin/2,width-margin,height-margin,mainArc,mainArc);
 
-        //setting shadow rectangle
         int heightZ = Math.max(5,(int) (Math.min(width,height)*0.25)) + margin/2;
         double marginShadow = Math.max(5,(int) (Math.min(width,height)*0.1));
         int mainArcShadow = (int) (height * 0.3);
@@ -106,13 +109,10 @@ public class ChonkyButton extends JButton implements ThemeObserver{
         g2.setPaint(shadowColorAlpha);
         g2.fill(areaShadow);
 
-        //setting inner rectangle
         int marginInner = Math.max(5,(int) ((Math.min(width,height)- (double) margin )*0.22));
         int innerArc = (int) (height * 0.25);
         int innerWidth = width-heightZ ;
         int innerHeight = height-heightZ;
-
-        //TODO: Make inner shadow/glow (Check figma)
 
         innerRectangle = new RoundRectangle2D.Double(heightZ - margin, marginInner- (double) margin /2,innerWidth- (double) margin /2,innerHeight,innerArc,innerArc);
         g2.setPaint(baseColor);
@@ -123,15 +123,14 @@ public class ChonkyButton extends JButton implements ThemeObserver{
         Font currentFont = getFont();
         Font scaledFont;
         int newFontSize = 0;
-        while(fm.stringWidth(getText()) > innerRectangle.getBounds().getWidth()- (double) marginInner /2){
-            if(newFontSize==12){
-                return;
+        while(fm.stringWidth(getText()) > innerRectangle.getBounds().getWidth() - (double) marginInner / 2) {
+            if(newFontSize <= 12) {
+                break;
             }
             fm = getFontMetrics(getFont());
             newFontSize = (int) (innerHeight * fontHeightRatio);
-            fontHeightRatio-=0.01f;
+            fontHeightRatio -= 0.01f;
             newFontSize = Math.max(12, newFontSize);
-            newFontSize = Math.min(60, newFontSize);
             scaledFont = currentFont.deriveFont((float) newFontSize);
             setFont(scaledFont);
         }

@@ -11,8 +11,6 @@ public class ChonkyArrowButton extends ChonkyButton {
     public ChonkyArrowButton(Colors colorEnum, Constants arrowDirection) {
         super(colorEnum);
         this.arrowDirection = arrowDirection;
-        setMargin(new Insets(55,55,55,55));
-        setPreferredSize(new Dimension(150,0));
     }
 
     @Override

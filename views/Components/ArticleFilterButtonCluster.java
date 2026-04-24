@@ -2,8 +2,8 @@ package views.Components;
 
 import assets.Colors;
 import assets.Constants;
+import assets.Scaler;
 import utility.ButtonBuilder;
-import utility.GridBagConstraintsBuilder;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -15,155 +15,127 @@ public class ArticleFilterButtonCluster extends JPanel {
     private final String[] buttonNamesMainFilter = {"Oblubene", "Ovocie", "Zelenina", "Pecivo", "Instorky"};
 
     private final JPanel mainSecondaryPanel = new JPanel();
-    private final GridBagConstraints gbcSecondaryFilterPanel = GridBagConstraintsBuilder.buildGridBagConstraints(1,1);
-    private final GridBagConstraints gbcMainPanel = GridBagConstraintsBuilder.buildGridBagConstraints(1,1);
-    private final JButton leftButton = ButtonBuilder.buildChonkyArrowButton( Colors.BUTTON_LIGHT_BLUE,Constants.LEFT);
-    private final JButton rightButton = ButtonBuilder.buildChonkyArrowButton( Colors.BUTTON_LIGHT_BLUE,Constants.RIGHT);
-    private final Dimension buttonDimensions = new Dimension(183,136);
+    private final JButton leftButton = ButtonBuilder.buildChonkyArrowButton(Colors.BUTTON_LIGHT_BLUE, Constants.LEFT);
+    private final JButton rightButton = ButtonBuilder.buildChonkyArrowButton(Colors.BUTTON_LIGHT_BLUE, Constants.RIGHT);
+
     private final List<JButton> mainFilterButtons = new ArrayList<>();
     private final List<String> secondaryFilterButtonsNames = new ArrayList<>();
     private final List<JButton> secondaryFilterButtons = new ArrayList<>();
 
     private int lastUsedPosition = 3;
 
-    public ArticleFilterButtonCluster(){
+    public ArticleFilterButtonCluster() {
         setOpaque(false);
-        setLayout(new GridBagLayout());
-        add(makeMainFilterPanel(),gbcMainPanel);
-        gbcMainPanel.gridy++;
-        add(makeSecondaryFilterPanel(),gbcMainPanel);
-
+        int gap = Scaler.getPadding(0.005);
+        setLayout(new GridLayout(2, 1, 0, gap));
+        add(makeMainFilterPanel());
+        add(makeSecondaryFilterPanel());
+        leftButton.addActionListener(e -> scrollLeft());
+        rightButton.addActionListener(e -> scrollRight());
     }
 
-    private JPanel makeMainFilterPanel(){
-        final JPanel main = new JPanel();
-        main.setBorder(new EmptyBorder(10,10,5,10));
-        main.setLayout(new GridBagLayout());
+    private JPanel makeMainFilterPanel() {
+        JPanel main = new JPanel();
         main.setOpaque(false);
-        final GridBagConstraints gbc = GridBagConstraintsBuilder.buildGridBagConstraints();
 
-        for(String name : buttonNamesMainFilter){
+        int gap = Scaler.getPadding(0.005);
+        main.setLayout(new GridLayout(1, 5, gap, gap));
+
+        int pad = Scaler.getPadding(0.005);
+        main.setBorder(new EmptyBorder(pad, pad, pad, pad));
+
+        for (String name : buttonNamesMainFilter) {
             JButton button = ButtonBuilder.buildChonkyButton(name, Colors.BUTTON_LIGHT_BLUE);
-            button.setPreferredSize(buttonDimensions);
-            main.add(button,gbc);
             mainFilterButtons.add(button);
+            main.add(button);
         }
         return main;
     }
 
-    private JPanel makeSecondaryFilterPanel(){
+    private JPanel makeSecondaryFilterPanel() {
         JPanel main = mainSecondaryPanel;
         main.removeAll();
-        GridBagConstraints gbc = gbcSecondaryFilterPanel;
-        String[] buttonNamesSecondaryFilter = secondaryFilterButtonsNames.toArray(new String[0]);
         main.setOpaque(false);
-        main.setLayout(new GridBagLayout());
-        main.setBorder(new EmptyBorder(5,10,10,10));
-        if(buttonNamesSecondaryFilter.length==5){
 
-            for(String name : buttonNamesSecondaryFilter){
-                JButton button = ButtonBuilder.buildChonkyButton(name, Colors.BUTTON_LIGHT_BLUE);
-                button.setPreferredSize(buttonDimensions);
-                secondaryFilterButtons.add(button);
-                main.add(button,gbc);
-                gbc.gridx++;
-            }
+        int gap = Scaler.getPadding(0.005);
+        main.setLayout(new GridLayout(1, 5, gap, gap));
 
-        }else if(buttonNamesSecondaryFilter.length<5){
+        int pad = Scaler.getPadding(0.005);
+        main.setBorder(new EmptyBorder(pad, pad, pad, pad));
 
-            int buttonCounter = 0;
-            for(String name : buttonNamesSecondaryFilter){
-                JButton button = ButtonBuilder.buildChonkyButton(name, Colors.BUTTON_LIGHT_BLUE);
-                button.setPreferredSize(buttonDimensions);
-                secondaryFilterButtons.add(button);
-                main.add(button,gbc);
-                buttonCounter++;
-                gbc.gridx++;
-            }
-            for (int i = 0; i < (5-buttonCounter); i++) {
-                JButton button = ButtonBuilder.buildChonkyButtonDisabled(Colors.BUTTON_LIGHT_BLUE);
-                secondaryFilterButtons.add(button);
-                button.setPreferredSize(buttonDimensions);
-                main.add(button,gbc);
-                gbc.gridx++;
-            }
+        String[] names = secondaryFilterButtonsNames.toArray(new String[0]);
+        secondaryFilterButtons.clear();
 
-        } else {
-
-            gbc.weightx=0;
-            main.add(leftButton,gbc);
-
-            gbc.gridx=5;
-            main.add(rightButton,gbc);
-
-            gbc.weightx=1;
-            gbc.gridx=2;
-            for (lastUsedPosition = 0; lastUsedPosition < 3; lastUsedPosition++) {
-                JButton button = ButtonBuilder.buildChonkyButton(buttonNamesSecondaryFilter[lastUsedPosition], Colors.BUTTON_LIGHT_BLUE);
-                button.setPreferredSize(buttonDimensions);
-                secondaryFilterButtons.add(button);
-                main.add(button,gbc);
-                gbc.gridx++;
+        if (names.length <= 5) {
+            for (int i = 0; i < 5; i++) {
+                if (i < names.length) {
+                    JButton button = ButtonBuilder.buildChonkyButton(names[i], Colors.BUTTON_LIGHT_BLUE);
+                    secondaryFilterButtons.add(button);
+                    main.add(button);
+                } else {
+                    JButton disabledBtn = ButtonBuilder.buildChonkyButtonDisabled(Colors.BUTTON_LIGHT_BLUE);
+                    secondaryFilterButtons.add(disabledBtn);
+                    main.add(disabledBtn);
+                }
             }
         }
+        else {
+            main.add(leftButton);
+
+            for (int i = 0; i < 3; i++) {
+                int itemIndex = lastUsedPosition - 3 + i;
+
+                if (itemIndex >= 0 && itemIndex < names.length) {
+                    JButton button = ButtonBuilder.buildChonkyButton(names[itemIndex], Colors.BUTTON_LIGHT_BLUE);
+                    secondaryFilterButtons.add(button);
+                    main.add(button);
+                } else {
+                    JButton disabledBtn = ButtonBuilder.buildChonkyButtonDisabled(Colors.BUTTON_LIGHT_BLUE);
+                    secondaryFilterButtons.add(disabledBtn);
+                    main.add(disabledBtn);
+                }
+            }
+
+            main.add(rightButton);
+
+            leftButton.setEnabled(lastUsedPosition > 3);
+            rightButton.setEnabled(lastUsedPosition < names.length);
+        }
+
         return main;
     }
 
-    public void scrollRight(){
-        leftButton.setEnabled(true);
-        JPanel main = mainSecondaryPanel;
-        GridBagConstraints gbc = gbcSecondaryFilterPanel;
-        String[] buttonNamesSecondaryFilter = secondaryFilterButtonsNames.toArray(new String[0]);
-
-        gbc.gridx = 2;
-        try {
-            for (int newPosition=lastUsedPosition; newPosition < lastUsedPosition+3; newPosition++) {
-                JButton button = ButtonBuilder.buildChonkyButton(buttonNamesSecondaryFilter[newPosition], Colors.BUTTON_LIGHT_BLUE);
-                main.remove(main.getComponent(2));
-                main.add(button,gbc);
-                gbc.gridx++;
-            }
-        } catch (IndexOutOfBoundsException e) {
-            main.remove(main.getComponent(2));
-            main.add(ButtonBuilder.buildChonkyButtonDisabled(Colors.BUTTON_LIGHT_BLUE),gbc);
-            rightButton.setEnabled(false);
-        }
-        lastUsedPosition+=3;
-    }
-
-    public void scrollLeft(){
-        rightButton.setEnabled(true);
-        JPanel main = mainSecondaryPanel;
-        GridBagConstraints gbc = gbcSecondaryFilterPanel;
-        String[] buttonNamesSecondaryFilter = secondaryFilterButtonsNames.toArray(new String[0]);
-
-        gbc.gridx = 4;
-            main.remove(main.getComponent(2));
-            main.remove(main.getComponent(2));
-            main.remove(main.getComponent(2));
-            for (int newPosition=lastUsedPosition; newPosition > lastUsedPosition-3; newPosition--) {
-                JButton button = ButtonBuilder.buildChonkyButton(buttonNamesSecondaryFilter[newPosition-4], Colors.BUTTON_LIGHT_BLUE);
-                main.add(button,gbc);
-                gbc.gridx--;
-            }
-
-        lastUsedPosition-=3;
-        if(lastUsedPosition==3){
-            leftButton.setEnabled(false);
+    public void scrollRight() {
+        String[] names = secondaryFilterButtonsNames.toArray(new String[0]);
+        if (lastUsedPosition < names.length) {
+            lastUsedPosition += 3;
+            makeSecondaryFilterPanel();
+            mainSecondaryPanel.revalidate();
+            mainSecondaryPanel.repaint();
         }
     }
 
-    public void setButtonNamesSecondaryFilter(String[] names){
+    public void scrollLeft() {
+        if (lastUsedPosition > 3) {
+            lastUsedPosition -= 3;
+            makeSecondaryFilterPanel();
+            mainSecondaryPanel.revalidate();
+            mainSecondaryPanel.repaint();
+        }
+    }
+
+    public void setButtonNamesSecondaryFilter(String[] names) {
         secondaryFilterButtonsNames.clear();
         secondaryFilterButtonsNames.addAll(List.of(names));
-        add(makeSecondaryFilterPanel(),gbcMainPanel);
-        revalidate();
-    }
-    public JButton getRightButton(){return rightButton;}
-    public JButton getLeftButton(){return leftButton;}
-    public JButton[] getMainFilterButtons(){return mainFilterButtons.toArray(new JButton[0]);}
-    public JButton[] getSecondaryFilterButtons(){
-        return secondaryFilterButtons.toArray(new JButton[0]);
+
+        lastUsedPosition = 3;
+        makeSecondaryFilterPanel();
+        mainSecondaryPanel.revalidate();
+        mainSecondaryPanel.repaint();
     }
 
+    public JButton getRightButton() { return rightButton; }
+    public JButton getLeftButton() { return leftButton; }
+    public JButton[] getMainFilterButtons() { return mainFilterButtons.toArray(new JButton[0]); }
+    public JButton[] getSecondaryFilterButtons() { return secondaryFilterButtons.toArray(new JButton[0]); }
 }

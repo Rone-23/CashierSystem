@@ -1,6 +1,7 @@
 package utility.tutorial;
 
 import assets.Colors;
+import assets.Scaler;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -23,69 +24,80 @@ public class TrainingScenarioOverlay extends JDialog {
         setAlwaysOnTop(true);
         setBackground(new Color(0, 0, 0, 0));
 
-        JPanel mainCard = new JPanel(new BorderLayout(10, 10)) {
+        int gap = Scaler.getPadding(0.01);
+
+        JPanel mainCard = new JPanel(new BorderLayout(gap, gap)) {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(new Color(30, 30, 30, 220));
-                g2.fill(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 20, 20));
+
+                int arc = Scaler.getPadding(0.02);
+                g2.fill(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), arc, arc));
                 g2.dispose();
             }
         };
         mainCard.setOpaque(false);
-        mainCard.setBorder(new EmptyBorder(15, 15, 15, 15));
+
+        int pad = Scaler.getPadding(0.015);
+        mainCard.setBorder(new EmptyBorder(pad, pad, pad, pad));
 
         JLabel titleLabel = new JLabel("Tréningový Nákup", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Roboto", Font.BOLD, 20));
-        titleLabel.setForeground(Colors.BUTTON_LIGHT_BLUE.getColor());
+        titleLabel.setFont(Scaler.getFont(0.02, Font.BOLD));
+        titleLabel.setForeground(Color.WHITE);
         mainCard.add(titleLabel, BorderLayout.NORTH);
 
         JPanel listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setOpaque(false);
 
+        int rowGap = Scaler.getPadding(0.01);
         for (TrainingObjective obj : targets) {
             JPanel row = createObjectiveRow(obj);
             objectivePanels.put(obj.getItemName().toLowerCase(), row);
             listPanel.add(row);
-            listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+            listPanel.add(Box.createRigidArea(new Dimension(0, rowGap)));
         }
         mainCard.add(listPanel, BorderLayout.CENTER);
 
         statusLabel = new JLabel("Nablokuj všetky položky", SwingConstants.CENTER);
-        statusLabel.setFont(new Font("Roboto", Font.BOLD, 16));
+        statusLabel.setFont(Scaler.getFont(0.016, Font.BOLD));
         statusLabel.setForeground(Colors.MILD_YELLOW.getColor());
         mainCard.add(statusLabel, BorderLayout.SOUTH);
 
         add(mainCard);
         pack();
 
-        int x = parentFrame.getX() + parentFrame.getWidth() - this.getWidth() - 30;
-        int y = parentFrame.getY() + 30;
+        int margin = Scaler.getPadding(0.03);
+        int x = parentFrame.getX() + parentFrame.getWidth() - this.getWidth() - margin;
+        int y = parentFrame.getY() + margin;
         setLocation(x, y);
     }
 
     private JPanel createObjectiveRow(TrainingObjective obj) {
-        JPanel row = new JPanel(new BorderLayout(15, 0));
+        int hGap = Scaler.getPadding(0.015);
+        JPanel row = new JPanel(new BorderLayout(hGap, 0));
         row.setOpaque(false);
         row.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.GRAY));
-        row.setMaximumSize(new Dimension(350, 60));
+
+        int maxRowWidth = Scaler.getDimension(0.25, 0).width;
+        int maxRowHeight = Scaler.getPadding(0.06);
+        row.setMaximumSize(new Dimension(maxRowWidth, maxRowHeight));
 
         JLabel nameLabel = new JLabel(obj.getItemName());
-        nameLabel.setFont(new Font("Roboto", Font.BOLD, 16));
+        nameLabel.setFont(Scaler.getFont(0.016, Font.BOLD));
         nameLabel.setForeground(Color.WHITE);
         row.add(nameLabel, BorderLayout.CENTER);
 
         JLabel progressLabel = new JLabel("0 / " + obj.getTargetAmount() + " ks");
-        progressLabel.setFont(new Font("Roboto", Font.BOLD, 16));
+        progressLabel.setFont(Scaler.getFont(0.016, Font.BOLD));
         progressLabel.setForeground(Color.WHITE);
         objectiveLabels.put(obj.getItemName().toLowerCase(), progressLabel);
         row.add(progressLabel, BorderLayout.EAST);
 
         return row;
     }
-
 
     public void updateItemRow(String itemName, int currentAmount, int targetAmount, TrainingObjective.State state) {
         String key = itemName.toLowerCase();

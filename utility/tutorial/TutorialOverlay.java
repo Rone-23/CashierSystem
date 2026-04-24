@@ -1,6 +1,7 @@
 package utility.tutorial;
 
 import assets.Colors;
+import assets.Scaler;
 import assets.ThemeManager;
 import assets.ThemeObserver;
 
@@ -42,14 +43,18 @@ public class TutorialOverlay extends JPanel implements ThemeObserver {
         addMouseListener(new MouseAdapter() {});
         addMouseMotionListener(new MouseAdapter() {});
 
-        dialogPanel = new JPanel(new BorderLayout(10, 10)) {
+        int gap = Scaler.getPadding(0.01);
+
+        dialogPanel = new JPanel(new BorderLayout(gap, gap)) {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
                 g2.setColor(backgroundColor);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
+
+                int arc = Scaler.getPadding(0.03);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
 
                 g2.dispose();
                 super.paintComponent(g);
@@ -61,27 +66,39 @@ public class TutorialOverlay extends JPanel implements ThemeObserver {
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
                 g2.setColor(borderColor);
-                g2.setStroke(new BasicStroke(5));
-                g2.drawRoundRect(1, 1, getWidth() - 3, getHeight() - 3, 30, 30);
+
+                int strokeThickness = Math.max(2, Scaler.getPadding(0.005));
+                g2.setStroke(new BasicStroke(strokeThickness));
+
+                int arc = Scaler.getPadding(0.03);
+                int offset = strokeThickness / 2;
+                g2.drawRoundRect(offset, offset, getWidth() - strokeThickness, getHeight() - strokeThickness, arc, arc);
 
                 g2.dispose();
             }
         };
         dialogPanel.setOpaque(false);
-        dialogPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
+
+        int vPad = Scaler.getPadding(0.02);
+        int hPad = Scaler.getPadding(0.04);
+        dialogPanel.setBorder(BorderFactory.createEmptyBorder(vPad, hPad, vPad, hPad));
 
         titleLabel = new JLabel();
         titleLabel.setForeground(forgroundColor);
-        titleLabel.setFont(new Font("Roboto", Font.BOLD, 42));
+        titleLabel.setFont(Scaler.getFont(0.04, Font.BOLD));
+
         textLabel = new JLabel();
         textLabel.setForeground(forgroundColor);
-        textLabel.setFont(new Font("Roboto", Font.PLAIN, 34));
+        textLabel.setFont(Scaler.getFont(0.03, Font.PLAIN));
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.setOpaque(false);
 
         skipButton = new JButton("Ukončiť");
         nextButton = new JButton("Ďalej");
+
+        skipButton.setFont(Scaler.getFont(0.025, Font.BOLD));
+        nextButton.setFont(Scaler.getFont(0.025, Font.BOLD));
 
         buttonPanel.add(skipButton);
         buttonPanel.add(nextButton);
@@ -127,11 +144,12 @@ public class TutorialOverlay extends JPanel implements ThemeObserver {
 
     public void displayStep(TutorialStep step, Runnable onNext, Runnable onSkip) {
         this.currentStep = step;
-
         this.targetComponents = step.getTargetComponents();
 
         titleLabel.setText(step.getTitle());
-        textLabel.setText("<html><div style='width: 450px; margin-top: 5px;'>" + step.getMessage() + "</div></html>");
+
+        int htmlWidth = Scaler.getDimension(0.25, 0).width;
+        textLabel.setText("<html><div style='width: " + htmlWidth + "px; margin-top: 5px;'>" + step.getMessage() + "</div></html>");
 
         for (java.awt.event.ActionListener al : nextButton.getActionListeners()) {
             nextButton.removeActionListener(al);
@@ -151,7 +169,9 @@ public class TutorialOverlay extends JPanel implements ThemeObserver {
 
     private void positionDialog() {
         dialogPanel.setSize(dialogPanel.getPreferredSize());
-        int margin = 60;
+
+        int margin = Scaler.getPadding(0.06);
+        int targetOffset = Scaler.getPadding(0.02);
 
         if (currentStep.getPosition() != TutorialStep.DialogPosition.AUTO) {
             switch (currentStep.getPosition()) {
@@ -165,10 +185,12 @@ public class TutorialOverlay extends JPanel implements ThemeObserver {
         else if (targetComponents != null && !targetComponents.isEmpty() && targetComponents.getFirst() != null && targetComponents.getFirst().isShowing()) {
             JComponent primaryTarget = targetComponents.getFirst();
             Point p = SwingUtilities.convertPoint(primaryTarget.getParent(), primaryTarget.getLocation(), this);
-            int x = Math.min(p.x, getWidth() - dialogPanel.getWidth() - 20);
-            int y = p.y + primaryTarget.getHeight() + 20;
-            if (y + dialogPanel.getHeight() > getHeight()) y = p.y - dialogPanel.getHeight() - 20;
-            dialogPanel.setLocation(x, Math.max(20, y));
+
+            int x = Math.min(p.x, getWidth() - dialogPanel.getWidth() - targetOffset);
+            int y = p.y + primaryTarget.getHeight() + targetOffset;
+
+            if (y + dialogPanel.getHeight() > getHeight()) y = p.y - dialogPanel.getHeight() - targetOffset;
+            dialogPanel.setLocation(x, Math.max(targetOffset, y));
         }
         else {
             dialogPanel.setLocation((getWidth() - dialogPanel.getWidth()) / 2, (getHeight() - dialogPanel.getHeight()) / 2);
@@ -188,12 +210,16 @@ public class TutorialOverlay extends JPanel implements ThemeObserver {
             for (JComponent target : targetComponents) {
                 if (target != null && target.isShowing()) {
                     Point p = SwingUtilities.convertPoint(target.getParent(), target.getLocation(), this);
-                    int padding = 30;
+
+                    int padding = Scaler.getPadding(0.03);
+                    int cutoutArc = Scaler.getPadding(0.05);
+
                     RoundRectangle2D cutout = new RoundRectangle2D.Double(
                             p.x - padding, p.y - padding,
                             target.getWidth() + (padding * 2),
                             target.getHeight() + (padding * 2),
-                            50, 50);
+                            cutoutArc, cutoutArc);
+
                     dimArea.subtract(new Area(cutout));
                 }
             }
