@@ -68,6 +68,11 @@ public class ContentController implements OpenTransactionObserver, KeyboardListe
     }
 
     @Override
+    public void onItemRemove(Item item){
+        clearContent();
+    }
+
+    @Override
     public void keyboardPress(String buttonPressed) {
         if (buttonPressed.equals(ButtonSet.ButtonLabel.DELETE.toString())){
             clearContent();

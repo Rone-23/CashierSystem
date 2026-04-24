@@ -29,7 +29,7 @@ public class SQL_Connect {
             String url = "jdbc:sqlite:cashier_system_database.db";
             conn = DriverManager.getConnection(url);
             try (Statement stmt = conn.createStatement()) {
-                stmt.execute("PRAGMA busy_timeout = 5000;"); //wait time 5s
+                stmt.execute("PRAGMA busy_timeout = 5000;");
             }
         } catch (Exception e) {
             System.out.println("Error unable to establish connection: " + e.getMessage());
@@ -163,27 +163,30 @@ public class SQL_Connect {
      */
 
     public int createTransaction(int cashierID) throws SQLException {
-        String sqlInsert =  "insert into \"transaction\" (cashier_id, created_at)" +
-                "values (?,current_timestamp)";
+        String sqlInsert = "INSERT INTO \"transaction\" (cashier_id, created_at) VALUES (?, current_timestamp)";
 
-        try (PreparedStatement pstmt = conn.prepareStatement(sqlInsert)) {
+        try (PreparedStatement pstmt = conn.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setInt(1, cashierID);
             pstmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
 
-        String sqlGet =  "select transaction_id from \"transaction\" order by transaction_id desc limit 1";
-
-        try (PreparedStatement pstmt = conn.prepareStatement(sqlGet)) {
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()){
-                return rs.getInt(1);
+            try (ResultSet rs = pstmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new SQLException("Nepodarilo sa vytvoriť transakciu: " + e.getMessage(), e);
         }
-        throw new SQLException("No last transaction number could be found. ");
+
+        throw new SQLException("No last transaction number could be found.");
+    }
+
+    public void deleteTransaction(int transactionID) throws SQLException {
+        String sql = "DELETE FROM \"transaction\" WHERE transaction_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, transactionID);
+            pstmt.executeUpdate();
+        }
     }
 
     public void setCustomerId(int transactionID,int cashierID) throws SQLException {

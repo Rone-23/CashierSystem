@@ -49,7 +49,7 @@ public class OpenTransactionManager implements OpenTransactionObserver, ContentO
     }
 
     public void addPayment(ActionEvent paymentType){
-        if(content.isEmpty() && !paymentType.getActionCommand().equalsIgnoreCase(ButtonSet.ButtonLabel.CASH_BACK.toString())){
+        if(content.isEmpty() && !paymentType.getActionCommand().equalsIgnoreCase(ButtonSet.ButtonLabel.CASH_BACK.toString()) && !paymentType.getActionCommand().equalsIgnoreCase(ButtonSet.ButtonLabel.COPY_RECEIPT.toString()) ){
             return;
         }
         try {
@@ -104,6 +104,16 @@ public class OpenTransactionManager implements OpenTransactionObserver, ContentO
 
     @Override
     public void paymentDone() {
+        if (openTransaction != null && openTransaction.getItemsInTransaction().isEmpty() &&
+                (!openTransaction.getReturnStatus() || openTransaction.getReturnedItems().isEmpty())) {
+
+            openTransaction.openTransactionDestroy();
+            ViewManager.getInstance().showIdle();
+            ViewManager.getInstance().returnToDefault();
+            DisplayDispatcher.activeDisplayForAmount();
+            return;
+        }
+
         MakeTransaction makeTransaction = new MakeTransaction();
         makeTransaction.makeTransaction(openTransaction);
         ViewManager.getInstance().showIdle();

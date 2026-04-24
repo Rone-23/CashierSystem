@@ -200,7 +200,7 @@ public class OpenTransaction implements CustomerCardObserver {
     }
 
     public void pay(String actionEvent, String content){
-        if(actionEvent.equalsIgnoreCase(ButtonSet.ButtonLabel.CASH_BACK.toString())){
+        if(actionEvent.equalsIgnoreCase(ButtonSet.ButtonLabel.CASH_BACK.toString()) || actionEvent.equalsIgnoreCase(ButtonSet.ButtonLabel.COPY_RECEIPT.toString())){
             checkSum(actionEvent,0);
             return;
         }
@@ -318,6 +318,14 @@ public class OpenTransaction implements CustomerCardObserver {
     public static void removeObserver(OpenTransactionObserver openTransactionObserver){observerList.remove(openTransactionObserver);}
 
     public void openTransactionDestroy(){
+        if (itemsInTransaction.isEmpty() && transactionID != 0 && !isReturn) {
+            try {
+                SQL_Connect.getInstance().deleteTransaction(transactionID);
+            } catch (SQLException e) {
+                System.out.println("Failed to delete empty transaction: " + e.getMessage());
+            }
+        }
+
         for(OpenTransactionObserver observer : observerList){
             observer.onDestroy();
         }

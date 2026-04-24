@@ -122,6 +122,7 @@ public class ViewManager {
     public void returnToDefault(){
         duringRegister.returnToDefault();
         duringReturn.returnToDefault();
+        duringArticles.getArticleFilterButtonCluster().setButtonNamesSecondaryFilter(new String[0]);
     }
 
     public void showKeyboard(){

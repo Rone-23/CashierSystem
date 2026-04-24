@@ -23,6 +23,7 @@ public class ValidateCustomerAction extends AbstractAction implements ContentObs
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if(content.isEmpty()) return;
 
         if(OpenTransactionManager.getInstance().getOpenTransaction().getCustomerID()!=-1){
             NotificationController.notifyObservers("Karta už bola načítaná.", 4000, Colors.YELLOW.getColor());
