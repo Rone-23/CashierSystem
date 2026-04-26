@@ -33,7 +33,7 @@ public class CodeEnterAction extends AbstractAction implements ContentObserver {
 
             try {
                 SQL_Connect.getInstance().createNewCustomerCard(Integer.parseInt(content), "Držiteľ karty: " + content);
-                NotificationController.notifyObservers("Zákaznícka karta " + content + " úspešne vytvorená!", 4000);
+                NotificationController.notifyObservers("Zákaznícka karta " + content + " úspešne vytvorená!", 4000, Colors.GREEN.getColor());
                 ContentController.clearContent();
                 ViewManager.getInstance().showIdle();
                 ViewManager.getInstance().returnToDefault();

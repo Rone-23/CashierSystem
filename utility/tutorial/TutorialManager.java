@@ -2,6 +2,7 @@ package utility.tutorial;
 
 import controllers.panels.ViewManager;
 import controllers.transaction.OpenTransactionManager;
+import services.Users.CashierSession;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -61,6 +62,7 @@ public class TutorialManager {
 
     public void endTutorial() {
         overlay.setVisible(false);
+        CashierSession.logout();
         OpenTransactionManager.getInstance().getOpenTransaction().openTransactionDestroy();
         ViewManager.getInstance().showIdle();
     }

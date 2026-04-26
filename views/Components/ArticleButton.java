@@ -36,7 +36,7 @@ public class ArticleButton extends JToggleButton implements ContainsItem, ThemeO
         setOpaque(false);
         setFocusPainted(false);
         setBorderPainted(false);
-        setFont(Scaler.getFont(0.011, Font.BOLD));
+        setFont(Scaler.getFont(0.015, Font.BOLD));
         setForeground(Colors.BLACK_TEXT.getColor());
     }
 

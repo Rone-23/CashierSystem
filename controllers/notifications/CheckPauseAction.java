@@ -18,7 +18,7 @@ public class CheckPauseAction extends AbstractAction implements ContentObserver 
 
     public CheckPauseAction(){
         ContentController.addObserver(this);
-        pauseCode = String.format("%04d", (int)(Math.random() * 10000));
+        pauseCode = String.format("%04d", (int)(Math.random() * 9000)+1000);
         System.out.println("UNLOCK CODE: " + pauseCode);
         String path = "./Receipts/SECRET_CODE.txt";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
@@ -38,7 +38,7 @@ public class CheckPauseAction extends AbstractAction implements ContentObserver 
             ContentController.removeObserver(this);
             ViewManager.getInstance().getStatusBar().setLocked(false);
         }else{
-            NotificationController.notifyObservers("Nesprávny kod.",1500);
+            NotificationController.notifyObservers("Nesprávny kód.",1500);
         }
         ContentController.clearContent();
     }

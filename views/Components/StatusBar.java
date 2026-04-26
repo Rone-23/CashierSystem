@@ -147,7 +147,6 @@ public class StatusBar extends JPanel implements NotificationObserver, ThemeObse
 
     public JComponent getNotificationLabel(){return notificationLabel;}
 
-
     @Override
     public void onDestroy() {
         setStatus("---");

@@ -40,24 +40,48 @@ public class UtilityController {
         duringIdle.getButton(ButtonSet.ButtonLabel.RETURN.toString()).addActionListener(_ -> {
             ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.CONFIRM.toString()).setActionCommand(ButtonSet.ButtonLabel.RETURN.toString());
             ViewManager.getInstance().getDuringCodeEnter().setMode(Constants.RECEIPT);
+            ViewManager.getInstance().getDuringCodeEnter().setExplanationText(
+                    "Vrátenie tovaru",
+                    "Pre vrátenie tovaru zadajte číslo transackcie. <br><br>" +
+                            "• Číslo nájdete na pôvodnom pokladničnom bloku.<br>"
+            );
             ViewManager.getInstance().showCodeEnter();
             DisplayDispatcher.activeDisplayForCode();
         });
         duringIdle.getButton(ButtonSet.ButtonLabel.COPY_RECEIPT.toString()).addActionListener(_ -> {
             ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.CONFIRM.toString()).setActionCommand(ButtonSet.ButtonLabel.COPY_RECEIPT.toString());
             ViewManager.getInstance().getDuringCodeEnter().setMode(Constants.RECEIPT);
+            ViewManager.getInstance().getDuringCodeEnter().setExplanationText(
+                    "Kópia dokladu",
+                    "Pre vytlačenie kópie zadajte číslo transakcie. <br><br>" +
+                            "• Číslo nájdete na pôvodnom pokladničnom bloku.<br>" +
+                            "• Kópia bude vytlačená okamžite po potvrdení."
+            );
             ViewManager.getInstance().showCodeEnter();
             DisplayDispatcher.activeDisplayForCode();
+
         });
         duringIdle.getButton(ButtonSet.ButtonLabel.GENERATE_VOUCHER.toString()).addActionListener(_ -> {
             ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.CONFIRM.toString()).setActionCommand(ButtonSet.ButtonLabel.GENERATE_VOUCHER.toString());
             ViewManager.getInstance().getDuringCodeEnter().setMode(Constants.CUSTOMER);
+            ViewManager.getInstance().getDuringCodeEnter().setExplanationText(
+                    "Generovanie poukážky",
+                    "Vytvorenie novej darčekovej poukážky pre zákazníka.<br><br>" +
+                            "• Zadajte ID poukážky vytlačené na zadnej strane.<br>" +
+                            "• Po potvrdení bude poukážka aktivovaná a pripravená na platbu transakcie."
+            );
             ViewManager.getInstance().showCodeEnter();
             DisplayDispatcher.activeDisplayForCode();
         });
         duringIdle.getButton(ButtonSet.ButtonLabel.CREATE_CARD.toString()).addActionListener(_ -> {
             ViewManager.getInstance().getDuringCodeEnter().getButton(ButtonSet.ButtonLabel.CONFIRM.toString()).setActionCommand(ButtonSet.ButtonLabel.CREATE_CARD.toString());
             ViewManager.getInstance().getDuringCodeEnter().setMode(Constants.CUSTOMER);
+            ViewManager.getInstance().getDuringCodeEnter().setExplanationText(
+                    "Nová zákaznícka karta",
+                    "Registrácia novej zákazníckej karty.<br><br>" +
+                            "• Naskenujte čiarový kód (alebo ručne zadajte 7 ciferné číslo karty).<br>" +
+                            "• Uistite sa, že karta ešte nie je v systéme evidovaná, inak bude táto požiadavka zamietnutá."
+            );
             ViewManager.getInstance().showCodeEnter();
             DisplayDispatcher.activeDisplayForCode();
         });

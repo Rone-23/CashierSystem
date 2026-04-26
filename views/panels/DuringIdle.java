@@ -39,8 +39,8 @@ public class DuringIdle extends JPanel implements ButtonFoundable, ThemeObserver
     }
 
     public JPanel createLeftPanel(){
-        themeButton.setPreferredSize(new Dimension(200, 124));
-        themeButton.setFont(new Font("Roboto", Font.BOLD, 24));
+        themeButton.setPreferredSize(Scaler.getDimension(0.12,0.12));
+        themeButton.setFont(Scaler.getFont(0.035,Font.BOLD));
 
         GridBagConstraints themeGbc = new GridBagConstraints();
         themeGbc.anchor = GridBagConstraints.SOUTHWEST;

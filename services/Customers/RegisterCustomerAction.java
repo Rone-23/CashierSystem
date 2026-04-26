@@ -1,5 +1,6 @@
 package services.Customers;
 
+import assets.Colors;
 import controllers.notifications.NotificationController;
 import controllers.panels.ViewManager;
 import controllers.transaction.ContentController;
@@ -7,6 +8,7 @@ import controllers.transaction.ContentObserver;
 import services.SQL_Connect;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.sql.SQLException;
 
@@ -20,7 +22,7 @@ public class RegisterCustomerAction extends AbstractAction implements ContentObs
     @Override
     public void actionPerformed(ActionEvent e) {
         if (content == null || !content.matches("\\d{7}")) {
-            NotificationController.notifyObservers("Karta musí obsahovať presne 7 čísel!", 4000);
+            NotificationController.notifyObservers("Karta musí obsahovať presne 7 čísel!", 4000, Colors.YELLOW.getColor());
             ContentController.clearContent();
             return;
         }

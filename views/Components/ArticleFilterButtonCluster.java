@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ArticleFilterButtonCluster extends JPanel {
-    private final String[] buttonNamesMainFilter = {"Oblubene", "Ovocie", "Zelenina", "Pecivo", "Instorky"};
+    private final String[] buttonNamesMainFilter = {"Oblubene", "Ovocie", "Zelenina", "Pecivo"};
 
     private final JPanel mainSecondaryPanel = new JPanel();
     private final JButton leftButton = ButtonBuilder.buildChonkyArrowButton(Colors.BUTTON_LIGHT_BLUE, Constants.LEFT);

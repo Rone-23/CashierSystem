@@ -21,6 +21,8 @@ public class DuringCodeEnter extends JPanel implements ButtonFoundable, ThemeObs
     private final JPanel middlePanel;
     private final JPanel rightPanel;
 
+    private final JLabel explanationLabel = new JLabel();
+
 
     public DuringCodeEnter() {
         inputDisplay.setText("");
@@ -59,10 +61,20 @@ public class DuringCodeEnter extends JPanel implements ButtonFoundable, ThemeObs
     }
 
     private JPanel createLeftPanel(){
-        final JPanel leftPanel = new JPanel();
+        final JPanel leftPanel = new JPanel(new BorderLayout());
         leftPanel.setName("leftPanel");
         leftPanel.setOpaque(false);
         leftPanel.setPreferredSize(dimension);
+
+        int pad = Scaler.getPadding(0.02);
+        leftPanel.setBorder(new EmptyBorder(pad, pad, pad, pad));
+
+        explanationLabel.setFont(Scaler.getFont(0.02, Font.PLAIN));
+        explanationLabel.setForeground(Colors.BLACK_TEXT.getColor());
+        explanationLabel.setVerticalAlignment(SwingConstants.TOP); // Align text to the top
+
+        leftPanel.add(explanationLabel, BorderLayout.CENTER);
+
         return leftPanel;
     }
 
@@ -107,6 +119,16 @@ public class DuringCodeEnter extends JPanel implements ButtonFoundable, ThemeObs
         rightPanel.add(actionButtons, BorderLayout.NORTH);
 
         return rightPanel;
+    }
+
+    public void setExplanationText(String title, String text) {
+        int width = Scaler.getDimension(0.25, 0).width;
+        explanationLabel.setText(
+                "<html><div style='width: " + width + "px;'>" +
+                        "<b style='font-size: 1.2em;'>" + title + "</b><br><br>" +
+                        text +
+                        "</div></html>"
+        );
     }
 
     @Override
@@ -164,6 +186,7 @@ public class DuringCodeEnter extends JPanel implements ButtonFoundable, ThemeObs
     @Override
     public void onThemeChange() {
         setBackground(Colors.BACKGROUND_GRAY.getColor());
+        explanationLabel.setForeground(Colors.BLACK_TEXT_LIGHT.getColor());
         repaint();
     }
 }
