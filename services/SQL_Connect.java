@@ -158,6 +158,36 @@ public class SQL_Connect {
         }
     }
 
+    public List<String[]> getRandomDiscounts(int limit) {
+        List<String[]> promos = new ArrayList<>();
+        String sql = """
+            SELECT a.name, a.price, MAX(d.discount_percent) as discount_percent, a.path_to_image, d.requires_customer_card
+            FROM article a
+            JOIN discount d ON a.article_id = d.article_id
+            WHERE d.valid_to IS NULL OR d.valid_to > CURRENT_TIMESTAMP
+            GROUP BY a.article_id
+            ORDER BY RANDOM()
+            LIMIT ?
+        """;
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, limit);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                promos.add(new String[]{
+                        rs.getString("name"),
+                        String.valueOf(rs.getInt("price")),
+                        String.valueOf(rs.getInt("discount_percent")),
+                        rs.getString("path_to_image"),
+                        String.valueOf(rs.getInt("requires_customer_card"))
+                });
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching random promos: " + e.getMessage());
+        }
+        return promos;
+    }
+
     /*
     TRANSACTION
      */
